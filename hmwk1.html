@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="../icona.png">
+
+<title>HMWK 1</title>
+<style>
+:root{
+  --ink:#272a44; --mute:#6a6f91; --line:#e3e6f6; --soft:#f4f5ff; --card:rgba(255,255,255,.9);
+  --violet:#7c5cff; --blue:#2f7dff; --orange:#f08a24; --green:#1fa971; --red:#e5484d; --yellow:#e6b800; --pink:#ec5fa5;
+  --shadow:0 12px 34px rgba(88,80,170,.12);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;color:var(--ink);font:16px/1.65 "Nunito","Quicksand",ui-rounded,"SF Pro Rounded","Segoe UI",system-ui,sans-serif;min-height:100vh;
+  background:radial-gradient(900px 500px at 6% -6%,#e5dfff 0,transparent 60%),radial-gradient(800px 520px at 100% 0,#ffe1f0 0,transparent 55%),radial-gradient(900px 600px at 50% 112%,#d6f4ff 0,transparent 60%),#f7f7ff;background-attachment:fixed}
+header,main{max-width:1080px;margin:0 auto;padding:0 20px}
+header{padding-top:26px}
+.back{display:inline-flex;align-items:center;gap:6px;color:var(--mute);text-decoration:none;font-size:14px;border-radius:99px;padding:6px 14px;background:#fff;box-shadow:0 2px 8px rgba(88,80,170,.10);transition:.18s}
+.back:hover{color:var(--violet);transform:translateX(-2px)}
+h1{margin:14px 0 6px;font-size:clamp(26px,4.5vw,38px);line-height:1.15;letter-spacing:-.3px;background:linear-gradient(90deg,var(--violet),var(--blue) 60%,#14b8c4);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{margin:0 0 6px;color:var(--mute);font-size:17px;max-width:760px}
+h3{margin:0 0 6px;font-size:19px}
+.tabs{display:inline-flex;flex-wrap:wrap;gap:4px;background:#fff;border-radius:99px;padding:5px;box-shadow:0 4px 16px rgba(88,80,170,.10);margin:16px 0 4px}
+.tabs button{border:0;background:transparent;color:var(--mute);padding:9px 18px;border-radius:99px;cursor:pointer;font:inherit;font-weight:700;transition:.2s}
+.tabs button:hover{color:var(--violet)}
+.tabs button.on{background:linear-gradient(135deg,var(--violet),var(--blue));color:#fff;box-shadow:0 6px 16px rgba(124,92,255,.35)}
+main{padding-bottom:70px}
+section.tab{display:none}
+section.tab.on{display:block;animation:rise .45s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.card{background:var(--card);border:1px solid rgba(124,92,255,.10);border-radius:24px;padding:22px 26px;margin:18px 0;box-shadow:var(--shadow)}
+.card.hero{background:linear-gradient(135deg,rgba(124,92,255,.10),rgba(47,125,255,.08));}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.mini{background:var(--soft);border-radius:18px;padding:16px 18px;transition:.2s}
+.mini:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(88,80,170,.12);background:#fff}
+.mini h4{margin:0 0 4px;font-size:16.5px}
+.mini p{margin:4px 0}
+.row{display:flex;gap:18px;flex-wrap:wrap}
+.row>*{flex:1 1 320px;min-width:0}
+.say{color:#3d4160;margin:2px 0 12px}
+.tip{background:#fff8e6;border-radius:14px;padding:10px 14px;margin-top:12px;color:#6b4e0c;font-size:15px}
+.note{color:var(--mute);font-size:14.5px}
+.m{color:var(--mute);font-size:13px}
+label{color:var(--mute);font-size:13px;font-weight:700;display:block;margin-bottom:4px}
+input,select{background:#fff;color:var(--ink);border:1.5px solid var(--line);border-radius:12px;padding:9px 12px;font:inherit;transition:.15s}
+input:focus,select:focus{outline:none;border-color:var(--violet);box-shadow:0 0 0 3px rgba(124,92,255,.15)}
+input[type=range]{padding:0;width:100%;accent-color:var(--violet);border:0}
+input[type=text]{width:100%}
+.btn{background:#fff;color:var(--ink);border:1.5px solid var(--line);border-radius:99px;padding:9px 18px;font:inherit;font-weight:700;cursor:pointer;transition:.18s}
+.btn:hover{border-color:var(--violet);color:var(--violet);transform:translateY(-1px)}
+.btn.primary{background:linear-gradient(135deg,var(--violet),var(--blue));color:#fff;border-color:transparent;box-shadow:0 6px 16px rgba(124,92,255,.32)}
+.btn.primary:hover{color:#fff;box-shadow:0 9px 22px rgba(124,92,255,.42)}
+.ctrls{display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin:10px 0}
+code,.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+.pub{font-size:clamp(17px,3vw,23px);font-weight:800;background:linear-gradient(135deg,#dcfbe9,#e0f2ff);color:#0e6b45;border-radius:18px;padding:14px 20px;margin:12px 0}
+.chips{display:flex;flex-wrap:wrap;gap:6px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px}
+.chip{background:var(--soft);border-radius:99px;padding:3px 10px}
+.chip.last{background:#dcfbe9;color:#0e6b45;font-weight:700}
+.chip.rep{background:#ede9ff;color:#5b3fd6}
+canvas{width:100%;max-width:560px;height:auto;background:#fbfbff;border-radius:18px;display:block;border:1px solid var(--line)}
+.legend span{display:inline-block;margin:0 14px 4px 0;font-size:13.5px;color:var(--mute)}
+.dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+#log{max-height:520px;overflow:auto;background:#fbfbff;border:1px solid var(--line);border-radius:18px;padding:8px}
+#log .r{padding:8px 12px;border-radius:12px;cursor:pointer;color:var(--mute);font-size:14px;transition:.15s}
+#log .r:hover{background:var(--soft)}
+#log .r.cur{background:#ede9ff;color:var(--ink)}
+#log .r p{margin:3px 0}
+#log .r .m{display:none}
+#log.math .r.cur .m{display:block;font-family:ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap}
+.cap{background:var(--soft);border-radius:14px;padding:10px 14px;margin:10px 0;min-height:66px;font-size:15px}
+.hexout{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;word-break:break-all;background:var(--soft);border-radius:14px;padding:10px 14px;margin:6px 0}
+.ok{color:var(--green);font-weight:700}.bad{color:var(--red);font-weight:700}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:14.5px;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+th,td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+th{background:var(--soft);color:var(--mute);font-weight:800}
+.tag{display:inline-block;font-size:11.5px;font-weight:700;border-radius:99px;padding:2px 10px;margin:0 4px 4px 0}
+.t-der{background:#efe9ff;color:#6a3fd8}.t-pk{background:#e0edff;color:#1f63d6}.t-hash{background:#ffeedb;color:#b45f0a}.t-chk{background:#dcf7e9;color:#13774f}.t-enc{background:#fff4c9;color:#8a6a00}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.tile{background:var(--soft);border-radius:18px;padding:14px 16px}
+.tile b{display:block;font-size:28px;line-height:1.2;background:linear-gradient(90deg,var(--violet),var(--blue));-webkit-background-clip:text;background-clip:text;color:transparent}
+.tile small{color:var(--mute)}
+.meter{display:grid;grid-template-columns:150px 1fr 48px;gap:12px;align-items:center;margin:8px 0;font-size:14px}
+.track{position:relative;height:12px;background:var(--soft);border-radius:99px}
+.track i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--violet),var(--blue))}
+.track u{position:absolute;top:-5px;bottom:-5px;width:2px;background:var(--ink);opacity:.4}
+.mv{font-weight:800;text-align:right}
+svg.plot text,svg.bars text,#timeline text{fill:var(--mute);font-family:inherit}
+.pipe{display:flex;flex-wrap:wrap;align-items:stretch;gap:6px;margin:12px 0}
+.node{background:#fff;border-radius:18px;padding:12px 12px;min-width:118px;flex:1 1 118px;text-align:center;box-shadow:0 4px 14px rgba(88,80,170,.10);transition:.2s}
+.node:hover{transform:translateY(-4px)}
+.node .e{font-size:26px;display:block}
+.node b{display:block;font-size:14.5px}
+.node small{color:var(--mute);font-size:12.5px}
+.arrow{align-self:center;color:var(--violet);text-align:center;font-size:12px;font-weight:700;min-width:84px}
+.hl{display:flex;gap:10px;align-items:flex-start;margin:8px 0}
+.hl .e{font-size:22px;line-height:1.4}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <a class="back" href="index.html">← Home</a>
+  <h1>HMWK 1 · From a private key to a public key</h1>
+  <p class="sub">A toy version of the maths behind Ethereum keys: a tiny curve you can follow step by step, and an experiment to see how "random" the results look.</p>
+</header>
+
+<div style="max-width:1080px;margin:0 auto;padding:0 20px"><div class="tabs">
+  <button data-t="t1" class="on">🔑 1 · Make a public key</button>
+  <button data-t="t2">📊 2 · Do the keys look random?</button>
+</div></div>
+<main>
+
+<section class="tab on" id="t1">
+  <div class="card hero">
+    <h3>The idea in 30 seconds</h3>
+    <p class="say">A <b>private key</b> is just a number <b>k</b>. The <b>public key</b> is a point <b>Q</b> on a curve, obtained by starting from a fixed point <b>G</b> and "adding G to itself" k times: <b>Q = k · G</b>.
+    Adding two points follows a geometric rule: draw a line through them, find where it crosses the curve a third time, then flip that point upside down.
+    Going forward (from k to Q) is easy. Going backward (from Q to k) is believed to be extremely hard on a real curve; this is what keeps the private key secret.
+    Here we use a tiny curve, so that you can follow every step with your own eyes.</p>
+  </div>
+
+  <div class="card">
+    <div class="ctrls">
+      <div><label>Curve</label><input value="y² = x³ + 7  (mod 17)" disabled style="width:200px"></div>
+      <div><label>Starting point G</label><select id="gsel"></select></div>
+      <div><label>Private key k</label><input id="kin" type="number" min="1" max="100000" value="6" style="width:110px"></div>
+      <div><label>Method</label>
+        <select id="meth"><option value="naive">Step by step: G, 2G, 3G, … kG</option><option value="da">Fast: double-and-add</option></select></div>
+      <button class="btn primary" id="go">Compute ✨</button>
+    </div>
+    <div id="summary" class="note"></div>
+    <div class="pub" id="pubkey"></div>
+    <div id="chips" class="chips"></div>
+    <p class="note" id="chipnote"></p>
+  </div>
+
+  <div class="row">
+    <div class="card">
+      <h3>🎬 Watch one addition happen</h3>
+      <canvas id="cv" width="560" height="560"></canvas>
+      <div class="cap" id="cap"></div>
+      <div class="legend">
+        <span><i class="dot" style="background:#2f7dff"></i>first point</span>
+        <span><i class="dot" style="background:#f08a24"></i>second point (G)</span>
+        <span><i class="dot" style="background:#e6b800"></i>the line</span>
+        <span><i class="dot" style="background:none;border:2.5px solid #e5484d"></i>where the line meets the curve again</span>
+        <span><i class="dot" style="background:#1fa971"></i>result</span>
+      </div>
+      <div class="ctrls">
+        <button class="btn" id="rst">⏮</button>
+        <button class="btn" id="prv">◀ Back</button>
+        <button class="btn primary" id="ply">▶ Play</button>
+        <button class="btn" id="nxt">Next ▶</button>
+        <div style="flex:1;min-width:150px"><label>Slow down: <span id="spv">1500</span> ms per step</label><input id="spd" type="range" min="200" max="4000" step="100" value="1500"></div>
+      </div>
+      <p class="note">The grey dots are all the points of the curve. Because the numbers wrap around at 17, a "line" is not a smooth line: it is a set of dots (the yellow ones).</p>
+    </div>
+    <div class="card">
+      <h3>📝 What happens at each step</h3>
+      <label style="display:flex;gap:8px;align-items:center;font-weight:600"><input type="checkbox" id="showmath" style="width:auto"> also show the calculation</label>
+      <div id="stepinfo" class="note" style="margin:6px 0"></div>
+      <div id="log"></div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="mini"><h4>🔁 Why only a few different keys?</h4><p class="say">G only generates a cycle of a few points. After the last one we come back to the "zero" point ∞ and everything repeats, so keys k and k + (cycle length) give the same public key. A real curve has about 2²⁵⁶ points, so this never happens in practice.</p></div>
+    <div class="mini"><h4>⚡ Why "double-and-add"?</h4><p class="say">Adding G one time after another needs k steps. Reading k in binary, we can instead double at every bit and add G only at the 1-bits: about log₂k steps. For a 256-bit key that means roughly 380 operations instead of 2²⁵⁶. Try both methods above and compare the number of steps.</p></div>
+    <div class="mini"><h4>🧸 Why is this only a toy?</h4><p class="say">With so few points, an attacker simply tries every k. On top of that, this particular curve belongs to a weak family (called supersingular) that real systems avoid. The real curve, secp256k1, is huge and not of this type.</p></div>
+  </div>
+  <p class="note" style="margin-top:14px">💡 Tip: choose a starting point of order 18 (for instance (6, 6)) to see the longest possible cycle on this curve.</p>
+</section>
+
+<section class="tab" id="t2">
+  <div class="card hero">
+    <h3>The question</h3>
+    <p class="say">Is a public key "random-looking" compared with the private key it comes from? We try many private keys <b>k = 1, 2, 3, …</b>, compute each public key, and look at the results as if they were data. At the same time we run the same tests on a <b>hash function</b> (Keccak-256), which is designed to look random. Comparing the two shows what is special about elliptic-curve keys.</p>
+    <div class="ctrls">
+      <div><label>Starting point</label><div id="gshow" class="mono" style="padding:9px 0"></div></div>
+      <div><label>How many keys to try</label><input id="nin" type="number" min="9" max="2000" value="200" style="width:110px"></div>
+      <button class="btn primary" id="runstat">Run again ✨</button>
+    </div>
+    <p class="note">The starting point is the one chosen on the first tab.</p>
+  </div>
+  <div id="statout"></div>
+</section>
+
+</main>
+
+<script id="core">
+const EC = { p: 17, a: 0, b: 7 };
+const mod = (a, m = EC.p) => ((a % m) + m) % m;
+function inv(a) { a = mod(a); for (let i = 1; i < EC.p; i++) if (a * i % EC.p === 1) return i; throw new Error('no inverse'); }
+const onCurve = P => !P || mod(P[1] * P[1] - (P[0] ** 3 + EC.a * P[0] + EC.b)) === 0;
+function curvePoints() { const r = []; for (let x = 0; x < EC.p; x++) for (let y = 0; y < EC.p; y++) if (onCurve([x, y])) r.push([x, y]); return r; }
+
+// point addition; null = point at infinity. Returns details for the visualisation.
+function ecAdd(P, Q) {
+  if (!P) return { R: Q, kind: 'id', P, Q };
+  if (!Q) return { R: P, kind: 'id', P, Q };
+  const [x1, y1] = P, [x2, y2] = Q;
+  if (x1 === x2 && mod(y1 + y2) === 0) return { R: null, kind: 'inf', P, Q };
+  const dbl = x1 === x2 && y1 === y2;
+  const num = dbl ? mod(3 * x1 * x1 + EC.a) : mod(y2 - y1);
+  const den = dbl ? mod(2 * y1) : mod(x2 - x1);
+  const l = mod(num * inv(den));
+  const x3 = mod(l * l - x1 - x2), y3 = mod(l * (x1 - x3) - y1);
+  return { R: [x3, y3], third: [x3, mod(-y3)], kind: dbl ? 'dbl' : 'add', lambda: l, num, den, P, Q };
+}
+function ecMul(G, k) { // double-and-add
+  let R = null;
+  for (const bit of k.toString(2)) { R = ecAdd(R, R).R; if (bit === '1') R = ecAdd(R, G).R; }
+  return R;
+}
+function groupOrder(G) { let R = G, n = 1; while (R) { R = ecAdd(R, G).R; n++; } return n; }
+const fmt = P => P ? `(${P[0]}, ${P[1]})` : '∞';
+
+function stepsNaive(G, k) {
+  const steps = [{ label: `1G = G = ${fmt(G)}`, R: G, d: null, m: 1 }];
+  let acc = G;
+  for (let i = 2; i <= k; i++) { const d = ecAdd(acc, G); acc = d.R; steps.push({ label: `${i}G = ${i - 1}G + G`, R: acc, d, m: i }); }
+  return steps;
+}
+function stepsDA(G, k) {
+  const steps = []; let R = null, m = 0; const bits = k.toString(2);
+  for (let i = 0; i < bits.length; i++) {
+    if (m > 0) { const d = ecAdd(R, R); R = d.R; m *= 2; steps.push({ label: `bit ${bits.length - 1 - i} (=${bits[i]}): double → ${m}G`, R, d, m }); }
+    if (bits[i] === '1') {
+      if (m === 0) { R = G; m = 1; steps.push({ label: `bit ${bits.length - 1 - i} (=1): start, R = G`, R, d: null, m }); }
+      else { const d = ecAdd(R, G); R = d.R; m += 1; steps.push({ label: `bit ${bits.length - 1 - i} (=1): add G → ${m}G`, R, d, m }); }
+    }
+  }
+  return steps;
+}
+
+// ---------- Keccak-f[1600] sponge (original Keccak padding 0x01, SHA-3 padding 0x06) ----------
+const M64 = (1n << 64n) - 1n;
+const rotl = (v, n) => n === 0n ? v : ((v << n) | (v >> (64n - n))) & M64;
+const RC = [0x0000000000000001n,0x0000000000008082n,0x800000000000808An,0x8000000080008000n,0x000000000000808Bn,0x0000000080000001n,0x8000000080008081n,0x8000000000008009n,0x000000000000008An,0x0000000000000088n,0x0000000080008009n,0x000000008000000An,0x000000008000808Bn,0x800000000000008Bn,0x8000000000008089n,0x8000000000008003n,0x8000000000008002n,0x8000000000000080n,0x000000000000800An,0x800000008000000An,0x8000000080008081n,0x8000000000008080n,0x0000000080000001n,0x8000000080008008n];
+const RHO = new Array(25).fill(0n);
+{ let x = 1, y = 0; for (let t = 0; t < 24; t++) { RHO[x + 5 * y] = BigInt(((t + 1) * (t + 2) / 2) % 64); [x, y] = [y, (2 * x + 3 * y) % 5]; } }
+function keccakF(A) {
+  for (let r = 0; r < 24; r++) {
+    const C = [0, 1, 2, 3, 4].map(x => A[x] ^ A[x + 5] ^ A[x + 10] ^ A[x + 15] ^ A[x + 20]);
+    const D = [0, 1, 2, 3, 4].map(x => C[(x + 4) % 5] ^ rotl(C[(x + 1) % 5], 1n));
+    for (let i = 0; i < 25; i++) A[i] ^= D[i % 5];
+    const B = new Array(25).fill(0n);
+    for (let x = 0; x < 5; x++) for (let y = 0; y < 5; y++) B[y + 5 * ((2 * x + 3 * y) % 5)] = rotl(A[x + 5 * y], RHO[x + 5 * y]);
+    for (let y = 0; y < 5; y++) for (let x = 0; x < 5; x++) A[x + 5 * y] = B[x + 5 * y] ^ ((~B[(x + 1) % 5 + 5 * y] & M64) & B[(x + 2) % 5 + 5 * y]);
+    A[0] ^= RC[r];
+  }
+}
+function sponge256(msg, suffix) {
+  const rate = 136, padded = Math.ceil((msg.length + 1) / rate) * rate;
+  const buf = new Uint8Array(padded); buf.set(msg); buf[msg.length] ^= suffix; buf[padded - 1] ^= 0x80;
+  const A = new Array(25).fill(0n);
+  for (let off = 0; off < padded; off += rate) {
+    for (let i = 0; i < rate / 8; i++) { let lane = 0n; for (let b = 7; b >= 0; b--) lane = (lane << 8n) | BigInt(buf[off + 8 * i + b]); A[i] ^= lane; }
+    keccakF(A);
+  }
+  const out = new Uint8Array(32);
+  for (let i = 0; i < 4; i++) { let l = A[i]; for (let b = 0; b < 8; b++) { out[8 * i + b] = Number(l & 0xffn); l >>= 8n; } }
+  return out;
+}
+const keccak256 = m => sponge256(m, 0x01);
+const sha3_256 = m => sponge256(m, 0x06);
+const utf8 = s => new TextEncoder().encode(s);
+const hex = u => Array.from(u, b => b.toString(16).padStart(2, '0')).join('');
+function toChecksum(addr) {
+  const a = addr.toLowerCase().replace(/^0x/, ''); const h = hex(keccak256(utf8(a)));
+  let out = '0x'; for (let i = 0; i < a.length; i++) out += (/[a-f]/.test(a[i]) && parseInt(h[i], 16) >= 8) ? a[i].toUpperCase() : a[i];
+  return out;
+}
+const popcnt = n => { let c = 0; while (n) { c += n & 1; n >>>= 1; } return c; };
+const bitDiff = (a, b) => { let c = 0; for (let i = 0; i < a.length; i++) c += popcnt(a[i] ^ b[i]); return c; };
+
+// ---------- statistics ----------
+const enc10 = P => P ? ((P[0] << 5) | P[1]) : 0;          // 5 bits x + 5 bits y
+const hash10 = k => { const h = keccak256(new Uint8Array([k & 255, (k >> 8) & 255, (k >> 16) & 255])); return (h[0] << 2) | (h[1] >> 6); };
+function pearson(xs, ys) {
+  const n = xs.length, mx = xs.reduce((a, b) => a + b) / n, my = ys.reduce((a, b) => a + b) / n;
+  let sxy = 0, sxx = 0, syy = 0; for (let i = 0; i < n; i++) { sxy += (xs[i] - mx) * (ys[i] - my); sxx += (xs[i] - mx) ** 2; syy += (ys[i] - my) ** 2; }
+  return sxx && syy ? sxy / Math.sqrt(sxx * syy) : 0;
+}
+const entropy = counts => { const n = counts.reduce((a, b) => a + b, 0); return -counts.filter(c => c).reduce((s, c) => s + (c / n) * Math.log2(c / n), 0); };
+function statsFor(G, N) {
+  const ks = [], pts = [];
+  for (let k = 1; k <= N; k++) { ks.push(k); pts.push(ecMul(G, k)); }
+  const real = pts.filter(Boolean);
+  const hx = new Array(17).fill(0), hy = new Array(17).fill(0);
+  const bx = new Array(5).fill(0), by = new Array(5).fill(0);
+  real.forEach(([x, y]) => { hx[x]++; hy[y]++; for (let b = 0; b < 5; b++) { bx[b] += (x >> b) & 1; by[b] += (y >> b) & 1; } });
+  const kr = [], xr = [], yr = []; pts.forEach((P, i) => { if (P) { kr.push(ks[i]); xr.push(P[0]); yr.push(P[1]); } });
+  const n = groupOrder(G);
+  const distinct = new Set(real.map(P => P.join(','))).size;
+  // homomorphism: Q(k+1) = Q(k) + G for all k
+  let homOK = true; for (let k = 1; k < N && k < 300; k++) { const a = ecAdd(pts[k - 1], G).R, b = pts[k]; if (fmt(a) !== fmt(b)) homOK = false; }
+  // avalanche on bits of k (8 low bits), EC vs Keccak baseline
+  let ecSum = 0, hSum = 0, cnt = 0;
+  for (let k = 1; k <= Math.min(N, 255); k++) for (let b = 0; b < 8; b++) {
+    const k2 = k ^ (1 << b); if (k2 === 0) continue;
+    ecSum += popcnt(enc10(ecMul(G, k)) ^ enc10(ecMul(G, k2)));
+    hSum += popcnt(hash10(k) ^ hash10(k2)); cnt++;
+  }
+  // baseline histograms of hash10 for comparison
+  const hh = new Array(32).fill(0), hv = []; for (let k = 1; k <= N; k++) { const v = hash10(k) >> 5; hh[v]++; hv.push(v); }
+  return { ks, pts, real, hx, hy, bx, by, kr, xr, yr, n, distinct, homOK, ecAv: ecSum / cnt, hAv: hSum / cnt, hh,
+           corrKX: pearson(kr, xr), corrKY: pearson(kr, yr), hxE: entropy(hx), hyE: entropy(hy), inf: pts.length - real.length, hv };
+}
+</script>
+<script>
+
+const $ = id => document.getElementById(id);
+document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.tabs button').forEach(x => x.classList.toggle('on', x === b));
+  document.querySelectorAll('section.tab').forEach(s => s.classList.toggle('on', s.id === b.dataset.t));
+});
+
+const CURVE = curvePoints();
+let G = [1, 5], steps = [], idx = 0, timer = null;
+const C = { blue: '#2f7dff', orange: '#f08a24', yellow: '#e6b800', red: '#e5484d', green: '#1fa971', grid: '#e4e7f7', pt: '#c3c8e6', txt: '#8a8fb0' };
+
+CURVE.forEach(P => { const o = document.createElement('option'); o.value = P.join(','); o.textContent = `${fmt(P)}  ·  cycle of ${groupOrder(P)}`; if (P[0] === 1 && P[1] === 5) o.selected = true; $('gsel').appendChild(o); });
+
+function plain(s) {
+  const d = s.d;
+  if (!d) return `We start from G = ${fmt(G)}.`;
+  if (d.kind === 'id') return `Adding the "zero" point ∞ changes nothing: the result is ${fmt(s.R)}.`;
+  if (d.kind === 'inf') return `${fmt(d.P)} and ${fmt(d.Q)} are mirror images of each other, so the line between them is vertical and never meets the curve again. Their sum is the point at infinity ∞, the "zero" of this world.`;
+  if (d.kind === 'dbl') return `Double ${fmt(d.P)}: draw the tangent line at this point. It meets the curve again at ${fmt(d.third)}. Flip that point upside down (y becomes −y, mod 17) and we get ${fmt(d.R)}.`;
+  return `Add ${fmt(d.P)} and ${fmt(d.Q)}: draw the line through them. It meets the curve again at ${fmt(d.third)}. Flip that point upside down (y becomes −y, mod 17) and we get ${fmt(d.R)}.`;
+}
+function maths(s) {
+  const d = s.d; if (!d || d.kind === 'inf' || d.kind === 'id') return '';
+  const op = d.kind === 'dbl' ? `slope λ = 3x²/(2y) = ${d.num}/${d.den}` : `slope λ = (y₂−y₁)/(x₂−x₁) = ${d.num}/${d.den}`;
+  return `${op} = ${d.num}·${inv(d.den)} = ${d.lambda} (mod 17)\nx₃ = λ² − x₁ − x₂ = ${d.R[0]}\ny₃ = λ(x₁ − x₃) − y₁ = ${d.R[1]}`;
+}
+
+function compute() {
+  pause();
+  G = $('gsel').value.split(',').map(Number);
+  const k = Math.max(1, Math.min(100000, parseInt($('kin').value) || 1)); $('kin').value = k;
+  const n = groupOrder(G); let meth = $('meth').value, extra = '';
+  if (meth === 'naive' && k > 200) { meth = 'da'; $('meth').value = 'da'; extra = ' (k is large, so the fast method was selected.)'; }
+  const Q = ecMul(G, k);
+  steps = meth === 'naive' ? stepsNaive(G, k) : stepsDA(G, k);
+  $('summary').innerHTML = `Starting from G = <b>${fmt(G)}</b> and adding G to itself ${k} times. G generates a cycle of <b>${n}</b> points, so only k mod ${n} = ${k % n} really matters. The animation has <b>${steps.length}</b> step${steps.length === 1 ? '' : 's'}${meth === 'da' ? ` (the step-by-step method would need ${k - 1} additions)` : ''}.${extra}`;
+  $('pubkey').innerHTML = `🔓 Toy public key &nbsp; Q = ${k} · G = ${Q ? `(${Q[0]}, ${Q[1]})` : '∞ (k is a multiple of the cycle length)'}`;
+  const LIM = 60, ch = $('chips'); ch.innerHTML = ''; let acc = null;
+  for (let i = 1; i <= k; i++) { acc = ecAdd(acc, G).R; if (i <= Math.min(k, LIM) || i === k) {
+    if (i === k && k > LIM) { const s = document.createElement('span'); s.textContent = '…'; ch.appendChild(s); }
+    const c = document.createElement('span'); c.className = 'chip' + (i === k ? ' last' : (i > n ? ' rep' : '')); c.textContent = `${i}G = ${fmt(acc)}`; ch.appendChild(c); } }
+  $('chipnote').textContent = (k > LIM ? `Showing the first ${LIM} multiples and the last one. ` : '') + (k > n ? `Purple chips are repeats: the cycle restarts every ${n} steps.` : '');
+  const lg = $('log'); lg.innerHTML = '';
+  steps.forEach((s, i) => { const d = document.createElement('div'); d.className = 'r'; d.onclick = () => { pause(); idx = i; render(); }; lg.appendChild(d); });
+  idx = 0; render();
+}
+
+function render() {
+  const rows = $('log').children;
+  steps.forEach((s, i) => { const e = rows[i];
+    e.className = 'r' + (i === idx ? ' cur' : '');
+    e.innerHTML = i === idx ? `<b>${s.label}</b><p>${plain(s)}</p><p class="m">${maths(s)}</p>` : i < idx ? `<b>${s.label}</b> → ${fmt(s.R)}` : `<span style="opacity:.55">Step ${i + 1}</span>`; });
+  const cur = rows[idx]; if (cur) $('log').scrollTop = Math.max(0, cur.offsetTop - 110);
+  $('stepinfo').textContent = `Step ${idx + 1} of ${steps.length}`;
+  $('cap').textContent = steps[idx] ? plain(steps[idx]) : '';
+  draw();
+}
+$('showmath').onchange = () => $('log').classList.toggle('math', $('showmath').checked);
+
+function draw() {
+  const c = $('cv'), ctx = c.getContext('2d'), W = c.width, m = 38, cell = (W - 2 * m) / 16;
+  const X = x => m + x * cell, Y = y => W - m - y * cell;
+  ctx.clearRect(0, 0, W, W);
+  ctx.strokeStyle = C.grid; ctx.lineWidth = 1; ctx.fillStyle = C.txt; ctx.font = '11px system-ui'; ctx.textAlign = 'center';
+  for (let i = 0; i <= 16; i++) { ctx.beginPath(); ctx.moveTo(X(i), Y(0)); ctx.lineTo(X(i), Y(16)); ctx.stroke(); ctx.beginPath(); ctx.moveTo(X(0), Y(i)); ctx.lineTo(X(16), Y(i)); ctx.stroke(); ctx.fillText(i, X(i), W - m + 16); ctx.fillText(i, m - 16, Y(i) + 4); }
+  const dot = (P, r, fill, stroke, w = 2) => { ctx.beginPath(); ctx.arc(X(P[0]), Y(P[1]), r, 0, 7); if (fill) { ctx.fillStyle = fill; ctx.fill(); } if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = w; ctx.stroke(); } };
+  CURVE.forEach(P => dot(P, 5, C.pt));
+  for (let i = 0; i < idx; i++) if (steps[i].R) dot(steps[i].R, 8, null, '#7fd3ad', 2);
+  const s = steps[idx]; if (!s) return; const d = s.d;
+  if (d && (d.kind === 'add' || d.kind === 'dbl')) {
+    const [x1, y1] = d.P;
+    for (let x = 0; x < 17; x++) dot([x, mod(d.lambda * (x - x1) + y1)], 3.5, C.yellow);
+    ctx.setLineDash([5, 5]); ctx.strokeStyle = C.red; ctx.lineWidth = 1.8; ctx.beginPath(); ctx.moveTo(X(d.third[0]), Y(d.third[1])); ctx.lineTo(X(d.R[0]), Y(d.R[1])); ctx.stroke(); ctx.setLineDash([]);
+    dot(d.third, 10, null, C.red, 2.8);
+    dot(d.P, 8, C.blue); if (d.kind === 'add') dot(d.Q, 8, C.orange); else dot(d.P, 12, null, C.orange, 2.8);
+    dot(d.R, 9, C.green);
+    ctx.font = 'bold 13px system-ui'; ctx.textAlign = 'left'; ctx.fillStyle = C.green; ctx.fillText(`${fmt(d.R)}`, X(d.R[0]) + 13, Y(d.R[1]) - 9);
+  } else if (d && d.kind === 'inf') {
+    ctx.strokeStyle = C.yellow; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(X(d.P[0]), Y(0)); ctx.lineTo(X(d.P[0]), Y(16)); ctx.stroke();
+    dot(d.P, 8, C.blue); dot(d.Q, 8, C.orange);
+    ctx.fillStyle = C.green; ctx.font = 'bold 16px system-ui'; ctx.textAlign = 'left'; ctx.fillText('result: ∞ (vertical line)', X(0) + 8, Y(16) + 24);
+  } else if (s.R) { dot(s.R, 10, C.green); }
+}
+function play() { if (idx >= steps.length - 1) idx = 0; $('ply').textContent = '⏸ Pause'; render(); timer = setInterval(() => { if (idx < steps.length - 1) { idx++; render(); } else pause(); }, +$('spd').value); }
+function pause() { clearInterval(timer); timer = null; $('ply').textContent = '▶ Play'; }
+$('ply').onclick = () => timer ? pause() : play();
+$('nxt').onclick = () => { pause(); if (idx < steps.length - 1) { idx++; render(); } };
+$('prv').onclick = () => { pause(); if (idx > 0) { idx--; render(); } };
+$('rst').onclick = () => { pause(); idx = 0; render(); };
+$('spd').oninput = () => { $('spv').textContent = $('spd').value; if (timer) { pause(); play(); } };
+$('go').onclick = () => { compute(); if (statsRan) runStats(); }; $('kin').onkeydown = e => { if (e.key === 'Enter') $('go').click(); };
+$('gsel').onchange = () => $('go').click(); $('meth').onchange = compute;
+
+// ---------------- statistics ----------------
+let statsRan = false;
+const fx = (v, d = 2) => v.toFixed(d);
+function bars(counts, color, labelEvery = 1, xl = '') {
+  const w = 520, h = 150, n = counts.length, mx = Math.max(...counts, 1), bw = (w - 30) / n;
+  let s = `<svg viewBox="0 0 ${w} ${h + 34}" class="bars" style="width:100%;height:auto">`;
+  counts.forEach((c, i) => { const bh = (c / mx) * (h - 22), x = 26 + i * bw;
+    s += c ? `<rect x="${x}" y="${h - bh}" width="${bw - 3}" height="${bh}" fill="${color}" rx="3"><title>value ${i}: ${c} times</title></rect>` : `<rect x="${x}" y="${h - 3}" width="${bw - 3}" height="3" fill="#d5d8ee" rx="1.5"><title>value ${i}: never</title></rect>`;
+    if (i % labelEvery === 0) s += `<text x="${x + bw / 2 - 1.5}" y="${h + 14}" font-size="10" text-anchor="middle">${i}</text>`; });
+  return s + `<text x="${w / 2}" y="${h + 30}" font-size="11" text-anchor="middle">${xl}</text><text x="2" y="${h - 22 + 4}" font-size="9">${mx}</text></svg>`;
+}
+function scatter(ks, vs, ymax, color, period, ylab) {
+  const w = 520, h = 250, L = 44, R = 10, T = 10, B = 40, iw = w - L - R, ih = h - T - B, kmax = Math.max(...ks), X = k => L + (k - 1) / Math.max(1, kmax - 1) * iw;
+  let s = `<svg viewBox="0 0 ${w} ${h}" class="plot" style="width:100%;height:auto">`;
+  if (period > 1) for (let p = 0; p * period < kmax; p += 2) s += `<rect x="${X(p * period + 1)}" y="${T}" width="${Math.max(0, X(Math.min(kmax, (p + 1) * period + 1)) - X(p * period + 1))}" height="${ih}" fill="#7c5cff" opacity=".07"/>`;
+  s += `<line x1="${L}" y1="${T + ih}" x2="${L + iw}" y2="${T + ih}" stroke="#c9cde6"/><line x1="${L}" y1="${T}" x2="${L}" y2="${T + ih}" stroke="#c9cde6"/>`;
+  s += `<text x="${L - 6}" y="${T + ih + 4}" font-size="10" text-anchor="end">0</text><text x="${L - 6}" y="${T + 8}" font-size="10" text-anchor="end">${ymax}</text>`;
+  s += `<text x="${L}" y="${T + ih + 14}" font-size="10">1</text><text x="${L + iw}" y="${T + ih + 14}" font-size="10" text-anchor="end">${kmax}</text>`;
+  ks.forEach((k, i) => { s += `<circle cx="${X(k)}" cy="${T + ih - (vs[i] / ymax) * ih}" r="2.7" fill="${color}" opacity=".85"><title>k = ${k}, value = ${vs[i]}</title></circle>`; });
+  s += `<text x="${L + iw / 2}" y="${h - 6}" font-size="12" text-anchor="middle">private key k →</text><text transform="translate(12 ${T + ih / 2}) rotate(-90)" font-size="12" text-anchor="middle">${ylab}</text></svg>`;
+  return s;
+}
+const meter = (label, val, max, ideal, shown) => `<div class="meter"><span>${label}</span><div class="track"><i style="width:${Math.min(100, val / max * 100)}%"></i>${ideal != null ? `<u style="left:${ideal / max * 100}%"></u>` : ''}</div><span class="mv">${shown != null ? shown : val}</span></div>`;
+const sec = (emoji, title, say, body, tip) => `<div class="card"><h3>${emoji} ${title}</h3><p class="say">${say}</p>${body}${tip ? `<div class="tip">💡 ${tip}</div>` : ''}</div>`;
+
+function runStats() {
+  statsRan = true;
+  G = $('gsel').value.split(',').map(Number); $('gshow').textContent = `G = ${fmt(G)}`;
+  const N = Math.max(9, Math.min(2000, parseInt($('nin').value) || 200)); $('nin').value = N;
+  const S = statsFor(G, N), n = S.n;
+  const seq = S.pts.slice(0, Math.min(N, 2 * n + 2)).map((P, i) => `<span class="chip${i >= n ? ' rep' : ''}">k=${i + 1} → ${fmt(P)}</span>`).join('');
+  const bitRows = (arr, name) => arr.map((v, b) => meter(`${name} bit ${b}`, +(v / S.real.length * 100).toFixed(0), 100, 50, `${(v / S.real.length * 100).toFixed(0)}%`)).join('');
+  $('statout').innerHTML =
+  `<div class="card"><div class="tiles">
+     <div class="tile"><b>${N}</b><small>private keys tried</small></div>
+     <div class="tile"><b>${S.distinct}</b><small>different public keys that appeared</small></div>
+     <div class="tile"><b>${n}</b><small>length of the cycle of G</small></div>
+     <div class="tile"><b>${S.homOK ? '100%' : '✗'}</b><small>of neighbours obey Q(k+1) = Q(k) + G</small></div>
+   </div></div>` +
+
+  sec('🔁', 'Do the public keys repeat?',
+      `We computed the public key for every k. Since G only generates a cycle of ${n} points, the same public keys keep coming back: only ${S.distinct} different ones appear${S.inf ? `, and every ${n}th key gives the "zero" point ∞ (not a usable public key)` : ''}. Purple chips below are repeats.`,
+      `<div class="chips">${seq}</div>`,
+      'A real curve has about 2²⁵⁶ different public keys, so repeats never happen in practice. A hash also gives a fixed number of possible outputs, but they are all different "by design" in a huge range.') +
+
+  sec('📊', 'How often does each value appear?',
+      `Each bar counts how many times a value (0 to 16) showed up as the x or the y coordinate of a public key. If the outputs were spread evenly, all bars would have about the same height. Grey dashes mean "this value never appears". On the right, the same kind of picture for the hash: it fills all its values almost evenly.`,
+      `<div class="grid"><div>${bars(S.hx, '#7c5cff', 1, 'x coordinate of the public key')}</div><div>${bars(S.hy, '#ec5fa5', 1, 'y coordinate of the public key')}</div><div>${bars(S.hh, '#1fa971', 2, 'hash of k (first 5 bits, values 0–31)')}</div></div>`,
+      'Elliptic-curve points use only a few of the possible values here, because only points that satisfy the curve equation exist. A hash is supposed to use all values equally.') +
+
+  sec('🔗', 'Does the output follow the input?',
+      `Each dot is one private key. Horizontally: the key k. Vertically: the x-coordinate of its public key (left), or a number obtained from a hash of k (right). A function that looks random gives a messy cloud with no pattern, like the one on the right. The curve gives something very regular on the left: the same heights again and again, restarting every ${n} keys (the shaded bands).`,
+      `<div class="row"><div><b>Elliptic-curve public key</b>${scatter(S.kr, S.xr, 16, '#7c5cff', n, 'x of public key')}</div><div><b>Hash (for comparison)</b>${scatter(S.ks, S.hv, 31, '#1fa971', 0, 'hash value')}</div></div>
+       <p class="note">Straight-line correlation between k and x: <b>${fx(S.corrKX, 3)}</b> (and with y: ${fx(S.corrKY, 3)}). It is close to zero, yet the pattern is obviously not random.</p>`,
+      'A correlation near zero only says "no straight-line trend". It cannot see repetition, so it misses the pattern on the left. Always look at the picture.') +
+
+  sec('🎚️', 'Are the bits balanced?',
+      `Write x and y in binary: 5 bits each. For a random-looking output, each bit should be 1 about half of the time. The thin line on each bar marks 50%.`,
+      `<div class="row"><div>${bitRows(S.bx, 'x')}</div><div>${bitRows(S.by, 'y')}</div></div>`,
+      'With so few public keys, the percentages are decided by which points happen to exist; nothing forces them to be balanced.') +
+
+  sec('🦋', 'What happens if we change the key a little?',
+      `The avalanche test: flip one bit of k, compute the new output, and count how many of its 10 bits changed. A good hash changes about half of them (5 out of 10). The thin line marks the ideal value.`,
+      `${meter('Hash (Keccak)', +fx(S.hAv, 2), 10, 5)}${meter('Elliptic curve', +fx(S.ecAv, 2), 10, 5)}
+       <p class="say" style="margin-top:12px">The curve scores close to 5 as well, but this is a coincidence of the tiny example: with only ${S.distinct} different outputs, any two of them differ in a few bits. A better test is the <b>neighbour rule</b>: for every k we checked, <b>Q(k+1) = Q(k) + G</b> ${S.homOK ? 'holds (100% of cases)' : 'FAILED'}. Knowing one public key tells us exactly where its neighbour is. A hash has no such rule: that is the whole point of a hash.</p>`,
+      'This neighbour rule looks like a weakness but it is a feature: it is what allows digital signatures and wallet tricks (like deriving public keys without private ones). Hash functions are designed to have no structure at all.') +
+
+  `<div class="card"><h3>🧭 What matters for what?</h3>
+    <p class="say">Two different kinds of tools, with different goals.</p>
+    <table>
+      <tr><th>Property</th><th>Elliptic-curve one-way function (k → kG)</th><th>Cryptographic hash (e.g. Keccak-256)</th></tr>
+      <tr><td>Hard to go backwards</td><td><b>Essential.</b> On a real curve, finding k from Q needs about 2¹²⁸ operations. In our toy it takes a blink: only ${n} possible keys.</td><td>Essential.</td></tr>
+      <tr><td>Different inputs give different outputs</td><td>Not a goal: k and k + ${n} give the same Q here.</td><td>Essential (collision resistance).</td></tr>
+      <tr><td>Tiny change in, big change out (avalanche)</td><td><b>Absent on purpose</b>: neighbours are related by Q(k+1) = Q(k) + G.</td><td>Essential: about half of the output bits change.</td></tr>
+      <tr><td>Output looks uniformly random</td><td>Nice to have, but security does not rely on it.</td><td>Essential.</td></tr>
+      <tr><td>Any input size, fixed output size</td><td>No: the input is a number modulo the cycle length.</td><td>Yes, this is what a hash is.</td></tr>
+      <tr><td>Algebraic structure</td><td>Needed: signature checking uses it.</td><td>None, on purpose. That is why a hash alone cannot sign.</td></tr>
+    </table>
+    <p class="note" style="margin-top:12px">In short: the security of kG comes from a hard mathematical problem (the discrete logarithm), not from "looking random". Avalanche and collision resistance belong to hash functions. And remember: statistical tests can show that something is <i>not</i> random, but passing them never proves that something is secure.</p>
+  </div>`;
+}
+$('runstat').onclick = runStats;
+compute(); runStats();
+
+</script>
+</body>
+</html>

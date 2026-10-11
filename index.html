@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="../icona.png">
+<title>Statistic's Homework</title>
+<style>
+:root{--ink:#272a44;--mute:#6a6f91;--violet:#7c5cff;--blue:#2f7dff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--ink);font:16px/1.5 "Nunito","Quicksand",ui-rounded,"SF Pro Rounded","Segoe UI",system-ui,sans-serif;display:flex;align-items:center;justify-content:center;padding:32px 20px;
+  background:radial-gradient(900px 520px at 8% -8%,#e5dfff 0,transparent 60%),radial-gradient(800px 520px at 100% 0,#ffe1f0 0,transparent 55%),radial-gradient(900px 600px at 50% 115%,#d6f4ff 0,transparent 60%),#f7f7ff;background-attachment:fixed}
+.wrap{width:100%;max-width:560px;text-align:center;animation:rise .6s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+h1{margin:0;font-size:clamp(34px,8vw,56px);line-height:1.1;letter-spacing:-.8px;background:linear-gradient(90deg,var(--violet),var(--blue) 60%,#14b8c4);-webkit-background-clip:text;background-clip:text;color:transparent}
+.by{margin:10px 0 38px;color:var(--mute);font-size:15px;letter-spacing:.4px}
+.menu{display:flex;flex-direction:column;gap:16px}
+a.hw{display:flex;align-items:center;gap:18px;text-align:left;text-decoration:none;color:var(--ink);background:rgba(255,255,255,.92);border:1px solid rgba(124,92,255,.12);border-radius:24px;padding:22px 26px;box-shadow:0 12px 34px rgba(88,80,170,.12);transition:.22s}
+a.hw .e{font-size:36px;line-height:1}
+a.hw b{display:block;font-size:22px}
+a.hw span.t{color:var(--mute);font-size:15px}
+a.hw .go{margin-left:auto;font-size:22px;color:var(--violet);transition:.22s}
+a.hw:hover,a.hw:focus-visible{transform:translateY(-4px);box-shadow:0 18px 40px rgba(124,92,255,.22);outline:none}
+a.hw:hover .go{transform:translateX(5px)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Statistic's Homework a.a. 2026/2027</h1>
+  <p class="by">by Marcello Napoletano 1757706</p>
+  <nav class="menu">
+    <a class="hw" href="hmwk1.html"><span class="e">🔑</span><div><b>HMWK 1</b><span class="t">Private key → public key</span></div><span class="go">→</span></a>
+    <a class="hw" href="hmwk2.html"><span class="e">🔐</span><div><b>HMWK 2</b><span class="t">Wallet seed → Ethereum address</span></div><span class="go">→</span></a>
+  </nav>
+</div>
+</body>
+</html>
