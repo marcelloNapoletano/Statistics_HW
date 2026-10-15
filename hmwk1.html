@@ -3,8 +3,6 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" type="image/png" href="../icona.png">
-
 <title>HMWK 1</title>
 <style>
 :root{
@@ -146,7 +144,7 @@ svg.plot text,svg.bars text,#timeline text{fill:var(--mute);font-family:inherit}
       <div class="legend">
         <span><i class="dot" style="background:#2f7dff"></i>first point</span>
         <span><i class="dot" style="background:#f08a24"></i>second point (G)</span>
-        <span><i class="dot" style="background:#e6b800"></i>the line</span>
+        <span><i class="dot" style="background:#e6b800"></i>the line through the two points (it re-enters from the other side when it leaves the grid)</span>
         <span><i class="dot" style="background:none;border:2.5px solid #e5484d"></i>where the line meets the curve again</span>
         <span><i class="dot" style="background:#1fa971"></i>result</span>
       </div>
@@ -157,7 +155,7 @@ svg.plot text,svg.bars text,#timeline text{fill:var(--mute);font-family:inherit}
         <button class="btn" id="nxt">Next ▶</button>
         <div style="flex:1;min-width:150px"><label>Slow down: <span id="spv">1500</span> ms per step</label><input id="spd" type="range" min="200" max="4000" step="100" value="1500"></div>
       </div>
-      <p class="note">The grey dots are all the points of the curve. Because the numbers wrap around at 17, a "line" is not a smooth line: it is a set of dots (the yellow ones).</p>
+      <p class="note">The grey dots are all the points of the curve. Because the numbers wrap around at 17, the yellow line leaves the grid at the top and re-enters from the bottom (and the same at the sides). The yellow dots are the places where it passes exactly through a grid point.</p>
     </div>
     <div class="card">
       <h3>📝 What happens at each step</h3>
@@ -384,6 +382,20 @@ function draw() {
   const s = steps[idx]; if (!s) return; const d = s.d;
   if (d && (d.kind === 'add' || d.kind === 'dbl')) {
     const [x1, y1] = d.P;
+    // the actual line: slope lam (taken in -8..8 so it looks as flat as possible), wrapped around at 17 like the numbers
+    const sl = d.lambda > 8 ? d.lambda - 17 : d.lambda;
+    ctx.strokeStyle = C.yellow; ctx.lineWidth = 3; ctx.lineCap = 'round';
+    const yAt = x => y1 + sl * (x - x1);
+    const wrap = v => ((v % 17) + 17) % 17;
+    // draw it piece by piece: every time it leaves the 0..16 box it re-enters from the other side
+    let xa = 0; 
+    while (xa < 16) {
+      const ya = yAt(xa); const base = Math.floor(ya / 17) * 17;
+      let xb = 16;
+      if (sl !== 0) { const edge = sl > 0 ? base + 17 : base; const xe = x1 + (edge - y1) / sl; if (xe > xa + 1e-9 && xe < 16) xb = xe; }
+      ctx.beginPath(); ctx.moveTo(X(xa), Y(ya - base)); ctx.lineTo(X(xb), Y(yAt(xb) - base)); ctx.stroke();
+      if (xb >= 16) break; xa = xb + 1e-6;
+    }
     for (let x = 0; x < 17; x++) dot([x, mod(d.lambda * (x - x1) + y1)], 3.5, C.yellow);
     ctx.setLineDash([5, 5]); ctx.strokeStyle = C.red; ctx.lineWidth = 1.8; ctx.beginPath(); ctx.moveTo(X(d.third[0]), Y(d.third[1])); ctx.lineTo(X(d.R[0]), Y(d.R[1])); ctx.stroke(); ctx.setLineDash([]);
     dot(d.third, 10, null, C.red, 2.8);
