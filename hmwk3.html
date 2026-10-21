@@ -1,0 +1,844 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HMWK 3</title>
+<style>
+:root{
+  --ink:#272a44; --mute:#6a6f91; --line:#e3e6f6; --soft:#f4f5ff; --card:rgba(255,255,255,.9);
+  --violet:#7c5cff; --blue:#2f7dff; --orange:#f08a24; --green:#1fa971; --red:#e5484d; --yellow:#e6b800; --pink:#ec5fa5;
+  --shadow:0 12px 34px rgba(88,80,170,.12);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;color:var(--ink);font:16px/1.65 "Nunito","Quicksand",ui-rounded,"SF Pro Rounded","Segoe UI",system-ui,sans-serif;min-height:100vh;
+  background:radial-gradient(900px 500px at 6% -6%,#e5dfff 0,transparent 60%),radial-gradient(800px 520px at 100% 0,#ffe1f0 0,transparent 55%),radial-gradient(900px 600px at 50% 112%,#d6f4ff 0,transparent 60%),#f7f7ff;background-attachment:fixed}
+header,main{max-width:1080px;margin:0 auto;padding:0 20px}
+header{padding-top:26px}
+.back{display:inline-flex;align-items:center;gap:6px;color:var(--mute);text-decoration:none;font-size:14px;border-radius:99px;padding:6px 14px;background:#fff;box-shadow:0 2px 8px rgba(88,80,170,.10);transition:.18s}
+.back:hover{color:var(--violet);transform:translateX(-2px)}
+h1{margin:14px 0 6px;font-size:clamp(26px,4.5vw,38px);line-height:1.15;letter-spacing:-.3px;background:linear-gradient(90deg,var(--violet),var(--blue) 60%,#14b8c4);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{margin:0 0 6px;color:var(--mute);font-size:17px;max-width:760px}
+h3{margin:0 0 6px;font-size:19px}
+.tabs{display:inline-flex;flex-wrap:wrap;gap:4px;background:#fff;border-radius:99px;padding:5px;box-shadow:0 4px 16px rgba(88,80,170,.10);margin:16px 0 4px}
+.tabs button{border:0;background:transparent;color:var(--mute);padding:9px 18px;border-radius:99px;cursor:pointer;font:inherit;font-weight:700;transition:.2s}
+.tabs button:hover{color:var(--violet)}
+.tabs button.on{background:linear-gradient(135deg,var(--violet),var(--blue));color:#fff;box-shadow:0 6px 16px rgba(124,92,255,.35)}
+main{padding-bottom:70px}
+section.tab{display:none}
+section.tab.on{display:block;animation:rise .45s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.card{background:var(--card);border:1px solid rgba(124,92,255,.10);border-radius:24px;padding:22px 26px;margin:18px 0;box-shadow:var(--shadow)}
+.card.hero{background:linear-gradient(135deg,rgba(124,92,255,.10),rgba(47,125,255,.08));}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.mini{background:var(--soft);border-radius:18px;padding:16px 18px;transition:.2s}
+.mini:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(88,80,170,.12);background:#fff}
+.mini h4{margin:0 0 4px;font-size:16.5px}
+.mini p{margin:4px 0}
+.row{display:flex;gap:18px;flex-wrap:wrap}
+.row>*{flex:1 1 320px;min-width:0}
+.say{color:#3d4160;margin:2px 0 12px}
+.tip{background:#fff8e6;border-radius:14px;padding:10px 14px;margin-top:12px;color:#6b4e0c;font-size:15px}
+.note{color:var(--mute);font-size:14.5px}
+.m{color:var(--mute);font-size:13px}
+label{color:var(--mute);font-size:13px;font-weight:700;display:block;margin-bottom:4px}
+input,select{background:#fff;color:var(--ink);border:1.5px solid var(--line);border-radius:12px;padding:9px 12px;font:inherit;transition:.15s}
+input:focus,select:focus{outline:none;border-color:var(--violet);box-shadow:0 0 0 3px rgba(124,92,255,.15)}
+input[type=range]{padding:0;width:100%;accent-color:var(--violet);border:0}
+input[type=text]{width:100%}
+.btn{background:#fff;color:var(--ink);border:1.5px solid var(--line);border-radius:99px;padding:9px 18px;font:inherit;font-weight:700;cursor:pointer;transition:.18s}
+.btn:hover{border-color:var(--violet);color:var(--violet);transform:translateY(-1px)}
+.btn.primary{background:linear-gradient(135deg,var(--violet),var(--blue));color:#fff;border-color:transparent;box-shadow:0 6px 16px rgba(124,92,255,.32)}
+.btn.primary:hover{color:#fff;box-shadow:0 9px 22px rgba(124,92,255,.42)}
+.ctrls{display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin:10px 0}
+code,.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+.pub{font-size:clamp(17px,3vw,23px);font-weight:800;background:linear-gradient(135deg,#dcfbe9,#e0f2ff);color:#0e6b45;border-radius:18px;padding:14px 20px;margin:12px 0}
+.chips{display:flex;flex-wrap:wrap;gap:6px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px}
+.chip{background:var(--soft);border-radius:99px;padding:3px 10px}
+.chip.last{background:#dcfbe9;color:#0e6b45;font-weight:700}
+.chip.rep{background:#ede9ff;color:#5b3fd6}
+canvas{width:100%;max-width:560px;height:auto;background:#fbfbff;border-radius:18px;display:block;border:1px solid var(--line)}
+.legend span{display:inline-block;margin:0 14px 4px 0;font-size:13.5px;color:var(--mute)}
+.dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+#log{max-height:520px;overflow:auto;background:#fbfbff;border:1px solid var(--line);border-radius:18px;padding:8px}
+#log .r{padding:8px 12px;border-radius:12px;cursor:pointer;color:var(--mute);font-size:14px;transition:.15s}
+#log .r:hover{background:var(--soft)}
+#log .r.cur{background:#ede9ff;color:var(--ink)}
+#log .r p{margin:3px 0}
+#log .r .m{display:none}
+#log.math .r.cur .m{display:block;font-family:ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap}
+.cap{background:var(--soft);border-radius:14px;padding:10px 14px;margin:10px 0;min-height:66px;font-size:15px}
+.hexout{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;word-break:break-all;background:var(--soft);border-radius:14px;padding:10px 14px;margin:6px 0}
+.ok{color:var(--green);font-weight:700}.bad{color:var(--red);font-weight:700}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:14.5px;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+th,td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+th{background:var(--soft);color:var(--mute);font-weight:800}
+.tag{display:inline-block;font-size:11.5px;font-weight:700;border-radius:99px;padding:2px 10px;margin:0 4px 4px 0}
+.t-der{background:#efe9ff;color:#6a3fd8}.t-pk{background:#e0edff;color:#1f63d6}.t-hash{background:#ffeedb;color:#b45f0a}.t-chk{background:#dcf7e9;color:#13774f}.t-enc{background:#fff4c9;color:#8a6a00}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.tile{background:var(--soft);border-radius:18px;padding:14px 16px}
+.tile b{display:block;font-size:28px;line-height:1.2;background:linear-gradient(90deg,var(--violet),var(--blue));-webkit-background-clip:text;background-clip:text;color:transparent}
+.tile small{color:var(--mute)}
+.meter{display:grid;grid-template-columns:150px 1fr 48px;gap:12px;align-items:center;margin:8px 0;font-size:14px}
+.track{position:relative;height:12px;background:var(--soft);border-radius:99px}
+.track i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--violet),var(--blue))}
+.track u{position:absolute;top:-5px;bottom:-5px;width:2px;background:var(--ink);opacity:.4}
+.mv{font-weight:800;text-align:right}
+svg.plot text,svg.bars text,#timeline text{fill:var(--mute);font-family:inherit}
+.pipe{display:flex;flex-wrap:wrap;align-items:stretch;gap:6px;margin:12px 0}
+.node{background:#fff;border-radius:18px;padding:12px 12px;min-width:118px;flex:1 1 118px;text-align:center;box-shadow:0 4px 14px rgba(88,80,170,.10);transition:.2s}
+.node:hover{transform:translateY(-4px)}
+.node .e{font-size:26px;display:block}
+.node b{display:block;font-size:14.5px}
+.node small{color:var(--mute);font-size:12.5px}
+.arrow{align-self:center;color:var(--violet);text-align:center;font-size:12px;font-weight:700;min-width:84px}
+.hl{display:flex;gap:10px;align-items:flex-start;margin:8px 0}
+.hl .e{font-size:22px;line-height:1.4}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+textarea{width:100%;background:#fff;color:var(--ink);border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;font:13.5px ui-monospace,Menlo,Consolas,monospace;resize:vertical}
+textarea:focus{outline:none;border-color:var(--violet);box-shadow:0 0 0 3px rgba(124,92,255,.15)}
+details summary{cursor:pointer;color:var(--violet)}
+.legend{margin:6px 0 4px}
+</style>
+</head>
+<body>
+<header>
+  <a class="back" href="index.html">← Home</a>
+  <h1>HMWK 3 · Encrypting, hiding and breaking messages</h1>
+  <p class="sub">A toy elliptic-curve encryption scheme and the Caesar cipher, compared, and then attacked: statistics of the Italian language against Caesar, and a search of the small key space against the toy ECC.</p>
+</header>
+<div style="max-width:1080px;margin:0 auto;padding:0 20px"><div class="tabs">
+  <button data-t="e1" class="on">🔐 1 · ECC encryption</button>
+  <button data-t="c1">🏛️ 2 · Caesar cipher</button>
+  <button data-t="m1">⚖️ 3 · Compare</button>
+  <button data-t="b1">🔎 4 · Break Caesar</button>
+  <button data-t="b2">💥 5 · Break the toy ECC</button>
+</div></div>
+<main>
+
+<!-- ============================ 1 · ECC encryption ============================ -->
+<section class="tab on" id="e1">
+  <div class="card hero">
+    <h3>The idea in 30 seconds</h3>
+    <p class="say">With the curve of HMWK 1 we can do more than make public keys: we can <b>send a secret message to someone who has published a public key</b>.
+    The sender invents a fresh random number <b>r</b> and, using only the receiver's public key <b>Q</b>, computes a point <b>S = r·Q</b> that only the two of them can know.
+    From S we build a long "random-looking" stream of bytes and we mix it with the message (XOR). The receiver, who knows the private key <b>k</b>, gets the same point with <b>S = k·R</b> and removes the stream again.
+    Nobody else can compute S, unless they can find k from Q (the hard problem of HMWK 1).</p>
+    <p class="note">Technically this is a simplified <i>ECIES</i>: an elliptic-curve Diffie–Hellman exchange followed by a symmetric stream cipher. It uses real secp256k1 parameters, but the private key is <b>restricted to a small range</b> so that we can attack it later in tab 5.</p>
+  </div>
+
+  <div class="card">
+    <h3>Step 0 · The receiver makes a key pair</h3>
+    <div class="ctrls">
+      <div><label>Curve</label>
+        <select id="curve"><option value="secp">secp256k1 (real parameters)</option><option value="toy">Part 1 toy curve (mod 17)</option></select></div>
+      <div style="min-width:220px"><label>Private key is chosen in 1 … 2<sup id="bv">16</sup></label><input id="bits" type="range" min="8" max="32" value="16"></div>
+      <button class="btn primary" id="newkey">🎲 New key pair</button>
+    </div>
+    <div id="keyinfo"></div>
+  </div>
+
+  <div class="card">
+    <h3>Step 1 · Encrypt and decrypt a message</h3>
+    <label>Message (the same one is used for the Caesar cipher)</label>
+    <input id="msg" type="text" value="Domani all'alba ci vediamo vicino al vecchio ponte sul fiume.">
+    <div class="ctrls">
+      <button class="btn primary" id="enc">🔒 Encrypt (sender)</button>
+      <button class="btn primary" id="dec">🔓 Decrypt with k (receiver)</button>
+      <button class="btn" id="decw">🙈 Try a wrong key</button>
+    </div>
+    <div id="eout"></div>
+  </div>
+
+  <div class="card">
+    <h3>Who knows what? The role of each key</h3>
+    <div class="grid">
+      <div class="mini"><h4>🔑 Private key k</h4><p>Chosen by the receiver and never shared. It is used only to decrypt. Here it lies in 1 … 2<sup>b</sup>; a real scheme uses almost all of 1 … 2²⁵⁶.</p></div>
+      <div class="mini"><h4>🪪 Public key Q = k·G</h4><p>Published by the receiver. Anyone can use it to encrypt a message for the receiver, but nobody can decrypt with it.</p></div>
+      <div class="mini"><h4>🎲 Ephemeral key r</h4><p>A fresh random number chosen by the sender for <b>each message</b>. The sender sends R = r·G along with the ciphertext. Because r changes, the same message never encrypts twice in the same way.</p></div>
+      <div class="mini"><h4>🤝 Shared secret S</h4><p>Never transmitted. The sender computes S = r·Q, the receiver computes S = k·R. They agree because r·(kG) = k·(rG).</p></div>
+      <div class="mini"><h4>🌀 Keystream</h4><p>Bytes obtained by hashing S with Keccak-256. Encryption is <i>message XOR keystream</i>; decryption is <i>ciphertext XOR keystream</i>, which gives the message back.</p></div>
+    </div>
+    <table style="margin-top:14px">
+      <tr><th>Sender</th><th>Public channel</th><th>Receiver</th></tr>
+      <tr><td>knows Q (public)</td><td>Q is public</td><td>knows k and Q</td></tr>
+      <tr><td>picks r, computes R = rG and S = rQ</td><td></td><td></td></tr>
+      <tr><td>keystream = H(S); C = M ⊕ keystream</td><td>R and C travel here, visible to everyone</td><td>computes S = kR, then M = C ⊕ H(S)</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ 2 · Caesar ============================ -->
+<section class="tab" id="c1">
+  <div class="card hero">
+    <h3>The oldest cipher</h3>
+    <p class="say">In the Caesar cipher the <b>key is a single number k from 0 to 25</b>. To encrypt, every letter is moved k places forward in the alphabet (after Z we go back to A); to decrypt, every letter is moved k places back. Spaces and punctuation are left as they are, and accents are removed. Julius Caesar reportedly used k = 3.</p>
+  </div>
+  <div class="card">
+    <label>Message (same as tab 1)</label>
+    <input id="msg2" type="text">
+    <div class="ctrls"><div style="flex:1;min-width:240px"><label>Key k = <b id="ckv">3</b></label><input id="ck" type="range" min="0" max="25" value="3"></div></div>
+    <div class="row">
+      <div>
+        <svg id="wheel" viewBox="0 0 300 300" style="width:100%;max-width:340px;display:block;margin:0 auto"></svg>
+        <p class="note" style="text-align:center">Outer ring: plain letters. Inner ring: the letters they become.</p>
+      </div>
+      <div>
+        <label>Ciphertext</label><div class="hexout" id="cenc"></div>
+        <label>Decrypted again with the same key</label><div class="hexout" id="cdec"></div>
+        <label>Mapping for this key</label><div class="hexout" id="cmap" style="line-height:1.9"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 3 · Compare ============================ -->
+<section class="tab" id="m1">
+  <div class="card">
+    <h3>Similarities and differences</h3>
+    <table>
+      <tr><th></th><th>Caesar cipher</th><th>Toy ECC encryption</th></tr>
+      <tr><td><b>Family</b></td><td>Symmetric, monoalphabetic substitution.</td><td>Public-key (hybrid): elliptic-curve key agreement + stream cipher.</td></tr>
+      <tr><td><b>Keys</b></td><td>One secret number k, shared by both people.</td><td>A key pair (k, Q) for the receiver, plus a fresh r for every message. Only k is secret long-term.</td></tr>
+      <tr><td><b>Encryption</b></td><td>Letter → letter + k (mod 26).</td><td>R = rG, S = rQ, C = M ⊕ H(S).</td></tr>
+      <tr><td><b>Decryption</b></td><td>Letter → letter − k (mod 26).</td><td>S = kR, M = C ⊕ H(S).</td></tr>
+      <tr><td><b>Key space</b></td><td>26 keys (25 useful): a few seconds by hand.</td><td>Real secp256k1: about 2²⁵⁶ ≈ 1.2·10⁷⁷ keys. In our toy: only 2<sup>b</sup> (b chosen above), or 8 on the mod-17 curve.</td></tr>
+      <tr><td><b>Randomised?</b></td><td>No: the same message always gives the same ciphertext.</td><td>Yes: a new r gives a different ciphertext each time.</td></tr>
+      <tr><td><b>What the ciphertext looks like</b></td><td>Exactly like the plaintext, with the letters relabelled. The letter frequencies survive.</td><td>Looks like random bytes: the statistics of the language are hidden by the keystream.</td></tr>
+      <tr><td><b>Security relies on</b></td><td>Nothing but a tiny key space and secrecy of k.</td><td>The difficulty of finding k from Q (ECDLP), and on the key space being huge.</td></tr>
+      <tr><td><b>Typical attack</b></td><td>Statistics of the language (this homework, tab 4), or trying 26 keys.</td><td>Search / discrete-logarithm algorithms (tab 5); statistics of the plaintext are useless.</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Statistical properties, measured live</h3>
+    <p class="say">We encrypt the same long Italian text with both schemes and look at the symbols. The <b>index of coincidence</b> (IC) is the probability that two randomly chosen symbols are equal: about 0.074 for Italian letters, but only 1/26 ≈ 0.038 for uniformly random letters (and 1/256 ≈ 0.0039 for random bytes). <b>Entropy</b> measures the average information per symbol; the more uniform the symbols, the larger it is.</p>
+    <div class="ctrls"><button class="btn primary" id="runcmp">Run again ✨</button></div>
+    <div id="cmpout"></div>
+  </div>
+</section>
+
+<!-- ============================ 4 · Break Caesar ============================ -->
+<section class="tab" id="b1">
+  <div class="card hero">
+    <h3>The attack in one paragraph</h3>
+    <p class="say">Italian letters are far from uniform: E, A, I and O are very common, Q and Z are rare. A Caesar cipher only <b>relabels</b> the letters, so the ciphertext shows the same pattern, just shifted. To find the key we <b>try all 26 shifts</b> and give each candidate plaintext a score that says how "Italian" it looks; the best-scoring shift is our guess. We compare four ways to score a candidate, each learned from a corpus of Italian text.</p>
+    <p class="note"><b>Corpus.</b> External book sites were not reachable while building this page, so the training corpus is a collection of original Italian prose written for this homework (history, science, daily life, narrative, news; about 20,000 letters). The tests use passages that are <i>not</i> in the corpus, plus a short independent real text (the Italian Vim tutorial). You can also load your own corpus, for instance a novel from Project Gutenberg, with the button below.</p>
+  </div>
+
+  <div class="card">
+    <h3>1 · Learn Italian from a corpus</h3>
+    <div class="ctrls">
+      <div><label>Use only the first … characters of the corpus</label>
+        <select id="csize"><option value="1000">1,000</option><option value="5000">5,000</option><option value="all" selected>everything</option></select></div>
+      <div><label>Or load a text file (.txt, Italian)</label><input type="file" id="cfile" accept=".txt,text/plain"></div>
+      <button class="btn" id="creset">↺ Built-in corpus</button>
+    </div>
+    <div id="minfo" class="note"></div>
+    <div id="mchart"></div>
+  </div>
+
+  <div class="card">
+    <h3>2 · Give it a ciphertext</h3>
+    <textarea id="cin" rows="3"></textarea>
+    <div class="ctrls">
+      <button class="btn" id="fromc">⬅ Take the ciphertext of tab 2</button>
+      <div><label>Random sample of … letters</label><input id="slen" type="number" min="3" max="400" value="40" style="width:90px"></div>
+      <button class="btn" id="rnds">🎲 Random sample, secret key</button>
+      <button class="btn primary" id="atk">🔎 Attack</button>
+    </div>
+    <div id="secnote" class="note"></div>
+    <div id="aout"></div>
+  </div>
+
+  <div class="card">
+    <h3>3 · How well does it work? (Monte Carlo experiment)</h3>
+    <p class="say">We take many random pieces of Italian text of a given length from the <b>test text</b> (never seen during training), encrypt each with a random key, attack it, and count how often the right key is found. If several shifts tie for the best score, the credit is shared between them.</p>
+    <div class="ctrls">
+      <div><label>Test text</label><select id="epool"><option value="mine">Passages written separately from the corpus</option><option value="vim">Independent real text (Vim tutorial, technical style)</option></select></div>
+      <div><label>Trials per length</label><input id="etr" type="number" min="50" max="2000" value="300" style="width:100px"></div>
+      <button class="btn primary" id="erun">▶ Run experiment</button>
+    </div>
+    <div id="eres"></div>
+    <div class="ctrls" style="margin-top:14px">
+      <div><label>Fixed length for the next test (letters)</label><input id="elen" type="number" min="3" max="200" value="10" style="width:100px"></div>
+      <button class="btn" id="crun">▶ Effect of the size of the corpus</button>
+    </div>
+    <div id="cres"></div>
+  </div>
+
+  <div class="card">
+    <h3>What we learn</h3>
+    <div class="grid">
+      <div class="mini"><h4>✅ Effectiveness</h4><p>With a few dozen letters the key is found essentially every time, by any of the statistical methods. A key space of 26 is so small that even a crude score is enough.</p></div>
+      <div class="mini"><h4>📏 Length matters</h4><p>Very short ciphertexts are ambiguous: several shifts can produce plausible text. Letter counts (χ²) need more letters than n-grams, because n-grams use the order of letters too, which carries much more information.</p></div>
+      <div class="mini"><h4>📚 Words need word boundaries</h4><p>The dictionary method is easy to understand (it is what a human does), but it is the weakest on short texts and useless if spaces are removed, since it needs complete words.</p></div>
+      <div class="mini"><h4>⚠️ Limitations</h4><p>The model must match the text: a different language, a very technical text, abbreviations, or a text written without a common letter (a lipogram) lower the success. A very small or unrepresentative corpus has the same effect (see the table above).</p></div>
+    </div>
+    <p class="note" style="margin-top:12px"><b>Comparison of approaches.</b> <i>Exhaustive search</i> always works for a 26-key space, but needs a way to tell the right plaintext from the others; the dictionary does that with words, χ² does it with single-letter statistics and n-grams with letter sequences. More context per score means more reliable decisions on short texts, at the price of a bigger model.</p>
+  </div>
+</section>
+
+<!-- ============================ 5 · Break the toy ECC ============================ -->
+<section class="tab" id="b2">
+  <div class="card hero">
+    <h3>The attack in one paragraph</h3>
+    <p class="say">The attacker sees the public key Q, the point R and the ciphertext C, and knows that the private key satisfies <b>Q = k·G</b> with <b>k ≤ 2<sup>b</sup></b>. There are only 2<sup>b</sup> candidates, so we can try them all: compute G, 2G, 3G, … until we hit Q. A cleverer method, <b>baby-step giant-step</b> (BSGS), needs only about 2·√(2<sup>b</sup>) operations. Once k is known, the attacker computes S = k·R and decrypts exactly like the receiver.</p>
+  </div>
+
+  <div class="card">
+    <h3>1 · What the attacker knows</h3>
+    <div id="known"></div>
+  </div>
+
+  <div class="card">
+    <h3>2 · Attack the private key</h3>
+    <div class="ctrls">
+      <button class="btn primary" id="abrute">🧱 Exhaustive search</button>
+      <button class="btn primary" id="absgs">🧠 Baby-step giant-step</button>
+    </div>
+    <div class="grid">
+      <div class="mini"><h4>🧱 Exhaustive search</h4><div class="track"><i id="pb1" style="width:0"></i></div><p class="note" id="st1">Not started. (Available up to 2¹⁸ keys: it needs about 35 µs per key in a browser.)</p></div>
+      <div class="mini"><h4>🧠 Baby-step giant-step</h4><div class="track"><i id="pb2" style="width:0"></i></div><p class="note" id="st2">Not started.</p></div>
+    </div>
+    <div id="aresult"></div>
+    <details style="margin-top:12px"><summary><b>How baby-step giant-step works</b></summary>
+      <p class="say" style="margin-top:8px">Write the unknown key as k = i·m + j with m ≈ √(2<sup>b</sup>) and 0 ≤ j &lt; m. Then Q − i·(mG) = j·G. <b>Baby steps:</b> compute and store j·G for j = 0 … m−1 (a table of m points). <b>Giant steps:</b> compute Q, Q − mG, Q − 2mG, … and look each one up in the table. The first match gives i and j, hence k. We trade memory (m points) for time (about 2m operations instead of m²).</p></details>
+  </div>
+
+  <div class="card">
+    <h3>3 · Why this does not work on a properly configured ECC</h3>
+    <p class="say">Time estimates use the speed measured in your browser (<b id="usop">35</b> µs per group operation). A fast computer would be thousands of times quicker, but that changes nothing for the last rows.</p>
+    <div id="scale"></div>
+    <p class="note" style="margin-top:10px">For a 256-bit curve the best generic algorithms (Pollard's rho, BSGS) need about 2¹²⁸ operations; BSGS would also need memory for about 2¹²⁸ points. This is why the private key must be chosen uniformly in almost the whole range 1 … n−1.</p>
+  </div>
+
+  <div class="card">
+    <h3>4 · Differences from the attack on the Caesar cipher</h3>
+    <table>
+      <tr><th></th><th>Caesar (tab 4)</th><th>Toy ECC (this tab)</th></tr>
+      <tr><td><b>What is exploited</b></td><td>The <i>structure of the plaintext</i>: letters are not uniform, and the cipher keeps that structure.</td><td>The <i>small key space</i>. The ciphertext statistics are of no use, they look random.</td></tr>
+      <tr><td><b>Information used</b></td><td>The ciphertext and a model of the language.</td><td>The public key Q (not the ciphertext), the curve and the key range.</td></tr>
+      <tr><td><b>How we recognise success</b></td><td>The decrypted text "looks Italian" (a score; can be ambiguous when short).</td><td>Exactly: k·G equals Q. No ambiguity at all.</td></tr>
+      <tr><td><b>Cost</b></td><td>26 trials, whatever the length of the text.</td><td>2<sup>b</sup> trials (or about 2·2<sup>b/2</sup> with BSGS), independent of the message.</td></tr>
+      <tr><td><b>Would it survive a bigger key?</b></td><td>Statistics would still break a Caesar-like cipher with any key size (a substitution keeps the language pattern).</td><td>Yes: with a full 256-bit key the attack is infeasible, and statistics of the plaintext give nothing.</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>5 · Weaknesses: from the small key space, and from the design of the toy scheme</h3>
+    <div class="grid">
+      <div class="mini"><h4>🔢 Caused by the restricted key space</h4><p>Exhaustive search and BSGS recover k. The same applies to the mod-17 toy curve, where the whole group has only 9 points. A badly chosen or low-entropy key (for example derived from a short password) is attacked in the same way, even on a huge curve.</p></div>
+      <div class="mini"><h4>🧩 No integrity check</h4><p>The ciphertext is a plain XOR, so anyone can change it in a predictable way without knowing any key. Try the demonstration below. A real scheme adds a MAC or uses authenticated encryption (for example AES-GCM).</p></div>
+      <div class="mini"><h4>🔁 Keystream depends on one number</h4><p>Everything is derived from the x-coordinate of S. If the same r is ever used twice, the two keystreams are identical, and XOR-ing the ciphertexts removes the key completely. r must be fresh and random every time.</p></div>
+      <div class="mini"><h4>🛡️ Missing checks and hygiene</h4><p>No validation that R is a point of the curve (invalid-curve attacks), no domain separation or salt in the key derivation, the message length is visible, and on small-cofactor curves such as the mod-17 one a small subgroup leaks information. Real ECIES standards fix these points.</p></div>
+    </div>
+    <h3 style="margin-top:18px">Demonstration: changing a message without the key</h3>
+    <p class="say">An attacker who knows (or guesses) that the message starts with a certain word can replace it with another word of the <b>same length</b>, using only the ciphertext. The receiver decrypts it normally and gets the forged text.</p>
+    <div class="ctrls"><div><label>New first word (same length as the original)</label><input id="forge" type="text" value="Sabato" style="width:200px"></div><button class="btn primary" id="forgebtn">✏️ Forge and decrypt</button></div>
+    <div id="forgeout"></div>
+  </div>
+</section>
+
+</main>
+
+<script id="core">
+// ---------- Keccak-f[1600] sponge (original Keccak padding 0x01, SHA-3 padding 0x06) ----------
+const M64 = (1n << 64n) - 1n;
+const rotl = (v, n) => n === 0n ? v : ((v << n) | (v >> (64n - n))) & M64;
+const RC = [0x0000000000000001n,0x0000000000008082n,0x800000000000808An,0x8000000080008000n,0x000000000000808Bn,0x0000000080000001n,0x8000000080008081n,0x8000000000008009n,0x000000000000008An,0x0000000000000088n,0x0000000080008009n,0x000000008000000An,0x000000008000808Bn,0x800000000000008Bn,0x8000000000008089n,0x8000000000008003n,0x8000000000008002n,0x8000000000000080n,0x000000000000800An,0x800000008000000An,0x8000000080008081n,0x8000000000008080n,0x0000000080000001n,0x8000000080008008n];
+const RHO = new Array(25).fill(0n);
+{ let x = 1, y = 0; for (let t = 0; t < 24; t++) { RHO[x + 5 * y] = BigInt(((t + 1) * (t + 2) / 2) % 64); [x, y] = [y, (2 * x + 3 * y) % 5]; } }
+function keccakF(A) {
+  for (let r = 0; r < 24; r++) {
+    const C = [0, 1, 2, 3, 4].map(x => A[x] ^ A[x + 5] ^ A[x + 10] ^ A[x + 15] ^ A[x + 20]);
+    const D = [0, 1, 2, 3, 4].map(x => C[(x + 4) % 5] ^ rotl(C[(x + 1) % 5], 1n));
+    for (let i = 0; i < 25; i++) A[i] ^= D[i % 5];
+    const B = new Array(25).fill(0n);
+    for (let x = 0; x < 5; x++) for (let y = 0; y < 5; y++) B[y + 5 * ((2 * x + 3 * y) % 5)] = rotl(A[x + 5 * y], RHO[x + 5 * y]);
+    for (let y = 0; y < 5; y++) for (let x = 0; x < 5; x++) A[x + 5 * y] = B[x + 5 * y] ^ ((~B[(x + 1) % 5 + 5 * y] & M64) & B[(x + 2) % 5 + 5 * y]);
+    A[0] ^= RC[r];
+  }
+}
+function sponge256(msg, suffix) {
+  const rate = 136, padded = Math.ceil((msg.length + 1) / rate) * rate;
+  const buf = new Uint8Array(padded); buf.set(msg); buf[msg.length] ^= suffix; buf[padded - 1] ^= 0x80;
+  const A = new Array(25).fill(0n);
+  for (let off = 0; off < padded; off += rate) {
+    for (let i = 0; i < rate / 8; i++) { let lane = 0n; for (let b = 7; b >= 0; b--) lane = (lane << 8n) | BigInt(buf[off + 8 * i + b]); A[i] ^= lane; }
+    keccakF(A);
+  }
+  const out = new Uint8Array(32);
+  for (let i = 0; i < 4; i++) { let l = A[i]; for (let b = 0; b < 8; b++) { out[8 * i + b] = Number(l & 0xffn); l >>= 8n; } }
+  return out;
+}
+const keccak256 = m => sponge256(m, 0x01);
+const sha3_256 = m => sponge256(m, 0x06);
+const utf8 = s => new TextEncoder().encode(s);
+const hex = u => Array.from(u, b => b.toString(16).padStart(2, '0')).join('');
+function toChecksum(addr) {
+  const a = addr.toLowerCase().replace(/^0x/, ''); const h = hex(keccak256(utf8(a)));
+  let out = '0x'; for (let i = 0; i < a.length; i++) out += (/[a-f]/.test(a[i]) && parseInt(h[i], 16) >= 8) ? a[i].toUpperCase() : a[i];
+  return out;
+}
+const popcnt = n => { let c = 0; while (n) { c += n & 1; n >>>= 1; } return c; };
+const bitDiff = (a, b) => { let c = 0; for (let i = 0; i < a.length; i++) c += popcnt(a[i] ^ b[i]); return c; };
+
+
+// =====================================================================
+//  Big-number elliptic curves (affine coordinates, BigInt)
+// =====================================================================
+const mod = (a, m) => ((a % m) + m) % m;
+function invMod(a, m) {                       // extended Euclid
+  let r0 = mod(a, m), r1 = m, s0 = 1n, s1 = 0n;
+  while (r1) { const q = r0 / r1; [r0, r1] = [r1, r0 - q * r1]; [s0, s1] = [s1, s0 - q * s1]; }
+  return mod(s0, m);
+}
+const CURVES = {
+  secp: { id: 'secp', name: 'secp256k1 (real parameters)', b: 7n,
+    p: 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2Fn,
+    n: 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141n,
+    G: { x: 0x79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798n, y: 0x483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8n } },
+  toy: { id: 'toy', name: 'Part 1 toy curve (mod 17)', b: 7n, p: 17n, n: 9n, G: { x: 1n, y: 5n } }
+};
+const onCurve = (C, P) => !P || mod(P.y * P.y - (P.x ** 3n + C.b), C.p) === 0n;
+const samePt = (P, Q) => (!P && !Q) || (P && Q && P.x === Q.x && P.y === Q.y);
+const ecNeg = (C, P) => P ? { x: P.x, y: mod(-P.y, C.p) } : null;
+function ecAdd(C, P, Q) {
+  if (!P) return Q; if (!Q) return P; const p = C.p;
+  let l;
+  if (P.x === Q.x) {
+    if (mod(P.y + Q.y, p) === 0n) return null;
+    l = mod(3n * P.x * P.x * invMod(2n * P.y, p), p);
+  } else l = mod((Q.y - P.y) * invMod(Q.x - P.x, p), p);
+  const x = mod(l * l - P.x - Q.x, p);
+  return { x, y: mod(l * (P.x - x) - P.y, p) };
+}
+function ecMul(C, k, P) {                      // double-and-add
+  let R = null;
+  for (const bit of k.toString(2)) { R = ecAdd(C, R, R); if (bit === '1') R = ecAdd(C, R, P); }
+  return R;
+}
+function randBig(max) {                        // uniform-ish in [1, max]
+  const bytes = new Uint8Array(40); crypto.getRandomValues(bytes);
+  let v = 0n; for (const b of bytes) v = (v << 8n) | BigInt(b);
+  return v % max + 1n;
+}
+function genKey(C, bits) {                     // RESTRICTED private key: 1 .. 2^bits (never above n-1)
+  let max = (1n << BigInt(bits)); if (max > C.n - 1n) max = C.n - 1n;
+  const k = randBig(max); return { k, Q: ecMul(C, k, C.G), max };
+}
+const b32 = n => { const o = new Uint8Array(32); for (let i = 31; i >= 0; i--) { o[i] = Number(n & 255n); n >>= 8n; } return o; };
+function keystream(S, len) {                   // Keccak-256(S.x || counter)
+  const xb = b32(S.x), out = new Uint8Array(len);
+  for (let off = 0, c = 0; off < len; c++, off += 32) {
+    const inp = new Uint8Array(33); inp.set(xb); inp[32] = c;
+    const h = keccak256(inp); for (let i = 0; i < 32 && off + i < len; i++) out[off + i] = h[i];
+  }
+  return out;
+}
+const xorBytes = (a, b) => a.map((v, i) => v ^ b[i]);
+function eccEncrypt(C, Q, msg, rGiven) {
+  let r = rGiven ?? randBig(C.n - 1n), R, S;
+  for (;;) { R = ecMul(C, r, C.G); S = ecMul(C, r, Q); if (S) break; r = rGiven ? r + 1n : randBig(C.n - 1n); }
+  const ks = keystream(S, msg.length);
+  return { r, R, S, ks, ct: xorBytes(msg, ks) };
+}
+function eccDecrypt(C, k, R, ct) {
+  const S = ecMul(C, k, R); if (!S) return null;
+  return xorBytes(ct, keystream(S, ct.length));
+}
+const tick = () => new Promise(r => setTimeout(r, 0));
+const ptKey = P => P ? P.x.toString(16) + (P.y & 1n ? 'o' : 'e') : 'inf';
+
+// ---- attack 1: exhaustive search over the restricted key range -------------
+async function bruteForce(C, Q, maxK, onProgress, every = 1500) {
+  const t0 = performance.now(); let P = C.G;
+  for (let k = 1n; k <= maxK; k++) {
+    if (samePt(P, Q)) return { k, ops: Number(k), ms: performance.now() - t0 };
+    P = ecAdd(C, P, C.G);
+    if (k % BigInt(every) === 0n) { onProgress && onProgress(Number(k), performance.now() - t0); await tick(); }
+  }
+  return null;
+}
+// ---- attack 2: baby-step giant-step, about 2*sqrt(range) operations --------
+async function bsgs(C, Q, maxK, onProgress, every = 800) {
+  const t0 = performance.now(), m = BigInt(Math.ceil(Math.sqrt(Number(maxK)))) + 1n;
+  const table = new Map(); let P = null, ops = 0;
+  for (let j = 0n; j < m; j++) {                // baby steps: store jG
+    table.set(ptKey(P), j); P = ecAdd(C, P, C.G); ops++;
+    if (j % BigInt(every) === 0n) { onProgress && onProgress('baby', ops, Number(m) * 2, performance.now() - t0); await tick(); }
+  }
+  const step = ecNeg(C, ecMul(C, m, C.G)); let cur = Q;   // giant steps: Q - i*m*G
+  for (let i = 0n; i <= m; i++) {
+    const j = table.get(ptKey(cur));
+    if (j !== undefined) { const k = i * m + j; if (k >= 1n && samePt(ecMul(C, k, C.G), Q)) return { k, ops, tableSize: table.size, ms: performance.now() - t0 }; }
+    cur = ecAdd(C, cur, step); ops++;
+    if (i % BigInt(every) === 0n) { onProgress && onProgress('giant', ops, Number(m) * 2, performance.now() - t0); await tick(); }
+  }
+  return null;
+}
+
+// =====================================================================
+//  Caesar cipher + Italian statistics
+// =====================================================================
+const ALPHA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const stripAcc = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '');
+const caesar = (text, k) => stripAcc(text).toUpperCase().replace(/[A-Z]/g, c => ALPHA[(((c.charCodeAt(0) - 65 + k) % 26) + 26) % 26]);
+const normIt = s => stripAcc(s).toLowerCase().replace(/[^a-z]+/g, ' ').trim();
+const lettersOf = s => { const a = []; for (const ch of s.toLowerCase()) { const c = ch.charCodeAt(0) - 97; if (c >= 0 && c < 26) a.push(c); } return a; };
+
+function trainModel(text) {
+  const L = lettersOf(text), N = L.length;
+  const uni = new Float64Array(26), bi = new Float64Array(676), tri = new Float64Array(17576);
+  for (let i = 0; i < N; i++) { uni[L[i]]++; if (i >= 1) bi[L[i - 1] * 26 + L[i]]++; if (i >= 2) tri[(L[i - 2] * 26 + L[i - 1]) * 26 + L[i]]++; }
+  const lg = (arr, tot, a) => Array.from(arr, v => Math.log((v + a) / (tot + a * arr.length)));
+  const pu = Array.from(uni, v => (v + 1) / (N + 26));
+  const wc = new Map(); for (const w of text.split(' ')) if (w.length >= 2) wc.set(w, (wc.get(w) || 0) + 1);
+  const dict = new Set([...wc.entries()].sort((a, b) => b[1] - a[1]).slice(0, 400).map(e => e[0]));
+  return { N, uni, pu, lu: lg(uni, N, 1), lb: lg(bi, N, 0.5), lt: lg(tri, N, 0.1), dict };
+}
+// score[s] for every guessed key s = 0..25 (HIGHER is better)
+const METHODS = {
+  chi2: { name: 'Letter frequencies (χ²)', short: 'χ²' },
+  bi: { name: 'Bigram score', short: '2-gram' },
+  tri: { name: 'Trigram score', short: '3-gram' },
+  dict: { name: 'Exhaustive + dictionary', short: 'words' }
+};
+function scoreShifts(method, cipher, M) {
+  const c = lettersOf(cipher), n = c.length, out = new Array(26).fill(0);
+  if (method === 'chi2') {
+    const cc = new Array(26).fill(0); c.forEach(v => cc[v]++);
+    for (let s = 0; s < 26; s++) { let x = 0; for (let j = 0; j < 26; j++) { const o = cc[(j + s) % 26], e = n * M.pu[j]; x += (o - e) * (o - e) / e; } out[s] = -x; }
+  } else if (method === 'bi' || method === 'tri') {
+    for (let s = 0; s < 26; s++) {
+      let x = 0; const p = c.map(v => (v - s + 26) % 26);
+      if (method === 'bi') for (let i = 1; i < n; i++) x += M.lb[p[i - 1] * 26 + p[i]];
+      else for (let i = 2; i < n; i++) x += M.lt[(p[i - 2] * 26 + p[i - 1]) * 26 + p[i]];
+      out[s] = x;
+    }
+  } else {
+    for (let s = 0; s < 26; s++) { let x = 0; for (const w of normIt(caesar(cipher, -s)).split(' ')) if (M.dict.has(w)) x += w.length; out[s] = x; }
+  }
+  return out;
+}
+function bestOf(scores) { const m = Math.max(...scores); const arr = []; scores.forEach((v, i) => { if (v >= m - 1e-9) arr.push(i); }); return arr; }
+
+// ---- Monte-Carlo experiment ------------------------------------------------
+function mulberry32(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function sampleWindow(pool, L, rnd) {          // starts at a word boundary, exactly L letters
+  const starts = [0]; for (let i = 1; i < pool.length; i++) if (pool[i - 1] === ' ' && pool[i] !== ' ') starts.push(i);
+  for (let tries = 0; tries < 50; tries++) {
+    const st = starts[Math.floor(rnd() * starts.length)]; let cnt = 0, e = st;
+    while (e < pool.length && cnt < L) { if (pool[e] !== ' ') cnt++; e++; }
+    if (cnt === L) return pool.slice(st, e);
+  }
+  return pool.slice(0, L);
+}
+function runExperiment(M, pool, lengths, trials, seed, methods = Object.keys(METHODS)) {
+  const rnd = mulberry32(seed), res = {};
+  for (const m of methods) res[m] = [];
+  for (const L of lengths) {
+    const hit = Object.fromEntries(methods.map(m => [m, 0]));
+    for (let t = 0; t < trials; t++) {
+      const plain = sampleWindow(pool, L, rnd), key = 1 + Math.floor(rnd() * 25), cipher = caesar(plain, key);
+      for (const m of methods) { const best = bestOf(scoreShifts(m, cipher, M)); if (best.includes(key)) hit[m] += 1 / best.length; }
+    }
+    for (const m of methods) res[m].push(hit[m] / trials);
+  }
+  return res;
+}
+
+// ---- simple statistics -----------------------------------------------------
+function countsOf(arr, size) { const c = new Array(size).fill(0); for (const v of arr) c[v]++; return c; }
+const indexOfCoincidence = c => { const N = c.reduce((a, b) => a + b, 0); return c.reduce((s, v) => s + v * (v - 1), 0) / (N * (N - 1)); };
+const entropyBits = c => { const N = c.reduce((a, b) => a + b, 0); return -c.filter(v => v).reduce((s, v) => s + v / N * Math.log2(v / N), 0); };
+
+</script>
+<script>
+const D = {"train":"l italia e una penisola lunga e stretta che si allunga nel mare mediterraneo come uno stivale a nord e chiusa dalla catena delle alpi che la separano dal resto dell europa mentre lungo il centro corre la dorsale degli appennini tra queste montagne si trovano valli profonde laghi tranquilli e pianure fertili dove da secoli i contadini coltivano grano viti e ulivi il clima cambia molto da una regione all altra nelle zone alpine gli inverni sono lunghi e freddi mentre sulle coste del sud l estate e calda e asciutta e la neve e un evento raro nel corso dei secoli molti popoli hanno abitato queste terre gli etruschi vivevano nell attuale toscana e costruirono citta ricche di tombe dipinte i greci fondarono colonie lungo le coste della sicilia e della calabria e i romani partiti da un piccolo villaggio sulle rive del tevere riuscirono a conquistare tutto il bacino del mediterraneo quando l impero cadde la penisola si divise in tanti piccoli stati spesso in lotta tra loro e solo nell ottocento torno a essere una nazione unita durante il rinascimento le citta italiane diventarono il centro della cultura europea a firenze lavoravano pittori scultori e architetti che cercavano di capire le regole della natura e di rappresentarla con maggiore verita gli artisti studiavano la prospettiva osservavano il corpo umano e leggevano con passione i libri degli antichi le famiglie piu ricche come i medici finanziavano le botteghe e le biblioteche convinte che la bellezza fosse anche un segno di potere in quegli anni nacquero opere che ancora oggi milioni di visitatori vengono a vedere da ogni parte del mondo la mattina presto il mercato del paese si riempie di voci i banchi sono pieni di pomodori zucchine peperoni e frutta di stagione e i venditori chiamano i clienti per nome perche quasi tutti si conoscono da una vita una signora anziana sceglie con cura le arance le annusa una per una e poi chiede al contadino se sono state raccolte il giorno prima lui sorride e le risponde che non vende mai nulla che non mangerebbe a casa sua poco piu in la un ragazzo aiuta il padre a caricare le casse sul furgone mentre il profumo del pane appena sfornato arriva dalla panetteria all angolo della piazza cucinare un buon piatto di pasta sembra facile ma richiede attenzione l acqua deve bollire con un po di sale la pasta va scolata quando e ancora un poco dura e il sugo deve essere pronto nello stesso momento per un sugo semplice bastano pochi ingredienti olio aglio pomodori maturi e qualche foglia di basilico molti pensano che i segreti della cucina siano complicati ma spesso la differenza la fa la qualita delle materie prime e la pazienza di chi sta ai fornelli nelle case di una volta la domenica la nonna iniziava a preparare il ragu fin dal mattino e l odore riempiva tutte le stanze fino all ora di pranzo cara marta ti scrivo dopo tanto tempo per raccontarti come stanno andando le cose qui in citta il lavoro mi tiene occupato quasi tutto il giorno ma la sera riesco a ritagliarmi un po di tempo per leggere e fare due passi lungo il fiume ho ripreso a studiare il pianoforte anche se le mie dita sono molto piu lente di quando avevo vent anni mia sorella ti saluta e dice che vi aspetta tutti a casa per le vacanze di natale ti prego scrivimi presto e dimmi se pensi di venire ci sarebbero tante cose da raccontarsi e abbiamo bisogno di parlare un po con calma davanti a una tazza di te la matematica nasce dal bisogno di contare e di misurare gli antichi egizi usavano le frazioni per dividere il raccolto e le corde annodate per tracciare gli angoli retti dei campi dopo le piene del nilo i greci trasformarono queste abilita pratiche in una scienza fondata sulle dimostrazioni un affermazione non e vera perche lo dice un maestro ma perche si puo dedurre con rigore da principi gia accettati questa idea semplice e rivoluzionaria e ancora oggi il cuore del pensiero scientifico ogni teorema e come una piccola costruzione in cui ogni pietra deve poggiare con sicurezza su quella che sta sotto fin dall antichita gli uomini hanno cercato di nascondere i messaggi importanti agli occhi dei nemici si racconta che giulio cesare durante le sue campagne militari scrivesse le lettere ai generali spostando ogni lettera dell alfabeto di alcuni posti in modo che chi intercettava il foglio vedesse soltanto una sequenza di segni senza significato quel metodo oggi sembra ingenuo perche le lettere di un testo non sono distribuite a caso alcune compaiono molto spesso altre quasi mai e questa regolarita tradisce il messaggio a chiunque abbia la pazienza di contarle nel corso dei secoli i crittografi hanno inventato sistemi sempre piu complessi e i crittoanalisti hanno risposto con metodi sempre piu raffinati i computer sono macchine che eseguono istruzioni con una velocita enorme e senza mai stancarsi un programma non e altro che una lista precisa di operazioni scritta in un linguaggio che la macchina sa interpretare all inizio gli informatici dovevano descrivere ogni passaggio con minuziosa attenzione mentre oggi possono contare su linguaggi molto piu vicini al modo di ragionare delle persone eppure nonostante i progressi il compito piu difficile resta sempre lo stesso capire con esattezza che cosa si vuole ottenere e scomporre il problema in parti abbastanza piccole da poter essere risolte una alla volta il vecchio faro sorgeva su uno scoglio all estremita del porto e da generazioni la famiglia del guardiano si occupava di accendere la luce ogni sera giovanni era cresciuto li tra il rumore delle onde e il grido dei gabbiani e conosceva ogni gradino della scala a chiocciola come le linee della propria mano quella notte il vento soffiava da levante con una forza insolita e il mare ruggiva contro le rocce mentre controllava la lampada vide in lontananza una piccola luce che oscillava tra le onde era una barca di pescatori che cercava di rientrare senza esitare scese di corsa le scale prese la lanterna piu grande e comincio a far segnali verso il largo la citta di venezia e costruita su un gruppo di isole nella laguna e i suoi abitanti hanno imparato fin dal medioevo a vivere in equilibrio con l acqua al posto delle strade ci sono canali e al posto delle automobili barche di ogni forma e dimensione le case poggiano su pali di legno piantati nel fango che resistono da secoli perche l assenza di ossigeno impedisce loro di marcire ogni autunno l acqua alta invade piazza san marco e i negozianti sistemano le passerelle con la rassegnazione di chi sa che il mare prima o poi torna sempre a bussare alla porta quando ero bambino la scuola era un edificio grigio con le finestre molto alte e la maestra si chiamava signora rossi ci faceva imparare a memoria le poesie e ci obbligava a scrivere con una calligrafia ordinata senza macchie e senza cancellature ricordo ancora il rumore del gesso sulla lavagna e il silenzio improvviso che calava in classe quando lei entrava all epoca mi sembrava severissima ma col passare degli anni ho capito quanto fosse paziente le devo la passione per i libri e l abitudine di non accontentarmi mai della prima risposta che mi viene in mente il notiziario di ieri sera ha annunciato che nei prossimi giorni una perturbazione proveniente dall atlantico portera piogge abbondanti su gran parte del nord e del centro secondo gli esperti i fiumi potrebbero salire di livello e per questo la protezione civile ha invitato i cittadini a evitare di uscire nelle ore piu critiche nel sud invece il tempo restera stabile con temperature sopra la media del periodo le autorita raccomandano di seguire gli aggiornamenti ufficiali e di non sottovalutare gli avvisi perche le condizioni possono cambiare in poche ore il treno parti con dieci minuti di ritardo e attraverso la campagna lentamente come se anche lui volesse godersi il paesaggio dal finestrino si vedevano campi dorati filari di cipressi e vecchie case di pietra con i tetti rossi di fronte a me una donna leggeva un giornale mentre accanto un bambino disegnava sul vetro appannato con il dito nessuno parlava ma nell aria c era una strana serenita la sensazione di essere sospesi tra il luogo da cui si e partiti e quello in cui si sta per arrivare per imparare bene una lingua straniera non basta studiare la grammatica bisogna ascoltare parlare sbagliare e riprovare molti studenti hanno paura di fare errori e per questo restano in silenzio ma e proprio dagli sbagli che si impara di piu leggere libri guardare film e conversare con persone madrelingua aiuta a capire il ritmo delle frasi e il significato nascosto delle parole con il tempo quello che all inizio sembrava un groviglio incomprensibile comincia a diventare familiare e un giorno ci si accorge di aver pensato una frase intera senza tradurla dalla propria lingua gli animali che vivono nei boschi hanno imparato a nascondersi con grande abilita il capriolo per esempio resta immobile tra le felci finche il pericolo non e passato mentre la volpe si muove di notte e sfrutta ogni ombra per avvicinarsi alle prede anche gli uccelli sanno farsi notare soltanto quando serve il canto del merlo all alba serve a difendere il territorio mentre il richiamo del picchio risuona nel silenzio come un colpo di tamburo chi cammina con attenzione lungo i sentieri puo accorgersi di mille piccoli segni come orme nel fango penne cadute o gusci di nocciole rosicchiati con cura ogni persona ha un ricordo legato al profumo di una stagione per me l autunno ha l odore delle castagne arrostite sul fuoco delle foglie bagnate e del fumo che esce dai camini era il momento dell anno in cui andavamo tutti insieme nel bosco dietro casa con i cesti di vimini e gli stivali di gomma a raccogliere funghi e castagne mio nonno camminava davanti a tutti e indicava con il bastone i posti dove secondo lui non potevano mancare non sbagliava quasi mai e io mi chiedevo come facesse a conoscere cosi bene ogni angolo di quella montagna l energia che usiamo ogni giorno proviene da fonti molto diverse le centrali idroelettriche sfruttano la caduta dell acqua per far girare le turbine i pannelli solari trasformano la luce in corrente elettrica e le pale eoliche catturano la forza del vento per molto tempo il carbone e il petrolio sono stati i combustibili piu diffusi ma il loro uso ha provocato un aumento dell anidride carbonica nell atmosfera e un graduale riscaldamento del pianeta per questo molti paesi stanno investendo nelle energie rinnovabili cercando di ridurre i consumi e di rendere piu efficienti le case le fabbriche e i trasporti il corpo umano e una macchina straordinaria composta da miliardi di cellule che lavorano insieme senza che noi ce ne rendiamo conto il cuore batte circa centomila volte al giorno e spinge il sangue lungo vasi che messi in fila coprirebbero molte migliaia di chilometri i polmoni portano l ossigeno nel sangue i reni lo ripuliscono dalle scorie e il cervello coordina tutte queste attivita con una precisione impressionante per mantenersi in salute e importante dormire a sufficienza mangiare in modo equilibrato e muoversi ogni giorno anche solo con una camminata a passo svelto nel suo studio pieno di libri e di carte sparse sul tavolo il professore stava correggendo gli ultimi compiti della giornata fuori pioveva e il rumore regolare delle gocce sul vetro rendeva quasi piacevole quel lavoro noioso un allieva aveva scritto una pagina bellissima sul rapporto tra l uomo e il mare ricca di immagini e di riflessioni sorprendenti per la sua eta sorrise prese la penna rossa e invece di segnare errori scrisse a margine una sola parola complimenti poi chiuse il quaderno spense la lampada e resto ancora un poco in silenzio ad ascoltare la pioggia il caffe e molto piu di una semplice bevanda per gli italiani e un rito che scandisce la giornata un pretesto per fermarsi qualche minuto e scambiare due parole con il barista o con un collega al mattino si beve in piedi al banco con un cornetto caldo mentre dopo pranzo ci si concede una pausa piu lunga ogni regione ha le sue abitudini a napoli il caffe e piccolo forte e dolcissimo a trieste ha nomi diversi a seconda della quantita di latte e in molte famiglie del sud la moka sul fornello e ancora il primo suono del giorno la storia della stampa cambio per sempre il modo di diffondere le idee prima dell invenzione dei caratteri mobili ogni libro doveva essere copiato a mano dai monaci con un lavoro che poteva durare anni e che rendeva i volumi rari e costosi quando le tipografie cominciarono a moltiplicarsi anche gli studenti e i mercanti poterono permettersi qualche testo e le notizie iniziarono a viaggiare molto piu in fretta da una citta all altra le autorita spaventate da questa liberta tentarono piu volte di controllare cio che veniva stampato ma ormai le parole avevano preso il largo e nessuno poteva piu fermarle mentre il sole tramontava dietro le colline la piazza del paese si animava come ogni sera i vecchi si sedevano sulle panchine a commentare la giornata i ragazzi giocavano a pallone vicino alla fontana e dalle finestre usciva il tintinnio dei piatti una bambina inseguiva un gatto tra le gambe dei passanti ridendo a squarciagola e la madre la richiamava invano dall altro lato della strada nessuno aveva fretta e il tempo sembrava scorrere con una lentezza antica quasi che il campanile avesse deciso di suonare le ore soltanto per abitudine per risolvere un problema difficile conviene procedere con ordine prima di tutto bisogna leggere con attenzione il testo e individuare i dati che abbiamo a disposizione poi si prova a ragionare su casi semplici per capire se esiste una regola che si ripete spesso quando si ha il coraggio di fare un disegno o una tabella la soluzione appare molto piu chiara se alla fine il risultato non convince e utile controllare ogni passaggio e verificare che nessun calcolo sia stato svolto in modo frettoloso la pazienza in matematica come nella vita e quasi sempre premiata un giorno d estate mentre il caldo rendeva immobile ogni cosa un vecchio pescatore sedeva sul molo con la canna in mano e il cappello abbassato sugli occhi non aveva preso nemmeno un pesce ma non sembrava preoccuparsene guardava l acqua con un espressione soddisfatta come se stesse aspettando qualcosa di molto piu importante un ragazzino gli si avvicino e gli chiese perche restasse li tutto il giorno senza risultati l uomo rispose che certe cose non si prendono con l amo ma con il tempo e che il mare a chi lo sa ascoltare racconta sempre una storia nuova la biblioteca comunale e aperta tutti i giorni tranne la domenica e chiunque puo iscriversi gratuitamente portando un documento di identita oltre ai libri e possibile consultare giornali riviste e dizionari oppure usare i computer per cercare informazioni su internet nelle sale di lettura vige la regola del silenzio ma durante il pomeriggio si organizzano incontri con gli autori laboratori per i bambini e corsi di lingua per gli stranieri molti cittadini la considerano un luogo prezioso dove ci si sente accolti e dove il sapere e davvero una ricchezza condivisa quando si pianifica un viaggio la cosa piu importante e decidere che tipo di esperienza si desidera c e chi preferisce le citta d arte con i musei i monumenti e i ristoranti tipici e chi invece sceglie la natura con lunghe camminate in montagna o giornate di relax sulla spiaggia in ogni caso conviene informarsi in anticipo sul clima sui prezzi e sugli orari dei trasporti per evitare spiacevoli sorprese alla fine tuttavia i ricordi piu belli sono quasi sempre quelli imprevisti un incontro casuale una trattoria scoperta per caso un tramonto che nessuna guida aveva promesso gli scienziati studiano da molti anni il comportamento delle api insetti piccoli ma straordinariamente organizzati in un alveare vivono decine di migliaia di individui ciascuno con un compito preciso alcune puliscono le celle altre nutrono le larve altre ancora escono a cercare il nettare quando una di loro trova un campo di fiori torna e comunica alle compagne la direzione e la distanza con una danza fatta di giri e movimenti ripetuti senza di loro molte piante non potrebbero riprodursi e per questo la scomparsa delle api preoccupa non soltanto gli apicoltori ma l intera agricoltura il tuo messaggio mi ha fatto molto piacere soprattutto perche non me l aspettavo avevo pensato di scriverti gia da qualche settimana ma tra il trasloco e il nuovo lavoro non sono riuscito a trovare un momento tranquillo adesso pero le cose si stanno sistemando la casa e quasi in ordine i colleghi sono gentili e la citta a poco a poco comincia a sembrarmi un posto familiare se in primavera avrai voglia di fare un salto da queste parti ti faro vedere i luoghi che amo di piu intanto ti abbraccio forte e ti ringrazio ancora per tutto quello che hai fatto per me il governo ha presentato ieri un nuovo piano per la ristrutturazione delle scuole destinato a migliorare la sicurezza degli edifici e a ridurre i consumi energetici secondo il ministro i lavori interesseranno prima di tutto le aree piu fragili del paese dove molte strutture risalgono a oltre cinquant anni fa e hanno bisogno di interventi urgenti l opposizione pur riconoscendo l importanza dell iniziativa ha criticato i tempi previsti giudicati troppo lunghi e ha chiesto che una parte dei fondi sia destinata subito ai comuni piu piccoli il dibattito proseguira nelle prossime settimane in parlamento nella piccola bottega di via dei tessitori il signor aldo lavorava il legno da piu di quarant anni aveva le mani ruvide e la schiena un po curva ma gli occhi erano ancora vivaci e bastava guardarlo mentre sceglieva un asse per capire quanto amasse il suo mestiere faceva sedie tavoli e piccole cassapanche tutto senza usare un solo chiodo soltanto incastri perfetti e un po di colla quando qualcuno gli chiedeva il segreto rispondeva che il legno e un essere vivo che respira e si muove e che bisogna rispettarlo se si vuole che duri nel tempo la luna e il nostro unico satellite naturale e si trova a circa trecentottantaquattromila chilometri dalla terra il suo influsso si fa sentire soprattutto sui mari dove provoca il fenomeno delle maree due volte al giorno il livello dell acqua sale e poi scende seguendo il ritmo della sua attrazione gravitazionale da sempre l uomo l ha osservata con curiosita e meraviglia attribuendole poteri misteriosi e nel ventesimo secolo e riuscito finalmente a posare i piedi sulla sua superficie ancora oggi le missioni spaziali continuano a studiarne la struttura nella speranza di costruire un giorno una base stabile nel pomeriggio il cielo si copri di nuvole scure e prima che avessimo il tempo di cercare un riparo comincio a cadere una pioggia fitta e pesante corremmo fino al portico della vecchia chiesa ridendo e tenendoci per mano con i vestiti fradici e i capelli appiccicati alla fronte da li potevamo vedere la strada trasformarsi in un piccolo torrente e le persone che scappavano con gli ombrelli rovesciati dal vento quando finalmente il temporale si allontano usci un sole timido e il selciato comincio a fumare mentre in lontananza un arcobaleno si disegnava sopra le colline gli studenti che si preparano a un esame importante dovrebbero imparare a organizzare il proprio tempo studiare dieci ore di fila la sera prima rinunciando al sonno e quasi sempre un errore la memoria lavora meglio quando le informazioni vengono ripassate poco alla volta in giornate diverse e utile anche spiegare gli argomenti a voce alta come se si stesse parlando a un compagno perche in questo modo si scoprono subito i punti poco chiari infine non bisogna dimenticare di concedersi qualche pausa una passeggiata o una chiacchierata con gli amici perche una mente riposata ragiona con piu lucidita i mercati medievali erano luoghi di incontro in cui si scambiavano non soltanto merci ma anche notizie storie e canzoni i mercanti arrivavano da paesi lontani con carichi di spezie stoffe e metalli preziosi e i contadini portavano formaggi uova e animali vivi in mezzo alla folla si muovevano giocolieri cantastorie e venditori di rimedi miracolosi pronti a convincere i passanti con parole ben scelte le citta piu importanti organizzavano grandi fiere una o due volte all anno e in quei giorni le strade si riempivano di tende colorate di odori e di rumori che si potevano sentire da molto lontano mia madre diceva sempre che la vera ricchezza di una famiglia sta nelle persone che si siedono alla stessa tavola nei giorni di festa preparava una quantita incredibile di cibo e la nostra piccola cucina si riempiva di parenti vicini e amici che arrivavano senza nemmeno essere stati invitati si mangiava si cantava si discuteva di politica e di calcio e alla fine qualcuno si addormentava sul divano con il piatto ancora sulle ginocchia oggi che la casa e vuota ripenso spesso a quelle serate e mi accorgo che nessun regalo avrebbe potuto darmi una felicita paragonabile per capire come funziona un motore bisogna immaginare una serie di piccole esplosioni che avvengono con ordine perfetto il carburante mescolato all aria entra nel cilindro e viene compresso dal pistone poi una scintilla lo accende e la spinta dei gas che si espandono muove l albero motore questo ciclo si ripete migliaia di volte al minuto e il movimento viene trasmesso alle ruote attraverso il cambio e la trasmissione oggi i motori elettrici stanno prendendo il posto di quelli a combustione perche sono piu silenziosi piu semplici e non producono gas di scarico nelle citta il giovane protagonista del romanzo lascia il paese natale con una valigia di cartone e pochi soldi in tasca convinto che nella grande citta trovera finalmente la fortuna che gli e stata negata le prime settimane sono durissime dorme in una pensione squallida lavora come garzone in un officina e impara a conoscere la solitudine di chi non ha nessuno a cui raccontare la propria giornata poi a poco a poco incontra persone che gli tendono una mano e scopre che la felicita non dipende dai soldi ma dalla possibilita di sentirsi utili il libro si chiude con una scena semplice e commovente che i lettori difficilmente dimenticano prima di consegnare il progetto il gruppo di lavoro ha voluto controllare ancora una volta tutti i dati raccolti ogni tabella e stata confrontata con le fonti originali ogni grafico e stato rifatto da capo e ogni conclusione e stata discussa a lungo perche nessuno voleva rischiare di presentare risultati poco solidi alla fine dopo tre giorni di riunioni e di correzioni la relazione era pronta era un documento di cinquanta pagine chiaro e rigoroso che avrebbe aiutato il comune a decidere come usare le risorse disponibili per migliorare i trasporti pubblici della citta le montagne in inverno hanno un fascino particolare il silenzio e assoluto interrotto soltanto dal fruscio degli sci sulla neve fresca o dal crepitio di un ramo carico di ghiaccio l aria e cosi limpida che i picchi lontani sembrano vicinissimi e la luce del mattino colora le vette di rosa e di oro gli escursionisti piu esperti sanno pero che questa bellezza nasconde dei pericoli le valanghe il freddo improvviso la nebbia che cala in pochi minuti per questo e sempre importante partire con l attrezzatura adatta consultare il bollettino e non sottovalutare mai la forza della natura che cosa significa essere un buon amico forse significa esserci quando serve senza aspettare di essere chiamati e saper ascoltare senza giudicare un amico vero ti dice la verita anche quando e scomoda ma lo fa con rispetto e con affetto e ti perdona se qualche volta ti dimentichi di lui con gli anni ci si accorge che le amicizie autentiche sono poche e che proprio per questo vanno custodite con attenzione come piante delicate che hanno bisogno di acqua di luce e di tempo per crescere alle sei del mattino la citta dorme ancora e soltanto i panettieri i tassisti e gli spazzini sembrano padroni delle strade le serrande si alzano con un rumore metallico le luci dei bar si accendono una dopo l altra e l odore del caffe comincia a diffondersi tra i palazzi un uomo con la giacca troppo larga aspetta l autobus fumando una sigaretta mentre un cane randagio attraversa la piazza con andatura tranquilla poi a poco a poco il traffico cresce le voci si moltiplicano e la grande macchina della giornata si mette in moto come ogni giorno e come sempre se vuoi preparare una buona torta casalinga comincia mescolando in una ciotola tre uova con duecento grammi di zucchero fino a ottenere un composto chiaro e spumoso aggiungi poi la farina setacciata un pizzico di sale e mezzo bicchiere di latte mescolando delicatamente per non far entrare troppa aria versa l impasto in una teglia imburrata e cuoci in forno gia caldo per circa quaranta minuti per capire se e pronta infila uno stuzzicadenti al centro se esce asciutto la torta puo essere sfornata e lasciata raffreddare prima di essere servita con un velo di zucchero a velo","tests":{"mine":"domani all alba ci vediamo vicino al vecchio ponte sul fiume e porta con te la mappa che ti ho consegnato ieri nessun sistema di protezione puo dirsi davvero sicuro se la sua forza dipende dal segreto dell algoritmo anziche da quello della chiave sul tavolo della cucina c erano ancora le tazze della colazione un cesto di mele rosse e una lettera che nessuno aveva avuto il coraggio di aprire la squadra ospite ha conquistato la vittoria nei minuti finali grazie a un tiro dalla distanza che ha lasciato il portiere immobile e il pubblico senza fiato un buon traduttore non si limita a sostituire una parola con un altra ma cerca di restituire il tono il ritmo e perfino i silenzi del testo originale alcuni antichi manoscritti conservati nei sotterranei del monastero contenevano ricette di medicina preghiere e frammenti di cronache che gli studiosi stanno ancora decifrando quando la nebbia scese sulla pianura il pastore raduno il gregge e lo condusse lentamente verso la stalla seguendo il suono lontano di una campana il direttore dell azienda ha spiegato ai dipendenti che il prossimo trimestre sara decisivo e che ogni reparto dovra contribuire con impegno agli obiettivi comuni per misurare la distanza tra due citta non serve sempre un righello a volte basta ricordare quante ore di cammino occorrono per raggiungerle ricordo il giorno in cui imparai ad andare in bicicletta mio padre correva dietro di me tenendo il sellino e a un certo punto smise di spingere senza dirmelo il sindaco ha inaugurato la nuova pista ciclabile che collega il centro storico ai quartieri periferici promettendo altri interventi entro la fine dell anno nelle lunghe sere d inverno la famiglia si riuniva intorno al camino e il nonno raccontava storie di briganti di streghe e di tesori nascosti sotto le radici di antichi castagni la differenza tra un messaggio cifrato e uno incomprensibile sta tutta nella possibilita di recuperare il testo originale per chi possiede la chiave giusta con il passare delle settimane le giornate si allungarono i fiori ricomparvero sui davanzali e il mercato si riempi di fragole asparagi e carciofi","vim":"vim e un editor molto potente ed ha parecchi comandi troppi per spiegarli tutti in una guida come questa questa guida serve a descrivere quei comandi che ti permettono di usare facilmente i comandi nelle lezioni modificano questo testo fai una copia di questo e importante non scordare che questa guida vuole insegnare tramite l uso questo vuol dire che devi eseguire i comandi per impararli davvero se leggi il testo e basta dimenticherai presto i comandi adesso assicurati che il tasto blocca maiuscolo non sia schiacciato e premi il tasto j tanto da muovere il cursore fino a che la muovi il cursore sullo schermo finche non ti senti a tuo agio a muoverti molto piu rapidamente dopo che ci si abitua davvero quando vedi il prompt della shell batti il comando con cui sei arrivato se hai memorizzato questi comandi e ti senti pronto esegui i passi per correggere errori muovi il cursore fino a posizionarlo sopra il premi il tasto x per cancellare il carattere sbagliato per rendere la prima linea uguale alla seconda muovi il cursore sopra il primo carattere dopo la posizione in cui il testo va inserito ripeti i passi da a fino a completare la correzione della frase non importa dove e posizionato il cursore sulla linea stessa vim e il comando per richiamare vim tutor e il nome del file che desideri modificare usa un file che possa essere modificato inserisci e cancella testo come hai imparato nelle lezioni precedenti il cursore si muove usando i tasti con le frecce o i tasti hjkl muovi il cursore all inizio di una parola che vuoi cancellare batti vim attende che tu batta w se vedi una lettera diversa molti comandi di modifica testi consistono in un operatore e un movimento w fino a inizio della parola seguente escluso il suo primo carattere e alla fine della parola corrente compreso il suo ultimo carattere dal cursore fino a fine linea compreso l ultimo carattere della linea quindi se batti de cancelli dal cursore fino a fine parola batti e per spostare il cursore alla fine della terza parola seguente nella combinazione dell operatore cancella e di un movimento descritto prima ripeti i passi e con un contatore diverso per cancellare le parole per la frequenza con cui capita di cancellare linee intere chi ha"}};
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const decoder = new TextDecoder('utf-8');
+const shortHex = (n, len = 12) => { const s = n.toString(16); return s.length > len ? s.slice(0, len) + '…' : s; };
+const ptStr = P => P ? `(${shortHex(P.x)}, ${shortHex(P.y)})` : '∞';
+const ptFull = P => P ? `x = ${P.x.toString(16)}\ny = ${P.y.toString(16)}` : '∞';
+const COL = { chi2: '#7c5cff', bi: '#f08a24', tri: '#1fa971', dict: '#e5484d' };
+
+document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.tabs button').forEach(x => x.classList.toggle('on', x === b));
+  document.querySelectorAll('section.tab').forEach(s => s.classList.toggle('on', s.id === b.dataset.t));
+});
+
+// ---------- generic charts ----------
+function barsSvg(counts, o = {}) {
+  const w = 520, h = o.h || 130, n = counts.length, mx = Math.max(...counts, 1), bw = (w - 20) / n, labels = o.labels, ev = o.every || 1;
+  let s = `<svg viewBox="0 0 ${w} ${h + 30}" class="bars" style="width:100%;height:auto">`;
+  if (o.title) s += `<text x="4" y="11" font-size="12" font-weight="700">${esc(o.title)}</text>`;
+  counts.forEach((c, i) => {
+    const bh = (c / mx) * (h - 26), x = 14 + i * bw;
+    s += `<rect x="${x}" y="${h - bh}" width="${Math.max(0.6, bw - (n > 100 ? 0.3 : 3))}" height="${bh}" fill="${o.color || '#7c5cff'}" rx="${n > 100 ? 0 : 3}"><title>${labels ? labels[i] : i}: ${c}</title></rect>`;
+    if (labels && i % ev === 0) s += `<text x="${x + bw / 2 - 1}" y="${h + 13}" font-size="10" text-anchor="middle">${labels[i]}</text>`;
+  });
+  if (o.xlab) s += `<text x="${w / 2}" y="${h + 27}" font-size="11" text-anchor="middle">${o.xlab}</text>`;
+  return s + '</svg>';
+}
+function miniChart(sc, best, secret, title) {
+  const mn = Math.min(...sc), mx = Math.max(...sc), rng = (mx - mn) || 1, w = 320, h = 100, bw = (w - 12) / 26, undecided = best.length === 26;
+  let s = `<svg viewBox="0 0 ${w} ${h + 34}" class="bars" style="width:100%;height:auto"><text x="3" y="11" font-size="11.5" font-weight="700">${title}</text>`;
+  sc.forEach((v, i) => {
+    const bh = 4 + (v - mn) / rng * (h - 30), x = 6 + i * bw, isBest = !undecided && best.includes(i);
+    s += `<rect x="${x}" y="${h - bh + 8}" width="${bw - 2}" height="${bh}" fill="${isBest ? '#1fa971' : '#b9bfe3'}" rx="2"><title>key ${i}: ${v.toFixed(1)}</title></rect>`;
+    if (i % 5 === 0 || i === 25) s += `<text x="${x + bw / 2 - 1}" y="${h + 22}" font-size="10" text-anchor="middle">${i}</text>`;
+    if (secret === i) s += `<text x="${x + bw / 2 - 1}" y="${h + 33}" font-size="11" text-anchor="middle" style="fill:#e5484d">▲</text>`;
+  });
+  return s + '</svg>';
+}
+function lineChart(res, xs) {
+  const w = 560, h = 250, L = 42, R = 12, T = 12, B = 34, iw = w - L - R, ih = h - T - B, X = i => L + i * iw / (xs.length - 1), Y = v => T + ih - v * ih;
+  let s = `<svg viewBox="0 0 ${w} ${h}" class="plot" style="width:100%;height:auto">`;
+  for (let g = 0; g <= 4; g++) { const v = g / 4; s += `<line x1="${L}" y1="${Y(v)}" x2="${L + iw}" y2="${Y(v)}" stroke="#e4e7f7"/><text x="${L - 6}" y="${Y(v) + 3}" font-size="10" text-anchor="end">${v * 100}%</text>`; }
+  xs.forEach((l, i) => s += `<text x="${X(i)}" y="${h - 16}" font-size="10.5" text-anchor="middle">${l}</text>`);
+  s += `<text x="${L + iw / 2}" y="${h - 3}" font-size="11" text-anchor="middle">length of the ciphertext (letters)</text><text transform="translate(11 ${T + ih / 2}) rotate(-90)" font-size="11" text-anchor="middle">key found</text>`;
+  for (const m in res) {
+    s += `<polyline fill="none" stroke="${COL[m]}" stroke-width="2.5" stroke-linejoin="round" points="${res[m].map((v, i) => X(i) + ',' + Y(v)).join(' ')}"/>`;
+    res[m].forEach((v, i) => s += `<circle cx="${X(i)}" cy="${Y(v)}" r="3.6" fill="${COL[m]}"><title>${METHODS[m].name}, ${xs[i]} letters: ${(v * 100).toFixed(0)}%</title></circle>`);
+  }
+  return s + '</svg>';
+}
+const legend = () => `<div class="legend">${Object.keys(METHODS).map(m => `<span><i class="dot" style="background:${COL[m]}"></i>${METHODS[m].name}</span>`).join('')}</div>`;
+function fmtDur(sec) {
+  if (sec < 1) return `${(sec * 1000).toFixed(sec * 1000 < 10 ? 1 : 0)} ms`;
+  if (sec < 60) return `${sec.toFixed(1)} s`;
+  if (sec < 3600) return `${(sec / 60).toFixed(1)} min`;
+  if (sec < 86400) return `${(sec / 3600).toFixed(1)} hours`;
+  const y = sec / 31557600;
+  if (y < 1) return `${(sec / 86400).toFixed(1)} days`;
+  if (y < 1e6) return `${y < 100 ? y.toFixed(1) : Math.round(y).toLocaleString('en')} years`;
+  const u = y / 1.38e10; return u < 1 ? `${y.toExponential(1)} years` : `${u.toExponential(1)} × the age of the universe`;
+}
+
+// ====================== 1 · ECC encryption ======================
+let C = CURVES.secp, KP = null, ENC = null, BITS = 16, USOP = 35;
+const msgBytes = () => utf8($('msg').value);
+function newKey() {
+  C = CURVES[$('curve').value]; const toy = C.id === 'toy';
+  $('bits').disabled = toy; BITS = +$('bits').value; $('bv').textContent = toy ? '–' : BITS;
+  KP = genKey(C, BITS); ENC = null; $('eout').innerHTML = ''; renderKey(); resetAttackUI();
+}
+function renderKey() {
+  $('keyinfo').innerHTML = `<div class="grid">
+    <div class="mini"><h4>🔑 Private key k <span class="m">(secret)</span></h4><p class="mono" style="word-break:break-all">${KP.k}</p><p class="note">chosen in 1 … ${KP.max}${C.id === 'toy' ? ' (the whole group)' : ` = 2<sup>${BITS}</sup>`}</p></div>
+    <div class="mini"><h4>🪪 Public key Q = k·G <span class="m">(published)</span></h4><p class="mono" title="${esc(ptFull(KP.Q))}">${ptStr(KP.Q)}</p><details><summary class="note">full coordinates</summary><pre class="mono" style="white-space:pre-wrap;word-break:break-all;margin:4px 0 0">${esc(ptFull(KP.Q))}</pre></details></div>
+    <div class="mini"><h4>📐 Curve</h4><p>y² = x³ + 7 over a ${C.p.toString(2).length}-bit field, base point G, group order ${C.id === 'toy' ? '9' : 'n ≈ 2²⁵⁶'}.</p></div></div>`;
+}
+function doEncrypt() {
+  if (!KP) newKey();
+  const m = msgBytes(); ENC = eccEncrypt(C, KP.Q, m); ENC.msg = m; renderEnc(); refreshB2();
+}
+function renderEnc() {
+  const e = ENC;
+  $('eout').innerHTML = `<h4 style="margin:14px 0 4px">🔒 Sender</h4>
+   <div class="hexout">① picks a fresh random <b>r</b> = ${shortHex(e.r, 24)}</div>
+   <div class="hexout">② <b>R = r·G</b> = ${ptStr(e.R)} &nbsp;→ <b>sent</b></div>
+   <div class="hexout">③ <b>S = r·Q</b> = ${ptStr(e.S)} &nbsp;→ <b>never sent</b>, only its x-coordinate is used</div>
+   <div class="hexout">④ keystream = Keccak-256(S.x ‖ 0), Keccak-256(S.x ‖ 1), … = ${hex(e.ks.slice(0, 16))}…</div>
+   <div class="hexout">⑤ message (hex) = ${hex(e.msg.slice(0, 16))}…<br>ciphertext <b>C = M ⊕ keystream</b> = ${hex(e.ct)} &nbsp;→ <b>sent with R</b></div>
+   <div id="dout"></div>`;
+}
+function doDecrypt(wrong) {
+  if (!ENC) doEncrypt();
+  const k = wrong ? (KP.k + 1n < C.n ? KP.k + 1n : KP.k - 1n) : KP.k;
+  const S = ecMul(C, k, ENC.R), pt = S ? xorBytes(ENC.ct, keystream(S, ENC.ct.length)) : null;
+  const ok = samePt(S, ENC.S);
+  $('dout').innerHTML = `<h4 style="margin:14px 0 4px">${wrong ? '🙈 Receiver with a wrong key' : '🔓 Receiver'}</h4>
+   <div class="hexout">① uses k = ${k}${wrong ? ' (wrong: k + 1)' : ''}</div>
+   <div class="hexout">② <b>S′ = k·R</b> = ${ptStr(S)} &nbsp;${ok ? '<span class="ok">✔ equals the sender\'s S</span>' : '<span class="bad">✘ different from S</span>'}</div>
+   <div class="hexout">③ message = C ⊕ keystream(S′):<br><b>${pt ? esc(decoder.decode(pt)) : '(S′ is the point at infinity, nothing to decrypt)'}</b></div>`;
+}
+$('curve').onchange = newKey; $('newkey').onclick = newKey; $('bits').oninput = () => { $('bv').textContent = $('bits').value; }; $('bits').onchange = newKey;
+$('enc').onclick = doEncrypt; $('dec').onclick = () => doDecrypt(false); $('decw').onclick = () => doDecrypt(true);
+
+// ====================== 2 · Caesar ======================
+function buildWheel() {
+  let s = '<circle cx="150" cy="150" r="145" fill="#f4f5ff" stroke="#d5d8ee"/><circle cx="150" cy="150" r="112" fill="#fff" stroke="#d5d8ee"/><circle cx="150" cy="150" r="78" fill="#f4f5ff" stroke="#d5d8ee"/>';
+  const put = (ch, r, col) => ''; let outer = '', inner = '';
+  for (let i = 0; i < 26; i++) {
+    const a = i * 360 / 26;
+    outer += `<text transform="translate(150 150) rotate(${a}) translate(0 -122)" text-anchor="middle" font-size="14" font-weight="700" style="fill:#272a44">${ALPHA[i]}</text>`;
+    inner += `<text transform="translate(150 150) rotate(${a}) translate(0 -90)" text-anchor="middle" font-size="14" font-weight="700" style="fill:#7c5cff">${ALPHA[i]}</text>`;
+  }
+  $('wheel').innerHTML = s + outer + `<g id="ring" style="transform-origin:150px 150px;transition:transform .7s cubic-bezier(.4,.1,.2,1)">${inner}</g><text x="150" y="146" text-anchor="middle" font-size="12">key</text><text id="wk" x="150" y="170" text-anchor="middle" font-size="26" font-weight="800" style="fill:#7c5cff"></text>`;
+}
+let ringAngle = 0;
+function renderCaesar() {
+  const k = +$('ck').value; $('ckv').textContent = k;
+  const c = caesar($('msg2').value, k); $('cenc').textContent = c; $('cdec').textContent = caesar(c, -k);
+  $('cmap').innerHTML = `<span style="color:#272a44">${ALPHA.split('').join(' ')}</span><br><span style="color:#7c5cff">${ALPHA.split('').map((_, i) => ALPHA[(i + k) % 26]).join(' ')}</span>`;
+  const ring = $('ring'); if (ring) { ring.style.transform = `rotate(${-k * 360 / 26}deg)`; $('wk').textContent = k; }
+}
+$('ck').oninput = renderCaesar;
+$('msg').oninput = () => { $('msg2').value = $('msg').value; ENC = null; $('eout').innerHTML = ''; renderCaesar(); refreshB2(); };
+$('msg2').oninput = () => { $('msg').value = $('msg2').value; ENC = null; $('eout').innerHTML = ''; renderCaesar(); refreshB2(); };
+
+// ====================== 3 · Compare ======================
+function runCompare() {
+  if (!KP) newKey();
+  const plain = (D.tests.mine + ' ' + D.tests.vim).toUpperCase(), lettersOnly = plain.replace(/ /g, '');
+  const cae = caesar(plain, 3).replace(/ /g, ''), pb = utf8(plain), e = eccEncrypt(C, KP.Q, pb);
+  const idx = s => Array.from(s, ch => ch.charCodeAt(0) - 65);
+  const cP = countsOf(idx(lettersOnly), 26), cC = countsOf(idx(cae), 26), cE = countsOf(Array.from(e.ct), 256), cB = countsOf(Array.from(pb), 256);
+  const row = (n, c, size) => `<tr><td>${n}</td><td>${c.reduce((a, b) => a + b, 0)}</td><td>${indexOfCoincidence(c).toFixed(4)}</td><td>${(1 / size).toFixed(4)}</td><td>${entropyBits(c).toFixed(2)}</td><td>${Math.log2(size).toFixed(2)}</td></tr>`;
+  const lab = ALPHA.split('');
+  const m = utf8($('msg').value), r1 = randBig(C.n - 1n - 1n), e1 = eccEncrypt(C, KP.Q, m, r1), e2 = eccEncrypt(C, KP.Q, m, r1 + 1n), e3 = eccEncrypt(C, KP.Q, m), e4 = eccEncrypt(C, KP.Q, m);
+  const pct = (a, b) => (100 * bitDiff(a, b) / (8 * a.length)).toFixed(0);
+  $('cmpout').innerHTML = `
+   <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(440px,1fr))">
+     <div>${barsSvg(cP, { labels: lab, color: '#7c5cff', title: 'Italian plaintext: letters', every: 1 })}</div>
+     <div>${barsSvg(cC, { labels: lab, color: '#f08a24', title: 'Caesar ciphertext (k = 3): same shape, shifted', every: 1 })}</div>
+     <div>${barsSvg(cE, { color: '#1fa971', title: 'ECC ciphertext: byte values 0–255, flat', xlab: 'byte value' })}</div>
+   </div>
+   <table style="margin-top:12px"><tr><th>Symbols</th><th>Count</th><th>Index of coincidence</th><th>…if perfectly uniform</th><th>Entropy (bits/symbol)</th><th>Maximum</th></tr>
+     ${row('Italian plaintext (letters A–Z)', cP, 26)}${row('Caesar ciphertext (letters A–Z)', cC, 26)}${row('Italian plaintext (bytes, with spaces)', cB, 256)}${row('ECC ciphertext (bytes)', cE, 256)}</table>
+   <p class="note">Caesar changes <i>which</i> letter is which, but not how often each one appears: IC and entropy are exactly those of the plaintext. The ECC ciphertext has IC close to 1/256 and entropy close to the maximum of 8 bits (slightly below, since the sample is finite): it carries no visible trace of the language.</p>
+   <div class="grid" style="margin-top:12px">
+     <div class="mini"><h4>🔑 Change the key by one</h4><p><b>Caesar</b> k = 3 → 4: every letter moves exactly one place (${esc(caesar($('msg').value, 3).slice(0, 30))}… → ${esc(caesar($('msg').value, 4).slice(0, 30))}…). The effect of the key is completely predictable.</p><p><b>ECC</b> r → r + 1: ${pct(e1.ct, e2.ct)}% of the ciphertext bits change, with no visible relation: the hash in the keystream scrambles everything.</p></div>
+     <div class="mini"><h4>🔁 Encrypt the same message twice</h4><p><b>Caesar</b>: identical results every time.</p><p><b>ECC</b>: ${hex(e3.ct.slice(0, 10))}… versus ${hex(e4.ct.slice(0, 10))}… (${pct(e3.ct, e4.ct)}% of the bits differ), because the sender picks a new r each time.</p></div>
+     <div class="mini"><h4>✏️ Change one letter of the message</h4><p>In <b>both</b> schemes one changed letter changes only the corresponding symbol of the ciphertext: neither scheme spreads the effect of the plaintext (no avalanche on the message). A hash function would; here this is a stream cipher, not a hash.</p></div>
+   </div>`;
+}
+$('runcmp').onclick = runCompare;
+
+// ====================== 4 · Break Caesar ======================
+let CORPUS = D.train, MODEL = trainModel(CORPUS), SECRET = null;
+const LENS = [3, 5, 10, 20, 40, 80, 160];
+function renderModel() {
+  const M = MODEL, top = [...M.uni.keys()].sort((a, b) => M.uni[b] - M.uni[a]).slice(0, 6).map(i => `${ALPHA[i]} ${(100 * M.uni[i] / M.N).toFixed(1)}%`).join(' · ');
+  $('minfo').innerHTML = `Learned from <b>${M.N.toLocaleString('en')}</b> letters. Letter frequencies, bigrams (pairs) and trigrams (triples) are counted; the ${M.dict.size} most frequent words (2+ letters) form a small dictionary. Most common letters: <b>${top}</b>.`;
+  $('mchart').innerHTML = barsSvg(Array.from(M.uni), { labels: ALPHA.split(''), color: '#7c5cff', title: 'Letter frequencies in the corpus' });
+}
+function retrain() { const v = $('csize').value; MODEL = trainModel(v === 'all' ? CORPUS : CORPUS.slice(0, +v)); renderModel(); }
+$('csize').onchange = () => { retrain(); attack(); };
+$('creset').onclick = () => { CORPUS = D.train; $('csize').value = 'all'; $('cfile').value = ''; retrain(); attack(); };
+$('cfile').onchange = e => {
+  const f = e.target.files[0]; if (!f) return; const r = new FileReader();
+  r.onload = () => { const t = normIt(String(r.result)); if (lettersOf(t).length < 2000) { $('minfo').textContent = 'That file has fewer than 2,000 letters: please choose a longer text.'; return; } CORPUS = t; $('csize').value = 'all'; retrain(); attack(); };
+  r.readAsText(f);
+};
+$('fromc').onclick = () => { $('cin').value = caesar($('msg2').value, +$('ck').value); SECRET = +$('ck').value; $('secnote').textContent = 'Ciphertext of tab 2 (the key is known to us, so the page can show whether the attack is right).'; attack(); };
+$('rnds').onclick = () => {
+  const L = Math.max(3, Math.min(400, +$('slen').value || 40)), key = 1 + Math.floor(Math.random() * 25);
+  $('cin').value = caesar(sampleWindow(D.tests.mine, L, Math.random), key); SECRET = key;
+  $('secnote').textContent = `A random piece of ${L} letters was encrypted with a secret key. The key is revealed (▲) after the attack.`; attack();
+};
+$('cin').oninput = () => { SECRET = null; $('secnote').textContent = ''; };
+$('atk').onclick = attack;
+function attack() {
+  const cipher = $('cin').value, n = lettersOf(cipher).length;
+  if (n < 2) { $('aout').innerHTML = '<p class="note">Please enter a ciphertext with at least two letters.</p>'; return; }
+  const res = Object.keys(METHODS).map(m => { const sc = scoreShifts(m, cipher, MODEL); return { m, sc, best: bestOf(sc) }; });
+  const rows = res.map(r => {
+    const und = r.best.length === 26, tie = !und && r.best.length > 1, key = r.best[0];
+    const dec = und ? '—' : esc(caesar(cipher, -key).slice(0, 70));
+    const verdict = SECRET === null ? '' : (r.best.includes(SECRET) ? `<span class="ok">✔${tie ? ' (tie)' : ''}</span>` : '<span class="bad">✘</span>');
+    return `<tr><td><i class="dot" style="background:${COL[r.m]}"></i>${METHODS[r.m].name}</td><td><b>${und ? 'undecided' : r.best.join(' or ')}</b></td><td class="mono">${dec}${caesar(cipher, -key).length > 70 && !und ? '…' : ''}</td><td>${verdict}</td></tr>`;
+  }).join('');
+  const tri = res.find(r => r.m === 'tri');
+  const cand = Array.from({ length: 26 }, (_, s) => `<tr${tri.best.includes(s) && tri.best.length < 26 ? ' style="background:#dcfbe9"' : ''}><td>${s}</td><td class="mono">${esc(caesar(cipher, -s).slice(0, 80))}</td></tr>`).join('');
+  $('aout').innerHTML = `<p class="note" style="margin-top:10px"><b>${n}</b> letters analysed.</p>
+   <table><tr><th>Method</th><th>Best key</th><th>Decryption</th><th>${SECRET === null ? '' : 'Correct?'}</th></tr>${rows}</table>
+   <p class="say" style="margin-top:14px">Score of each of the 26 possible keys (a tall bar = looks more Italian; green = chosen${SECRET === null ? '' : '; ▲ = true key'}):</p>
+   <div class="grid">${res.map(r => `<div>${miniChart(r.sc, r.best, SECRET, METHODS[r.m].name)}</div>`).join('')}</div>
+   <details style="margin-top:10px"><summary><b>All 26 candidate decryptions</b> (the exhaustive search a human would do)</summary><table style="margin-top:8px"><tr><th>Key</th><th>Plaintext if this were the key</th></tr>${cand}</table></details>`;
+}
+function expRun() {
+  const trials = Math.max(50, Math.min(2000, +$('etr').value || 300)), pool = D.tests[$('epool').value];
+  $('eres').innerHTML = '<p class="note">Running…</p>';
+  setTimeout(() => {
+    const t0 = performance.now(), res = runExperiment(MODEL, pool, LENS, trials, 2026), ms = Math.round(performance.now() - t0);
+    const tab = `<table style="margin-top:10px"><tr><th>Letters</th>${LENS.map(l => `<th>${l}</th>`).join('')}</tr>${Object.keys(res).map(m => `<tr><td><i class="dot" style="background:${COL[m]}"></i>${METHODS[m].short}</td>${res[m].map(v => `<td>${(v * 100).toFixed(0)}%</td>`).join('')}</tr>`).join('')}</table>`;
+    $('eres').innerHTML = `${lineChart(res, LENS)}${legend()}${tab}<p class="note">${trials} random pieces of text per length, random keys 1–25, ${ms} ms. 100% means that the key was found every time.</p>`;
+  }, 30);
+}
+$('erun').onclick = expRun;
+function corpusRun() {
+  const trials = Math.max(50, Math.min(2000, +$('etr').value || 300)), L = Math.max(3, Math.min(200, +$('elen').value || 10)), pool = D.tests[$('epool').value];
+  $('cres').innerHTML = '<p class="note">Running…</p>';
+  setTimeout(() => {
+    const sizes = [300, 1000, 3000, 10000, CORPUS.length].filter((v, i, a) => v <= CORPUS.length && a.indexOf(v) === i);
+    const rows = sizes.map(n => {
+      const M2 = trainModel(CORPUS.slice(0, n)), r = runExperiment(M2, pool, [L], trials, 7);
+      return `<tr><td>${lettersOf(CORPUS.slice(0, n)).length.toLocaleString('en')}</td>${Object.keys(r).map(m => `<td>${(r[m][0] * 100).toFixed(0)}%</td>`).join('')}</tr>`;
+    }).join('');
+    $('cres').innerHTML = `<table style="margin-top:8px"><tr><th>Letters in the corpus</th>${Object.keys(METHODS).map(m => `<th><i class="dot" style="background:${COL[m]}"></i>${METHODS[m].short}</th>`).join('')}</tr>${rows}</table><p class="note">Success rate on ciphertexts of ${L} letters. A tiny corpus gives noisy statistics (especially for trigrams and for the dictionary), but even a few thousand letters are enough for the letter-frequency method.</p>`;
+  }, 30);
+}
+$('crun').onclick = corpusRun;
+
+// ====================== 5 · Break the toy ECC ======================
+let busy = false;
+function resetAttackUI() { ['pb1', 'pb2'].forEach(i => $(i).style.width = '0'); $('st1').textContent = 'Not started. (Available up to 2¹⁸ keys: it needs about 35 µs per key in a browser.)'; $('st2').textContent = 'Not started.'; $('aresult').innerHTML = ''; $('forgeout').innerHTML = ''; refreshB2(); }
+function refreshB2() {
+  if (!KP) return;
+  $('known').innerHTML = `<div class="grid">
+    <div class="mini"><h4>📚 Public information</h4><p>Curve ${esc(C.name)}, base point G, and the public key<br><span class="mono">Q = ${ptStr(KP.Q)}</span></p><p>Range of the private key: <b>1 … ${KP.max}</b>${C.id === 'toy' ? '' : ` (2<sup>${BITS}</sup>)`}.</p></div>
+    <div class="mini"><h4>📨 Intercepted message</h4>${ENC ? `<p class="mono" style="word-break:break-all">R = ${ptStr(ENC.R)}<br>C = ${hex(ENC.ct)}</p>` : `<p>No message yet. <button class="btn" id="encnow">Encrypt the message now</button></p>`}</div>
+    <div class="mini"><h4>🚫 Not known to the attacker</h4><p>The private key k, the random r, the shared secret S and the plaintext.</p></div></div>`;
+  const b = $('encnow'); if (b) b.onclick = doEncrypt;
+  const first = ENC ? decoder.decode(ENC.msg).split(' ')[0] : '';
+  $('forgebtn').title = ENC ? `The first word has ${utf8(first).length} bytes` : '';
+  $('usop').textContent = USOP.toFixed(0); scaleTable();
+}
+function scaleTable() {
+  const rows = [16, 24, 32, 40, 64, 80, 128, 256].map(b => {
+    const brute = Math.pow(2, b), bs = 2 * Math.pow(2, b / 2), sec = o => fmtDur(o * USOP * 1e-6);
+    const label = b === 256 ? '256 (full secp256k1)' : b === 128 ? '128' : b;
+    return `<tr${b === 256 ? ' style="background:#fff1f2"' : ''}><td><b>${label}</b></td><td>${brute.toExponential(1)}</td><td><b>${sec(brute)}</b></td><td>${bs.toExponential(1)}</td><td>${Math.pow(2, b / 2).toExponential(1)}</td><td><b>${sec(bs)}</b></td></tr>`;
+  }).join('');
+  $('scale').innerHTML = `<table><tr><th>Private-key bits</th><th>Exhaustive: operations</th><th>Exhaustive: time</th><th>BSGS: operations</th><th>BSGS: table entries</th><th>BSGS: time</th></tr>${rows}</table>`;
+}
+async function finishAttack(res, name) {
+  if (!res) { $('aresult').innerHTML = '<p class="bad">Not found (unexpected).</p>'; return; }
+  const verified = samePt(ecMul(C, res.k, C.G), KP.Q), same = res.k === KP.k;
+  const pt = eccDecrypt(C, res.k, ENC.R, ENC.ct);
+  $('aresult').innerHTML = `<div class="pub" style="font-size:17px">🎯 ${name}: recovered k = ${res.k} ${verified ? '(k·G = Q ✔)' : '✘'} ${same ? '— identical to the secret key' : '— a different key, but equivalent'}<br>🔓 Decrypted message: <b>${pt ? esc(decoder.decode(pt)) : '—'}</b></div>`;
+}
+async function runBrute() {
+  if (busy) return; if (!KP) newKey(); if (!ENC) doEncrypt();
+  if (KP.max > (1n << 18n)) { $('st1').textContent = `Too many keys for a browser (more than 2¹⁸). Choose at most 18 bits, or use baby-step giant-step.`; return; }
+  busy = true; $('pb1').style.width = '0'; $('aresult').innerHTML = '';
+  const maxN = Number(KP.max);
+  const r = await bruteForce(C, KP.Q, KP.max, (k, ms) => { $('pb1').style.width = (k / maxN * 100) + '%'; $('st1').textContent = `Tried ${k.toLocaleString('en')} keys…`; });
+  if (r) { $('pb1').style.width = (r.ops / maxN * 100) + '%'; USOP = Math.max(1, r.ms * 1000 / r.ops); $('st1').innerHTML = `Found after <b>${r.ops.toLocaleString('en')}</b> tries in <b>${Math.round(r.ms)} ms</b> (≈ ${(r.ms * 1000 / r.ops).toFixed(0)} µs per try).`; }
+  busy = false; await finishAttack(r, 'Exhaustive search'); refreshB2();
+}
+async function runBsgs() {
+  if (busy) return; if (!KP) newKey(); if (!ENC) doEncrypt();
+  busy = true; $('pb2').style.width = '0'; $('aresult').innerHTML = '';
+  const r = await bsgs(C, KP.Q, KP.max, (ph, ops, tot, ms) => { $('pb2').style.width = Math.min(100, ops / tot * 100) + '%'; $('st2').textContent = ph === 'baby' ? `Baby steps: building the table (${ops.toLocaleString('en')} points)…` : `Giant steps: ${ops.toLocaleString('en')} operations so far…`; });
+  if (r) { $('pb2').style.width = '100%'; USOP = Math.max(1, r.ms * 1000 / r.ops); $('st2').innerHTML = `Found with only <b>${r.ops.toLocaleString('en')}</b> operations (table of ${r.tableSize.toLocaleString('en')} points) in <b>${Math.round(r.ms)} ms</b>.`; }
+  busy = false; await finishAttack(r, 'Baby-step giant-step'); refreshB2();
+}
+$('abrute').onclick = runBrute; $('absgs').onclick = runBsgs;
+$('forgebtn').onclick = () => {
+  if (!KP) newKey(); if (!ENC) doEncrypt();
+  let L = ENC.msg.indexOf(32); if (L < 0) L = ENC.msg.length;
+  const nw = utf8($('forge').value), orig = ENC.msg.slice(0, L);
+  if (nw.length !== L) { $('forgeout').innerHTML = `<p class="bad">The new word must have exactly ${L} bytes (the original first word, "${esc(decoder.decode(orig))}", has ${L}; accented letters count as 2).</p>`; return; }
+  const ct2 = ENC.ct.slice(); for (let i = 0; i < L; i++) ct2[i] ^= orig[i] ^ nw[i];
+  const pt = eccDecrypt(C, KP.k, ENC.R, ct2);
+  $('forgeout').innerHTML = `<div class="hexout">original C: ${hex(ENC.ct.slice(0, 16))}…<br>forged C′: ${hex(ct2.slice(0, 16))}… <i>(only the first ${L} bytes changed, computed as C ⊕ "${esc(decoder.decode(orig))}" ⊕ "${esc(decoder.decode(nw))}")</i></div><div class="pub" style="font-size:17px">The receiver decrypts the forged message with the real key and reads:<br><b>${esc(decoder.decode(pt))}</b></div>`;
+};
+
+// ====================== start ======================
+$('msg2').value = $('msg').value;
+buildWheel(); renderCaesar(); newKey(); runCompare(); renderModel();
+$('cin').value = caesar($('msg').value, 3); SECRET = 3; $('secnote').textContent = 'Default: the ciphertext of tab 2 with k = 3 (known to us, so the page can check the answer).';
+attack(); expRun(); corpusRun(); refreshB2();
+
+</script>
+</body>
+</html>
