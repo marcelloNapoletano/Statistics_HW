@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HMWK 4</title>
+<style>
+:root{
+  --ink:#272a44; --mute:#6a6f91; --line:#e3e6f6; --soft:#f4f5ff; --card:rgba(255,255,255,.9);
+  --violet:#7c5cff; --blue:#2f7dff; --orange:#f08a24; --green:#1fa971; --red:#e5484d; --yellow:#e6b800; --pink:#ec5fa5;
+  --shadow:0 12px 34px rgba(88,80,170,.12);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;color:var(--ink);font:16px/1.65 "Nunito","Quicksand",ui-rounded,"SF Pro Rounded","Segoe UI",system-ui,sans-serif;min-height:100vh;
+  background:radial-gradient(900px 500px at 6% -6%,#e5dfff 0,transparent 60%),radial-gradient(800px 520px at 100% 0,#ffe1f0 0,transparent 55%),radial-gradient(900px 600px at 50% 112%,#d6f4ff 0,transparent 60%),#f7f7ff;background-attachment:fixed}
+header,main{max-width:1080px;margin:0 auto;padding:0 20px}
+header{padding-top:26px}
+.back{display:inline-flex;align-items:center;gap:6px;color:var(--mute);text-decoration:none;font-size:14px;border-radius:99px;padding:6px 14px;background:#fff;box-shadow:0 2px 8px rgba(88,80,170,.10);transition:.18s}
+.back:hover{color:var(--violet);transform:translateX(-2px)}
+h1{margin:14px 0 6px;font-size:clamp(26px,4.5vw,38px);line-height:1.15;letter-spacing:-.3px;background:linear-gradient(90deg,var(--violet),var(--blue) 60%,#14b8c4);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{margin:0 0 6px;color:var(--mute);font-size:17px;max-width:760px}
+h3{margin:0 0 6px;font-size:19px}
+.tabs{display:inline-flex;flex-wrap:wrap;gap:4px;background:#fff;border-radius:99px;padding:5px;box-shadow:0 4px 16px rgba(88,80,170,.10);margin:16px 0 4px}
+.tabs button{border:0;background:transparent;color:var(--mute);padding:9px 18px;border-radius:99px;cursor:pointer;font:inherit;font-weight:700;transition:.2s}
+.tabs button:hover{color:var(--violet)}
+.tabs button.on{background:linear-gradient(135deg,var(--violet),var(--blue));color:#fff;box-shadow:0 6px 16px rgba(124,92,255,.35)}
+main{padding-bottom:70px}
+section.tab{display:none}
+section.tab.on{display:block;animation:rise .45s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.card{background:var(--card);border:1px solid rgba(124,92,255,.10);border-radius:24px;padding:22px 26px;margin:18px 0;box-shadow:var(--shadow)}
+.card.hero{background:linear-gradient(135deg,rgba(124,92,255,.10),rgba(47,125,255,.08));}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.mini{background:var(--soft);border-radius:18px;padding:16px 18px;transition:.2s}
+.mini:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(88,80,170,.12);background:#fff}
+.mini h4{margin:0 0 4px;font-size:16.5px}
+.mini p{margin:4px 0}
+.row{display:flex;gap:18px;flex-wrap:wrap}
+.row>*{flex:1 1 320px;min-width:0}
+.say{color:#3d4160;margin:2px 0 12px}
+.tip{background:#fff8e6;border-radius:14px;padding:10px 14px;margin-top:12px;color:#6b4e0c;font-size:15px}
+.note{color:var(--mute);font-size:14.5px}
+.m{color:var(--mute);font-size:13px}
+label{color:var(--mute);font-size:13px;font-weight:700;display:block;margin-bottom:4px}
+input,select{background:#fff;color:var(--ink);border:1.5px solid var(--line);border-radius:12px;padding:9px 12px;font:inherit;transition:.15s}
+input:focus,select:focus{outline:none;border-color:var(--violet);box-shadow:0 0 0 3px rgba(124,92,255,.15)}
+input[type=range]{padding:0;width:100%;accent-color:var(--violet);border:0}
+input[type=text]{width:100%}
+.btn{background:#fff;color:var(--ink);border:1.5px solid var(--line);border-radius:99px;padding:9px 18px;font:inherit;font-weight:700;cursor:pointer;transition:.18s}
+.btn:hover{border-color:var(--violet);color:var(--violet);transform:translateY(-1px)}
+.btn.primary{background:linear-gradient(135deg,var(--violet),var(--blue));color:#fff;border-color:transparent;box-shadow:0 6px 16px rgba(124,92,255,.32)}
+.btn.primary:hover{color:#fff;box-shadow:0 9px 22px rgba(124,92,255,.42)}
+.ctrls{display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin:10px 0}
+code,.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+.pub{font-size:clamp(17px,3vw,23px);font-weight:800;background:linear-gradient(135deg,#dcfbe9,#e0f2ff);color:#0e6b45;border-radius:18px;padding:14px 20px;margin:12px 0}
+.chips{display:flex;flex-wrap:wrap;gap:6px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px}
+.chip{background:var(--soft);border-radius:99px;padding:3px 10px}
+.chip.last{background:#dcfbe9;color:#0e6b45;font-weight:700}
+.chip.rep{background:#ede9ff;color:#5b3fd6}
+canvas{width:100%;max-width:560px;height:auto;background:#fbfbff;border-radius:18px;display:block;border:1px solid var(--line)}
+.legend span{display:inline-block;margin:0 14px 4px 0;font-size:13.5px;color:var(--mute)}
+.dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+#log{max-height:520px;overflow:auto;background:#fbfbff;border:1px solid var(--line);border-radius:18px;padding:8px}
+#log .r{padding:8px 12px;border-radius:12px;cursor:pointer;color:var(--mute);font-size:14px;transition:.15s}
+#log .r:hover{background:var(--soft)}
+#log .r.cur{background:#ede9ff;color:var(--ink)}
+#log .r p{margin:3px 0}
+#log .r .m{display:none}
+#log.math .r.cur .m{display:block;font-family:ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap}
+.cap{background:var(--soft);border-radius:14px;padding:10px 14px;margin:10px 0;min-height:66px;font-size:15px}
+.hexout{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;word-break:break-all;background:var(--soft);border-radius:14px;padding:10px 14px;margin:6px 0}
+.ok{color:var(--green);font-weight:700}.bad{color:var(--red);font-weight:700}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:14.5px;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+th,td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+th{background:var(--soft);color:var(--mute);font-weight:800}
+.tag{display:inline-block;font-size:11.5px;font-weight:700;border-radius:99px;padding:2px 10px;margin:0 4px 4px 0}
+.t-der{background:#efe9ff;color:#6a3fd8}.t-pk{background:#e0edff;color:#1f63d6}.t-hash{background:#ffeedb;color:#b45f0a}.t-chk{background:#dcf7e9;color:#13774f}.t-enc{background:#fff4c9;color:#8a6a00}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.tile{background:var(--soft);border-radius:18px;padding:14px 16px}
+.tile b{display:block;font-size:28px;line-height:1.2;background:linear-gradient(90deg,var(--violet),var(--blue));-webkit-background-clip:text;background-clip:text;color:transparent}
+.tile small{color:var(--mute)}
+.meter{display:grid;grid-template-columns:150px 1fr 48px;gap:12px;align-items:center;margin:8px 0;font-size:14px}
+.track{position:relative;height:12px;background:var(--soft);border-radius:99px}
+.track i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--violet),var(--blue))}
+.track u{position:absolute;top:-5px;bottom:-5px;width:2px;background:var(--ink);opacity:.4}
+.mv{font-weight:800;text-align:right}
+svg.plot text,svg.bars text,#timeline text{fill:var(--mute);font-family:inherit}
+.pipe{display:flex;flex-wrap:wrap;align-items:stretch;gap:6px;margin:12px 0}
+.node{background:#fff;border-radius:18px;padding:12px 12px;min-width:118px;flex:1 1 118px;text-align:center;box-shadow:0 4px 14px rgba(88,80,170,.10);transition:.2s}
+.node:hover{transform:translateY(-4px)}
+.node .e{font-size:26px;display:block}
+.node b{display:block;font-size:14.5px}
+.node small{color:var(--mute);font-size:12.5px}
+.arrow{align-self:center;color:var(--violet);text-align:center;font-size:12px;font-weight:700;min-width:84px}
+.hl{display:flex;gap:10px;align-items:flex-start;margin:8px 0}
+.hl .e{font-size:22px;line-height:1.4}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+textarea{width:100%;background:#fff;color:var(--ink);border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;font:13.5px ui-monospace,Menlo,Consolas,monospace;resize:vertical}
+textarea:focus{outline:none;border-color:var(--violet);box-shadow:0 0 0 3px rgba(124,92,255,.15)}
+details summary{cursor:pointer;color:var(--violet)}
+.legend{margin:6px 0 4px}
+</style>
+<style>
+.seg{display:inline-flex;background:#fff;border:1.5px solid var(--line);border-radius:99px;padding:3px}
+.seg button{border:0;background:transparent;color:var(--mute);padding:7px 14px;border-radius:99px;cursor:pointer;font:inherit;font-weight:700}
+.seg button.on{background:linear-gradient(135deg,var(--violet),var(--blue));color:#fff}
+.vgroups{display:flex;flex-wrap:wrap;gap:14px 26px;margin:16px 0 8px}
+.vgroup{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.vlab{font-weight:800;color:var(--ink);margin-right:4px}
+.vbtn{border:1.5px solid var(--line);background:#fff;color:var(--mute);padding:8px 14px;border-radius:99px;cursor:pointer;font:inherit;font-weight:700;transition:.18s}
+.vbtn:hover{border-color:var(--violet);color:var(--violet)}
+.vbtn.on{background:linear-gradient(135deg,var(--violet),var(--blue));color:#fff;border-color:transparent;box-shadow:0 6px 16px rgba(124,92,255,.32)}
+.opts{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;margin:8px 0}
+.chk{display:inline-flex;align-items:center;gap:6px;margin:0;cursor:pointer}
+.chk input{width:auto;accent-color:var(--violet)}
+.chartwrap{position:relative;width:100%;margin-top:6px}
+.chartwrap canvas{display:block;border-radius:14px}
+.busy{position:absolute;inset:0;background:rgba(255,255,255,.8);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--violet);border-radius:14px}
+.readout{position:absolute;top:10px;right:24px;background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:10px;padding:3px 10px;font-size:12.5px;color:var(--mute);display:none;pointer-events:none;white-space:pre}
+.sw{display:inline-block;width:22px;height:3px;margin-right:6px;vertical-align:3px}
+.dia{display:inline-block;width:9px;height:9px;transform:rotate(45deg);margin-right:7px}
+.mini-t{border-collapse:collapse;font-size:14px}.mini-t th,.mini-t td{padding:3px 10px;text-align:left;border-bottom:1px solid var(--line)}
+</style>
+</head>
+<body>
+<header>
+  <a class="back" href="index.html">← Home</a>
+  <h1>HMWK 4 · Many systems, many attackers</h1>
+  <p class="sub">What happens to the total, the average and the normalised penetration score when the number of systems n grows? Law of Large Numbers and Central Limit Theorem, simulated for the Bernoulli and Rademacher models.</p>
+</header>
+<main>
+
+<div class="card hero">
+  <h3>The setting</h3>
+  <p class="say">Imagine <b>m attackers</b>, each one trying to break into the same <b>n systems</b>, one after the other. On every system an attacker gets a result <b>X</b>.
+  In the <b>Bernoulli model</b> X = 1 if the system is penetrated and X = 0 if not (with probability <b>p</b> of success). In the <b>Rademacher model</b> X = +1 or −1 with probability ½ each: a fair, symmetric score with mean 0.
+  After n systems an attacker has a <b>total score Sₙ = X₁ + … + Xₙ</b>. Because every attacker is independent, the m attackers give us m samples, i.e. a <i>distribution</i> of scores.</p>
+  <div class="grid" style="margin-top:6px">
+    <div class="mini"><h4>Sₙ · total score</h4><p>Its spread <b>grows</b> with n: Var(Sₙ) = n·σ².</p></div>
+    <div class="mini"><h4>Sₙ/n · average score</h4><p>For Bernoulli it is the <i>fraction of systems penetrated</i>. Its spread <b>shrinks</b>: Var(Sₙ/n) = σ²/n. <b>Law of Large Numbers:</b> it concentrates on μ (μ = p, or 0 for Rademacher).</p></div>
+    <div class="mini"><h4>Sₙ/√n · normalised score</h4><p>Its spread stays <b>constant</b>: Var(Sₙ/√n) = σ². <b>Central Limit Theorem:</b> its distribution approaches a normal curve (standard normal N(0,1) for Rademacher, where σ = 1).</p></div>
+  </div>
+  <p class="note" style="margin-top:10px">Here μ = E[X] is the mean of one step and σ² = Var(X) its variance: μ = p and σ² = p(1−p) for Bernoulli, μ = 0 and σ² = 1 for Rademacher. Use the buttons below to plot each quantity and compare.</p>
+</div>
+
+<div class="card">
+  <div class="ctrls" style="align-items:end">
+    <div><label>Model</label>
+      <div class="seg" id="modelseg"><button data-model="bern" class="on">Bernoulli</button><button data-model="rad">Rademacher</button><button data-model="both">Both</button></div></div>
+    <div style="min-width:200px"><label>Success probability p (Bernoulli): <b id="pv">0.30</b></label><input id="p" type="range" min="0.05" max="0.95" step="0.05" value="0.3"></div>
+    <div><label>n = systems per attacker</label><select id="n"><option value="1000">1,000</option><option value="10000" selected>10,000</option><option value="100000">100,000</option></select></div>
+    <div><label>m = attackers</label><select id="m"><option value="50">50</option><option value="200">200</option><option value="1000" selected>1,000</option><option value="5000">5,000</option></select></div>
+    <button class="btn" id="redraw">🎲 New random draw</button>
+  </div>
+
+  <div class="vgroups">
+    <div class="vgroup"><span class="vlab">📈 Trajectories</span>
+      <button class="vbtn" data-view="trajS">Total score Sₙ</button>
+      <button class="vbtn on" data-view="trajA">Average Sₙ/n</button>
+      <button class="vbtn" data-view="trajN">Normalised Sₙ/√n</button></div>
+    <div class="vgroup"><span class="vlab">📊 Distributions</span>
+      <button class="vbtn" data-view="distS">Sₙ</button>
+      <button class="vbtn" data-view="distA">Sₙ/n</button>
+      <button class="vbtn" data-view="distN">Sₙ/√n</button></div>
+    <div class="vgroup"><span class="vlab">🧪 Convergence checks</span>
+      <button class="vbtn" data-view="var">Variance vs n</button>
+      <button class="vbtn" data-view="lln">Law of Large Numbers</button>
+      <button class="vbtn" data-view="clt">Central Limit Theorem</button></div>
+  </div>
+
+  <div class="opts">
+    <label class="chk" id="o_logx"><input type="checkbox" id="logx"> log scale for n</label>
+    <label class="chk" id="o_norm"><input type="checkbox" id="norm"> same height for every curve</label>
+    <label class="chk" id="o_z"><input type="checkbox" id="z"> Z-score: (Sₙ − nμ)/(σ√n)</label>
+    <button class="btn" id="replay">▶ Replay</button>
+    <span id="note" class="note"></span>
+  </div>
+
+  <div class="chartwrap">
+    <canvas id="cv"></canvas>
+    <div id="busy" class="busy" style="display:none"></div>
+    <div id="readout" class="readout"></div>
+  </div>
+  <div id="legend" class="legend"></div>
+</div>
+
+<div class="card">
+  <h3 id="vtitle">What you are seeing</h3>
+  <div class="grid">
+    <div class="mini"><h4>👀 What the picture shows</h4><div id="ex_see" class="say"></div></div>
+    <div class="mini"><h4>🔢 The numbers behind it</h4><div id="ex_num" class="say"></div></div>
+  </div>
+  <div class="tip" id="ex_tip"></div>
+</div>
+
+<div class="card">
+  <h3>🏢 What does it mean for n systems and m attackers?</h3>
+  <div id="story"></div>
+</div>
+
+<div class="card">
+  <h3>📋 Numbers for this simulation</h3>
+  <p class="note">Each row summarises the m attackers after n systems. "Theory" values come from the formulas above.</p>
+  <div id="tbl" style="overflow-x:auto"></div>
+</div>
+
+</main>
+<script id="core">
+// =====================================================================
+//  n systems, m attackers: simulation engine (pure JavaScript, no DOM)
+//  Each attacker goes through the systems one after another.
+//  X_i = result on system i. S_n = score after n systems.
+// =====================================================================
+function mulberry32(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const CP_BASE = [1, 2, 3, 5, 7, 10, 15, 20, 30, 50, 70, 100, 150, 200, 300, 500, 700, 1000, 1500, 2000, 3000, 5000, 7000, 10000, 15000, 20000, 30000, 50000, 70000, 100000];
+function checkpoints(n) { const cp = CP_BASE.filter(v => v <= n); if (cp[cp.length - 1] !== n) cp.push(n); return cp; }
+function modelInfo(id, p) {
+  if (id === 'bern') return { id, name: 'Bernoulli', mu: p, sigma: Math.sqrt(p * (1 - p)), rho: p * (1 - p) * ((1 - p) * (1 - p) + p * p), step: 1 };
+  return { id, name: 'Rademacher', mu: 0, sigma: 1, rho: 1, step: 2 };
+}
+const tick = () => new Promise(r => setTimeout(r, 0));
+
+async function simulate({ n, m, p, seed, K = 30 }, onProgress) {
+  const cp = checkpoints(n), ncp = cp.length, sim = { n, m, p, K, cp, models: {} };
+  let done = 0;
+  for (const id of ['bern', 'rad']) {
+    const rnd = mulberry32(seed + (id === 'rad' ? 7919 : 0)), info = modelInfo(id, p);
+    const S = new Int32Array(m * ncp), paths = new Int32Array(K * (n + 1)), thr = id === 'bern' ? p : 0.5;
+    const up = id === 'bern' ? 1 : 1, dn = id === 'bern' ? 0 : -1;
+    let last = performance.now();
+    for (let a = 0; a < m; a++) {
+      let s = 0, j = 0, next = cp[0]; const base = a * ncp, pb = a * (n + 1), keep = a < K;
+      for (let i = 1; i <= n; i++) {
+        s += rnd() < thr ? up : dn;
+        if (keep) paths[pb + i] = s;
+        if (i === next) { S[base + j] = s; j++; next = cp[j]; }
+      }
+      done++;
+      if (performance.now() - last > 40) { last = performance.now(); onProgress && onProgress(done / (2 * m)); await tick(); }
+    }
+    sim.models[id] = Object.assign(info, { S, paths });
+  }
+  return sim;
+}
+const col = (sim, M, j) => { const out = new Float64Array(sim.m), nc = sim.cp.length; for (let a = 0; a < sim.m; a++) out[a] = M.S[a * nc + j]; return out; };
+function meanVar(x) { const n = x.length; let s = 0; for (const v of x) s += v; const mu = s / n; let q = 0; for (const v of x) q += (v - mu) * (v - mu); return { mean: mu, variance: q / n }; }
+function erf(x) { const s = Math.sign(x); x = Math.abs(x); const t = 1 / (1 + 0.3275911 * x); return s * (1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-x * x)); }
+const Phi = z => 0.5 * (1 + erf(z / Math.SQRT2));
+const phi = z => Math.exp(-z * z / 2) / Math.sqrt(2 * Math.PI);
+function ksDist(z) { z = Float64Array.from(z).sort(); const n = z.length; let D = 0; for (let i = 0; i < n; i++) { const F = Phi(z[i]); D = Math.max(D, Math.abs((i + 1) / n - F), Math.abs(i / n - F)); } return D; }
+
+// per-checkpoint statistics of one model
+function statsAt(sim, M, j) {
+  const n = sim.cp[j], S = col(sim, M, j), A = S.map(v => v / n), N = S.map(v => v / Math.sqrt(n));
+  const ms = meanVar(S), ma = meanVar(A), mn = meanVar(N);
+  let mnA = Infinity, mxA = -Infinity; for (const v of A) { if (v < mnA) mnA = v; if (v > mxA) mxA = v; }
+  return { n, S, A, N, meanS: ms.mean, varS: ms.variance, meanA: ma.mean, varA: ma.variance, meanN: mn.mean, varN: mn.variance, minA: mnA, maxA: mxA };
+}
+function llnProb(sim, M, j, eps) { const n = sim.cp[j]; let c = 0; for (let a = 0; a < sim.m; a++) if (Math.abs(M.S[a * sim.cp.length + j] / n - M.mu) > eps) c++; return c / sim.m; }
+function cltDist(sim, M, j) { const n = sim.cp[j], z = col(sim, M, j).map(v => (v - n * M.mu) / (M.sigma * Math.sqrt(n))); return ksDist(z); }
+
+// histogram of S_n (integer lattice), converted to the variable v = (S - shift)/scale; returns density in v
+function histogram(sim, M, j, scale, shift, bins = 60) {
+  const n = sim.cp[j], S = col(sim, M, j), sd = M.sigma * Math.sqrt(n), sp = M.step;
+  const range = Math.max(8 * sd, sp), w = Math.max(sp, Math.ceil(range / bins / sp) * sp);
+  const base = n * M.mu, lo = Math.floor((base - 4.2 * sd) / w) * w;
+  const cnt = new Map(); for (const v of S) { const b = Math.floor((v - lo) / w); cnt.set(b, (cnt.get(b) || 0) + 1); }
+  const xs = [], ds = [], bw = w / scale, keys = [...cnt.keys()].sort((a, b) => a - b);
+  for (let b = keys[0]; b <= keys[keys.length - 1]; b++) { xs.push((lo + b * w - shift) / scale); ds.push((cnt.get(b) || 0) / (sim.m * bw)); }
+  return { xs, ds, bw };
+}
+</script>
+<script>
+const $ = id => document.getElementById(id);
+const NC = ['#7c5cff', '#2f7dff', '#1fa971', '#f08a24', '#e5484d'];          // colours for n = 10, 100, ...
+const QC = { S: '#7c5cff', A: '#1fa971', N: '#f08a24' };                      // colours for the three quantities
+const NS = [10, 100, 1000, 10000, 100000];
+const ST = { model: 'bern', view: 'trajA', p: 0.3, seed: 2026, logx: { trajS: false, trajA: true, trajN: true }, norm: { distS: true, distA: false, distN: false }, z: true, reveal: null };
+let SIM = null, busy = false, pending = false, timer = null;
+const fnum = (v, d = 3) => Number(v).toFixed(d);
+const sci = v => Number(v).toExponential(2);
+const int = v => Math.round(v).toLocaleString('en');
+const esc = s => String(s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+
+// =============== tiny plotting library on a canvas ===============
+function niceTicks(lo, hi, target = 6) {
+  const span = hi - lo, raw = span / target, mag = Math.pow(10, Math.floor(Math.log10(raw))), nr = raw / mag, step = (nr < 1.5 ? 1 : nr < 3 ? 2 : nr < 7 ? 5 : 10) * mag, t = [];
+  for (let v = Math.ceil(lo / step - 1e-9) * step; v <= hi + step * 1e-6; v += step) t.push(+v.toPrecision(12));
+  return t;
+}
+function logTicks(lo, hi) { const major = [], minor = []; for (let e = Math.floor(Math.log10(lo)) - 1; e <= Math.ceil(Math.log10(hi)); e++) for (const k of [1, 2, 5]) { const v = k * Math.pow(10, e); if (v < lo * 0.9999 || v > hi * 1.0001) continue; (k === 1 ? major : minor).push(v); } return { major, minor }; }
+function fmtTick(v, log) {
+  const a = Math.abs(v); if (a === 0) return '0';
+  if (log) return a >= 1 && a < 1e6 ? a.toLocaleString('en') : (a < 1 && a >= 0.001 ? String(+v.toPrecision(2)) : v.toExponential(0).replace('e+', 'e'));
+  if (a >= 10000) return v.toExponential(1).replace('e+', 'e').replace('.0e', 'e'); if (a >= 1000) return v.toLocaleString('en');
+  if (a >= 1) return String(+v.toPrecision(4)); if (a >= 0.001) return String(+v.toPrecision(3)); return v.toExponential(0);
+}
+class Plot {
+  constructor(cv) { this.cv = cv; this.ctx = cv.getContext('2d'); this.m = { l: 74, r: 18, t: 14, b: 52 }; }
+  resize() {
+    const dpr = window.devicePixelRatio || 1, w = Math.max(320, this.cv.parentElement.clientWidth), h = Math.round(Math.max(340, Math.min(620, w * 0.56)));
+    this.cv.style.width = w + 'px'; this.cv.style.height = h + 'px'; this.cv.width = Math.round(w * dpr); this.cv.height = Math.round(h * dpr);
+    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0); this.W = w; this.H = h;
+  }
+  setup(o) {
+    this.o = o; const c = this.ctx, m = this.m; this.x0 = m.l; this.x1 = this.W - m.r; this.y0 = this.H - m.b; this.y1 = m.t;
+    const f = (v, a, b, lg) => lg ? (Math.log(v) - Math.log(a)) / (Math.log(b) - Math.log(a)) : (v - a) / (b - a);
+    this.X = v => this.x0 + f(v, o.x[0], o.x[1], o.xlog) * (this.x1 - this.x0);
+    this.Y = v => this.y0 + f(v, o.y[0], o.y[1], o.ylog) * (this.y1 - this.y0);
+    this.invX = px => { const t = (px - this.x0) / (this.x1 - this.x0); return o.xlog ? Math.exp(Math.log(o.x[0]) + t * (Math.log(o.x[1]) - Math.log(o.x[0]))) : o.x[0] + t * (o.x[1] - o.x[0]); };
+    this.invY = py => { const t = (py - this.y0) / (this.y1 - this.y0); return o.ylog ? Math.exp(Math.log(o.y[0]) + t * (Math.log(o.y[1]) - Math.log(o.y[0]))) : o.y[0] + t * (o.y[1] - o.y[0]); };
+    c.clearRect(0, 0, this.W, this.H); c.fillStyle = '#fbfbff'; c.fillRect(this.x0, this.y1, this.x1 - this.x0, this.y0 - this.y1);
+    c.font = '12px system-ui, sans-serif'; c.lineWidth = 1;
+    const xt = o.xlog ? logTicks(o.x[0], o.x[1]) : { major: niceTicks(o.x[0], o.x[1], 8), minor: [] }, yt = o.ylog ? logTicks(o.y[0], o.y[1]) : { major: niceTicks(o.y[0], o.y[1], 7), minor: [] };
+    c.strokeStyle = '#eef0fb'; for (const v of xt.minor) { const x = this.X(v); c.beginPath(); c.moveTo(x, this.y0); c.lineTo(x, this.y1); c.stroke(); } for (const v of yt.minor) { const y = this.Y(v); c.beginPath(); c.moveTo(this.x0, y); c.lineTo(this.x1, y); c.stroke(); }
+    c.strokeStyle = '#e1e4f6'; c.fillStyle = '#6a6f91';
+    c.textAlign = 'center'; for (const v of xt.major) { const x = this.X(v); c.beginPath(); c.moveTo(x, this.y0); c.lineTo(x, this.y1); c.stroke(); c.fillText(fmtTick(v, o.xlog), x, this.y0 + 17); }
+    c.textAlign = 'right'; for (const v of yt.major) { const y = this.Y(v); c.beginPath(); c.moveTo(this.x0, y); c.lineTo(this.x1, y); c.stroke(); c.fillText(fmtTick(v, o.ylog), this.x0 - 8, y + 4); }
+    c.strokeStyle = '#c3c8e6'; c.strokeRect(this.x0, this.y1, this.x1 - this.x0, this.y0 - this.y1);
+    c.fillStyle = '#4a4f73'; c.font = '13px system-ui, sans-serif'; c.textAlign = 'center'; c.fillText(o.xlabel || '', (this.x0 + this.x1) / 2, this.H - 8);
+    c.save(); c.translate(16, (this.y0 + this.y1) / 2); c.rotate(-Math.PI / 2); c.fillText(o.ylabel || '', 0, 0); c.restore();
+  }
+  clip(fn) { const c = this.ctx; c.save(); c.beginPath(); c.rect(this.x0, this.y1, this.x1 - this.x0, this.y0 - this.y1); c.clip(); fn(c); c.restore(); }
+  line(pts, { c = '#000', w = 1.5, a = 1, dash = [] } = {}) {
+    this.clip(g => { g.globalAlpha = a; g.strokeStyle = c; g.lineWidth = w; g.setLineDash(dash); g.lineJoin = 'round'; g.beginPath(); let open = false;
+      for (const [x, y] of pts) { if (!isFinite(x) || !isFinite(y)) { open = false; continue; } const px = this.X(x), py = this.Y(y); if (open) g.lineTo(px, py); else { g.moveTo(px, py); open = true; } } g.stroke(); });
+  }
+  band(up, lo, color, a = 0.12) {
+    this.clip(g => { g.globalAlpha = a; g.fillStyle = color; g.beginPath(); up.forEach(([x, y], i) => i ? g.lineTo(this.X(x), this.Y(y)) : g.moveTo(this.X(x), this.Y(y))); for (let i = lo.length - 1; i >= 0; i--) g.lineTo(this.X(lo[i][0]), this.Y(lo[i][1])); g.closePath(); g.fill(); });
+  }
+  hist(xs, ds, bw, { c = '#000', fill = 0.25, w = 2, dash = [] } = {}) {
+    this.clip(g => { g.setLineDash(dash); g.lineWidth = w; g.strokeStyle = c; g.fillStyle = c; g.lineJoin = 'round'; g.beginPath(); const yb = this.Y(0);
+      g.moveTo(this.X(xs[0]), yb); xs.forEach((x, i) => { g.lineTo(this.X(x), this.Y(ds[i])); g.lineTo(this.X(x + bw), this.Y(ds[i])); }); g.lineTo(this.X(xs[xs.length - 1] + bw), yb);
+      if (fill) { g.globalAlpha = fill; g.fill(); g.globalAlpha = 1; } g.stroke(); });
+  }
+  dots(pts, { c = '#000', r = 3.4, shape = 'o' } = {}) {
+    this.clip(g => { g.fillStyle = c; for (const [x, y] of pts) { if (!isFinite(x) || !isFinite(y)) continue; const px = this.X(x), py = this.Y(y); g.beginPath(); if (shape === 'o') g.arc(px, py, r, 0, 7); else { g.moveTo(px, py - r * 1.3); g.lineTo(px + r * 1.3, py); g.lineTo(px, py + r * 1.3); g.lineTo(px - r * 1.3, py); g.closePath(); } g.fill(); } });
+  }
+  text(t, px, py, { c = '#4a4f73', align = 'left', size = 12, bold = false } = {}) { const g = this.ctx; g.fillStyle = c; g.font = `${bold ? '700 ' : ''}${size}px system-ui, sans-serif`; g.textAlign = align; g.fillText(t, px, py); }
+}
+const P = new Plot($('cv'));
+
+// =============== helpers ===============
+const activeModels = () => (ST.model === 'both' ? ['bern', 'rad'] : [ST.model]).map(id => SIM.models[id]);
+const nsUsed = () => NS.filter(v => v <= SIM.n && SIM.cp.includes(v));
+function sampleIdx(n, log, maxPts = 1300) {
+  const set = new Set([1, n]);
+  if (log) { const L = Math.log(n); for (let k = 0; k <= maxPts; k++) set.add(Math.max(1, Math.min(n, Math.round(Math.exp(L * k / maxPts))))); }
+  else { const st = Math.max(1, Math.ceil(n / maxPts)); for (let i = 1; i <= n; i += st) set.add(i); for (let i = 1; i <= Math.min(60, n); i++) set.add(i); }
+  return [...set].sort((a, b) => a - b);
+}
+function pathColor(modelId, k, both) {
+  if (!both) return `hsl(${Math.round((k * 137.5) % 360)} 70% 46%)`;
+  return modelId === 'bern' ? `hsl(${Math.round(8 + (k * 53) % 55)} 85% ${42 + (k % 3) * 6}%)` : `hsl(${Math.round(190 + (k * 41) % 100)} 70% ${40 + (k % 3) * 6}%)`;
+}
+function setLegend(items) {
+  $('legend').innerHTML = items.map(it => {
+    const sw = it.dash ? `<i class="sw" style="background:none;border-top:3px dashed ${it.c}"></i>` : it.ring ? `<i class="dot" style="background:none;border:2.5px solid ${it.c}"></i>` : it.diamond ? `<i class="dia" style="background:${it.c}"></i>` : it.line ? `<i class="sw" style="background:${it.c}"></i>` : `<i class="dot" style="background:${it.c}"></i>`;
+    return `<span>${sw}${it.t}</span>`;
+  }).join('');
+}
+const modelTag = M => ST.model === 'both' ? ` (${M.name})` : '';
+
+// =============== views ===============
+function drawTraj(kind) {
+  const ms = activeModels(), n = SIM.n, K = SIM.K, both = ms.length > 1, logx = ST.logx[`traj${kind}`], idx = sampleIdx(n, logx);
+  const val = (M, k, i) => { const s = M.paths[k * (n + 1) + i]; return kind === 'S' ? s : kind === 'A' ? s / i : s / Math.sqrt(i); };
+  const cen = (M, i) => kind === 'S' ? M.mu * i : kind === 'A' ? M.mu : M.mu * Math.sqrt(i);
+  const half = (M, i) => 2 * M.sigma * (kind === 'S' ? Math.sqrt(i) : kind === 'A' ? 1 / Math.sqrt(i) : 1);
+  let lo = Infinity, hi = -Infinity;
+  for (const M of ms) {
+    for (let k = 0; k < K; k++) for (const i of idx) { const v = val(M, k, i); if (v < lo) lo = v; if (v > hi) hi = v; }
+    if (kind === 'S') { lo = Math.min(lo, cen(M, n) - half(M, n)); hi = Math.max(hi, cen(M, n) + half(M, n)); }
+  }
+  const pad = (hi - lo) * 0.05 || 1; lo -= pad; hi += pad;
+  const cut = ST.reveal == null ? n : (logx ? Math.exp(Math.log(n) * ST.reveal) : n * ST.reveal), ix = idx.filter(i => i <= cut);
+  const ylabel = kind === 'S' ? 'total score Sₙ' : kind === 'A' ? 'average score Sₙ/n' : 'normalised score Sₙ/√n';
+  P.setup({ x: logx ? [1, n] : [0, n], y: [lo, hi], xlog: logx, xlabel: 'n = number of systems attacked so far', ylabel });
+  for (const M of ms) {
+    const dk = M.id === 'bern' ? '#9a4d00' : '#3b2fa8';
+    P.band(idx.map(i => [i, cen(M, i) + half(M, i)]), idx.map(i => [i, cen(M, i) - half(M, i)]), M.id === 'bern' ? '#f08a24' : '#7c5cff', 0.13);
+    P.line(idx.map(i => [i, cen(M, i)]), { c: dk, w: 2, dash: [7, 5] });
+    P.line(idx.map(i => [i, cen(M, i) + half(M, i)]), { c: dk, w: 1, dash: [3, 4], a: 0.7 }); P.line(idx.map(i => [i, cen(M, i) - half(M, i)]), { c: dk, w: 1, dash: [3, 4], a: 0.7 });
+  }
+  for (const M of ms) for (let k = 0; k < K; k++) P.line(ix.map(i => [i, val(M, k, i)]), { c: pathColor(M.id, k, both), w: 1.35, a: 0.8 });
+  const L = both ? [{ c: '#d9760f', t: 'Bernoulli attackers (warm colours)' }, { c: '#4b3fd0', t: 'Rademacher attackers (cool colours)' }] : [{ c: '#7c5cff', t: `${K} of the ${SIM.m.toLocaleString('en')} attackers, one colour each` }];
+  L.push({ c: '#444', dash: 1, t: 'expected value (theory)' }, { c: '#999', line: 1, t: '±2σ band (theory, about 95% of attackers)' });
+  setLegend(L);
+  const nm = { S: 'trajS', A: 'trajA', N: 'trajN' }; $('o_logx').style.display = ''; $('logx').checked = logx; ST.view = nm[kind];
+}
+function histCurves(kind) {
+  const ms = activeModels(), out = [];
+  ms.forEach((M, mi) => nsUsed().forEach((n, ni) => {
+    const j = SIM.cp.indexOf(n), z = ST.z && kind === 'N';
+    const scale = kind === 'S' ? 1 : kind === 'A' ? n : (z ? M.sigma * Math.sqrt(n) : Math.sqrt(n)), shift = z ? n * M.mu : 0;
+    const h = histogram(SIM, M, j, scale, shift), mean = (n * M.mu - shift) / scale, sd = M.sigma * Math.sqrt(n) / scale;
+    out.push({ M, n, mi, ni, h, mean, sd });
+  }));
+  return out;
+}
+function drawDist(kind) {
+  const cs = histCurves(kind), norm = ST.norm[`dist${kind}`], z = ST.z && kind === 'N', both = activeModels().length > 1;
+  let xlo = Infinity, xhi = -Infinity, ymax = 0;
+  for (const c of cs) { xlo = Math.min(xlo, c.mean - 4.3 * c.sd); xhi = Math.max(xhi, c.mean + 4.3 * c.sd); const pk = Math.max(...c.h.ds); c.pk = pk; ymax = Math.max(ymax, norm ? 1 : pk); }
+  if (kind === 'A') for (const M of activeModels()) { xlo = Math.max(xlo, Math.min(M.mu - 0.0, M.id === 'bern' ? 0 : -1) - 0.02); xhi = Math.min(xhi, M.id === 'bern' ? 1.02 : 1.02); }
+  if (kind === 'A') { const lo0 = Math.min(...activeModels().map(M => M.mu)), hi0 = Math.max(...activeModels().map(M => M.mu)); xlo = Math.max(xlo, activeModels().some(M => M.id === 'rad') ? -1.02 : -0.02); xhi = Math.min(xhi, 1.02); if (xlo > lo0 - 0.05) xlo = lo0 - 0.05; if (xhi < hi0 + 0.05) xhi = hi0 + 0.05; }
+  const xl = { S: 'total score Sₙ', A: 'average score Sₙ/n', N: z ? 'Z-score (Sₙ − nμ)/(σ√n)' : 'normalised score Sₙ/√n' }[kind];
+  P.setup({ x: [xlo, xhi], y: [0, ymax * 1.12], xlabel: xl, ylabel: norm ? 'relative height (peak = 1)' : 'density (area = 1)' });
+  const sc = c => norm ? 1 / c.pk : 1, npts = 220;
+  for (const c of cs) {                                 // normal approximation (dashed), then the histograms
+    const nrm = norm ? c.pk : 1, line = []; for (let i = 0; i <= npts; i++) { const x = c.mean - 4.3 * c.sd + 8.6 * c.sd * i / npts, d = phi((x - c.mean) / c.sd) / c.sd; line.push([x, norm ? d / (phi(0) / c.sd) : d]); }
+    P.line(line, { c: '#222', w: 1.1, dash: [4, 3], a: 0.75 });
+  }
+  for (const c of cs) { const second = both && c.mi === 1; P.hist(c.h.xs, c.h.ds.map(d => d * sc(c)), c.h.bw, { c: NC[NS.indexOf(c.n)], fill: second ? 0 : 0.26, w: second ? 2.2 : 1.8, dash: second ? [6, 3] : [] }); }
+  const L = nsUsed().map(n => ({ c: NC[NS.indexOf(n)], t: `n = ${n.toLocaleString('en')}` })); L.push({ c: '#222', dash: 1, t: 'normal curve with the same mean and variance' });
+  if (both) L.push({ c: '#666', line: 1, t: 'filled = Bernoulli · dashed outline = Rademacher' }); setLegend(L);
+  $('o_norm').style.display = ''; $('norm').checked = norm; $('o_z').style.display = kind === 'N' ? '' : 'none'; $('z').checked = ST.z;
+}
+function seriesVar() {
+  return activeModels().map(M => { const rows = SIM.cp.map((n, j) => statsAt(SIM, M, j)); return { M, rows }; });
+}
+function drawVar() {
+  const ser = seriesVar(), n = SIM.n; let lo = Infinity, hi = 0;
+  for (const { M, rows } of ser) for (const r of rows) for (const v of [r.varS, r.varA, r.varN]) if (v > 0) { lo = Math.min(lo, v); hi = Math.max(hi, v); }
+  for (const { M } of ser) { lo = Math.min(lo, M.sigma ** 2 / n); hi = Math.max(hi, n * M.sigma ** 2); }
+  P.setup({ x: [1, n], y: [lo / 2, hi * 2], xlog: true, ylog: true, xlabel: 'n = number of systems', ylabel: 'variance across the attackers (log scale)' });
+  const ns = SIM.cp;
+  for (const { M, rows } of ser) {
+    const dash = M.id === 'rad' && ser.length > 1 ? [6, 4] : [];
+    [['S', 'varS', k => k * M.sigma ** 2], ['A', 'varA', k => M.sigma ** 2 / k], ['N', 'varN', () => M.sigma ** 2]].forEach(([q, key, th]) => {
+      P.line([[1, th(1)], [n, th(n)]], { c: '#222', w: 1.2, dash: [3, 4], a: 0.8 });
+      P.line(rows.map(r => [r.n, r[key]]), { c: QC[q], w: 2, a: 0.9, dash });
+      P.dots(rows.map(r => [r.n, r[key]]), { c: QC[q], shape: M.id === 'rad' && ser.length > 1 ? 'd' : 'o', r: 3.2 });
+    });
+  }
+  const L = [{ c: QC.S, t: 'Var(Sₙ): grows like n·σ²' }, { c: QC.A, t: 'Var(Sₙ/n): shrinks like σ²/n' }, { c: QC.N, t: 'Var(Sₙ/√n): constant, σ²' }, { c: '#222', dash: 1, t: 'theory' }];
+  if (ser.length > 1) L.push({ c: '#666', diamond: 1, t: 'circles & solid = Bernoulli · diamonds & dashed = Rademacher' }); setLegend(L);
+  $('o_logx').style.display = 'none'; $('o_norm').style.display = 'none'; $('o_z').style.display = 'none';
+}
+const EPS = [0.2, 0.1, 0.05, 0.02], EC = ['#7c5cff', '#2f7dff', '#1fa971', '#e5484d'];
+function drawLln() {
+  const ms = activeModels(), n = SIM.n, both = ms.length > 1;
+  P.setup({ x: [1, n], y: [0, 1.04], xlog: true, xlabel: 'n = number of systems', ylabel: 'P( |Sₙ/n − μ| > ε ), fraction of attackers' });
+  ms.forEach(M => EPS.forEach((e, ei) => {
+    const pts = SIM.cp.map((nn, j) => [nn, llnProb(SIM, M, j, e)]), dash = M.id === 'rad' && both ? [6, 4] : [];
+    if (!both) P.line(SIM.cp.map(nn => [nn, Math.min(1, M.sigma ** 2 / (nn * e * e))]), { c: EC[ei], w: 1.3, dash: [2, 4], a: 0.75 });
+    P.line(pts, { c: EC[ei], w: 2.2, dash }); P.dots(pts, { c: EC[ei], shape: M.id === 'rad' && both ? 'd' : 'o', r: 3 });
+  }));
+  const L = EPS.map((e, i) => ({ c: EC[i], t: `ε = ${e}` })); if (!both) L.push({ c: '#555', dash: 1, t: 'Chebyshev bound σ²/(nε²), dotted' }); else L.push({ c: '#666', diamond: 1, t: 'circles & solid = Bernoulli · diamonds & dashed = Rademacher' });
+  setLegend(L); $('o_logx').style.display = 'none'; $('o_norm').style.display = 'none'; $('o_z').style.display = 'none';
+}
+function drawClt() {
+  const ms = activeModels(), n = SIM.n, floor = 1.36 / Math.sqrt(SIM.m), be = M => nn => 0.4748 * M.rho / (M.sigma ** 3 * Math.sqrt(nn));
+  const data = ms.map(M => ({ M, pts: SIM.cp.map((nn, j) => [nn, cltDist(SIM, M, j)]) }));
+  let lo = floor / 2, hi = 1; for (const d of data) for (const [, v] of d.pts) { lo = Math.min(lo, v / 1.5); }
+  lo = Math.max(1e-3, lo);
+  P.setup({ x: [1, n], y: [lo, 1], xlog: true, ylog: true, xlabel: 'n = number of systems', ylabel: 'distance to the normal curve (Kolmogorov, log scale)' });
+  P.line([[1, floor], [n, floor]], { c: '#8a8fb0', w: 1.6, dash: [2, 4] });
+  P.text('noise level of the experiment (≈ 1.36/√m)', P.x0 + 8, P.Y(floor) - 6, { c: '#6a6f91', size: 11.5 });
+  for (const { M, pts } of data) { const c = M.id === 'bern' ? '#f08a24' : '#7c5cff';
+    P.line([[1, be(M)(1)], [n, be(M)(n)]], { c, w: 1.2, dash: [7, 4], a: 0.8 });
+    P.line(pts, { c, w: 2.4 }); P.dots(pts, { c, shape: 'o', r: 3.2 }); }
+  const L = data.map(d => ({ c: d.M.id === 'bern' ? '#f08a24' : '#7c5cff', t: `${d.M.name}: measured distance` })); L.push({ c: '#444', dash: 1, t: 'Berry–Esseen bound ∝ 1/√n (dashed, same colour)' }, { c: '#8a8fb0', dash: 1, t: 'smallest distance this experiment can resolve' });
+  setLegend(L); $('o_logx').style.display = 'none'; $('o_norm').style.display = 'none'; $('o_z').style.display = 'none';
+}
+
+// =============== explanations ===============
+function perModel(fn) { return activeModels().map(M => `<p><b>${M.name}</b> (μ = ${fnum(M.mu, 2)}, σ = ${fnum(M.sigma, 3)}): ${fn(M)}</p>`).join(''); }
+function describe(view) {
+  const n = SIM.n, m = SIM.m, jl = SIM.cp.length - 1, ns = nsUsed(), both = activeModels().length > 1, bern = ST.model !== 'rad';
+  const st = M => statsAt(SIM, M, jl);
+  const D = {
+    trajS: { t: 'Total score Sₙ along the attack',
+      see: `<p>Every coloured line is one attacker: the total score after the first x systems. All lines drift along the dashed line <b>n·μ</b> (the expected score), and the bundle of lines <b>fans out</b> like √n (the shaded band is ±2σ√n, theory). The more systems are attacked, the further apart attackers end up in absolute terms.</p>${both ? '' : ST.model === 'rad' ? '<p>In the Rademacher model the lines are symmetric random walks: they wander up and down around 0.</p>' : '<p>In the Bernoulli model each success adds 1: every line climbs with average slope p.</p>'}`,
+      num: perModel(M => { const s = st(M); return `at n = ${int(n)} the mean of Sₙ over the ${int(m)} attackers is ${fnum(s.meanS, 1)} (theory nμ = ${fnum(n * M.mu, 1)}) and its standard deviation is ${fnum(Math.sqrt(s.varS), 1)} (theory σ√n = ${fnum(M.sigma * Math.sqrt(n), 1)}).`; }),
+      tip: 'The expected score grows like n but the spread grows only like √n, so the <i>relative</i> spread shrinks. That is the seed of the Law of Large Numbers.' },
+    trajA: { t: 'Average score Sₙ/n: the Law of Large Numbers',
+      see: `<p>Each line is the running average of one attacker, i.e. the <b>fraction of systems penetrated so far</b> (for Rademacher, the average score per system). At the beginning the lines are wild: after one system the average is just 0 or 1 (or ±1). Then they <b>funnel into the horizontal line y = μ</b>. The funnel width is ±2σ/√n (shaded). This is <b>convergence in probability</b>: for any ε, the chance that an attacker's average is farther than ε from μ goes to 0.</p><p class="note">Tip: the log scale for n (ticked by default) makes the early steps visible.</p>`,
+      num: perModel(M => { const s = st(M); return `at n = ${int(n)} the average of Sₙ/n is ${fnum(s.meanA, 4)} (μ = ${fnum(M.mu, 2)}); its standard deviation is ${fnum(Math.sqrt(s.varA), 4)} (theory σ/√n = ${fnum(M.sigma / Math.sqrt(n), 4)}); the worst attacker has ${fnum(s.minA, 4)} and the best ${fnum(s.maxA, 4)}.`; }),
+      tip: 'The line does not move: the probability p of a single attack stays what it is. What changes is that the <i>observed frequency</i> gets closer and closer to it.' },
+    trajN: { t: 'Normalised score Sₙ/√n: the right scale for fluctuations',
+      see: `<p>Dividing by √n makes the width of the bundle <b>constant</b> (band ±2σ, theory). The lines do <b>not</b> converge to a point: they keep wandering inside the band. What stabilises is the <i>distribution</i> at each n, which approaches a normal curve (Central Limit Theorem).</p>${bern ? '<p>For Bernoulli (μ ≠ 0) the centre μ√n keeps growing, so the whole bundle drifts away from 0: Sₙ/√n only makes sense after subtracting the mean (see "Z-score" in the distribution view).</p>' : ''}`,
+      num: perModel(M => { const s = st(M); return `at n = ${int(n)} the mean of Sₙ/√n is ${fnum(s.meanN, 3)} (theory μ√n = ${fnum(M.mu * Math.sqrt(n), 3)}); its standard deviation is ${fnum(Math.sqrt(s.varN), 3)} (theory σ = ${fnum(M.sigma, 3)}).`; }),
+      tip: 'Compare the three trajectory views: width ∝ √n for Sₙ, ∝ 1/√n for Sₙ/n, and constant for Sₙ/√n.' },
+    distS: { t: 'Distribution of the total score Sₙ',
+      see: `<p>Histograms of Sₙ over the ${int(m)} attackers, for increasing n. To make them comparable, every curve is scaled to the same height. The <b>centre moves</b> to nμ and the <b>width grows</b> like σ√n: absolute differences between attackers become larger. The dashed black curves are normal curves with the same mean and variance.</p>`,
+      num: `<table class="mini-t"><tr><th>n</th>${activeModels().map(M => `<th>${M.name}: std of Sₙ (theory)</th>`).join('')}</tr>${ns.map(nn => `<tr><td>${int(nn)}</td>${activeModels().map(M => { const s = statsAt(SIM, M, SIM.cp.indexOf(nn)); return `<td>${fnum(Math.sqrt(s.varS), 2)} (${fnum(M.sigma * Math.sqrt(nn), 2)})</td>`; }).join('')}</tr>`).join('')}</table>`,
+      tip: 'Even the raw totals look more and more bell-shaped, but their centre and width keep changing with n, so they cannot converge by themselves: we need a normalisation.' },
+    distA: { t: 'Distribution of the average Sₙ/n: concentration on μ',
+      see: `<p>The area under each curve is 1: it is the <b>probability mass</b>. For n = 10 the mass is spread out; as n grows it piles up in a <b>tall, narrow spike around μ</b> (width σ/√n). Almost all attackers end up with practically the same success rate. This is the statement to verify: <i>the probability mass concentrates on p as n → ∞</i> (on 0 for Rademacher).</p>`,
+      num: `<table class="mini-t"><tr><th>n</th>${activeModels().map(M => `<th>${M.name}: std of Sₙ/n (theory σ/√n)</th>`).join('')}</tr>${ns.map(nn => `<tr><td>${int(nn)}</td>${activeModels().map(M => { const s = statsAt(SIM, M, SIM.cp.indexOf(nn)); return `<td>${fnum(Math.sqrt(s.varA), 4)} (${fnum(M.sigma / Math.sqrt(nn), 4)})</td>`; }).join('')}</tr>`).join('')}</table>`,
+      tip: 'Untick "same height" to see the real densities: the curve for the largest n becomes extremely tall because the same unit of probability is squeezed into a very narrow interval.' },
+    distN: { t: 'Distribution of Sₙ/√n: the Central Limit Theorem',
+      see: `<p>Now the width is the same for every n, so the curves can be compared directly. For <b>Rademacher</b> (σ = 1, μ = 0) they land on the <b>standard normal curve</b> N(0,1) (dashed black) already for moderate n. For <b>Bernoulli</b> the centre sits at μ√n and moves to the right as n grows; the <b>Z-score</b> option (ticked by default) subtracts the mean and divides by σ: then it also converges to N(0,1). Untick it to see the raw drift.</p>`,
+      num: `<table class="mini-t"><tr><th>n</th>${activeModels().map(M => `<th>${M.name}: mean / std of ${ST.z ? 'Z' : 'Sₙ/√n'}</th>`).join('')}<th>Kolmogorov distance${both ? 's' : ''} to N(0,1)</th></tr>${ns.map(nn => { const j = SIM.cp.indexOf(nn); return `<tr><td>${int(nn)}</td>${activeModels().map(M => { const s = statsAt(SIM, M, j), z = ST.z; const mu = z ? (s.meanS - nn * M.mu) / (M.sigma * Math.sqrt(nn)) : s.meanN, sd = z ? Math.sqrt(s.varS) / (M.sigma * Math.sqrt(nn)) : Math.sqrt(s.varN); return `<td>${fnum(mu, 3)} / ${fnum(sd, 3)}</td>`; }).join('')}<td>${activeModels().map(M => fnum(cltDist(SIM, M, j), 3)).join(' · ')}</td></tr>`; }).join('')}</table>`,
+      tip: 'The Central Limit Theorem needs the <i>centred</i> and <i>scaled</i> sum: (Sₙ − nμ)/(σ√n). In the symmetric Rademacher case μ = 0 and σ = 1, so Sₙ/√n is already the right quantity.' },
+    var: { t: 'Variance under the three normalisations',
+      see: `<p>Points are the <b>measured variances</b> across the attackers; the dotted black lines are the theory. Both axes are logarithmic, so the three power laws are straight lines: <b style="color:${QC.S}">Var(Sₙ) = nσ²</b> goes up with slope +1, <b style="color:${QC.A}">Var(Sₙ/n) = σ²/n</b> goes down with slope −1, and <b style="color:${QC.N}">Var(Sₙ/√n) = σ²</b> is flat. √n is the only normalisation that keeps the variance finite and non-zero.</p>`,
+      num: perModel(M => { const s = st(M); return `at n = ${int(n)}: Var(Sₙ) = ${sci(s.varS)} (theory ${sci(n * M.sigma ** 2)}), Var(Sₙ/n) = ${sci(s.varA)} (theory ${sci(M.sigma ** 2 / n)}), Var(Sₙ/√n) = ${fnum(s.varN, 4)} (theory ${fnum(M.sigma ** 2, 4)}).`; }),
+      tip: `The points scatter slightly around the lines because only m = ${int(m)} attackers are used: the relative error of a variance estimate is about √(2/m) ≈ ${fnum(100 * Math.sqrt(2 / m), 1)}%.` },
+    lln: { t: 'Convergence in probability of Sₙ/n',
+      see: `<p>Each curve shows the fraction of attackers whose average is farther than ε from μ, as a function of n. Every curve <b>decreases to 0</b>, and the smaller ε is, the larger n must be before it happens. This is the definition of convergence in probability. In the single-model view the dotted lines are the <b>Chebyshev bound</b> σ²/(nε²): the true probability always stays below it (it is conservative).</p>`,
+      num: perModel(M => { const j = SIM.cp.indexOf(ns.length > 2 ? ns[2] : ns[ns.length - 1]), nn = SIM.cp[j]; return `at n = ${int(nn)}: ${EPS.map(e => `P(|Sₙ/n − μ| > ${e}) = ${fnum(llnProb(SIM, M, j, e), 3)}`).join(', ')}.`; }),
+      tip: 'To halve ε you need about four times more systems (the spread of Sₙ/n shrinks like 1/√n). With a symmetric Rademacher model the probabilities are slightly higher than for Bernoulli p = 0.3, because σ is larger.' },
+    clt: { t: 'Convergence in distribution of Sₙ/√n to the normal',
+      see: `<p>For each n we measure the largest vertical gap between the empirical distribution function of the Z-scores (Sₙ − nμ)/(σ√n) and the normal one. The gap <b>shrinks like 1/√n</b> (dashed Berry–Esseen line). It can only be measured down to the grey dotted line: with m attackers the empirical distribution itself has a random error of about 1.36/√m, so to see the convergence for larger n we need <b>more attackers</b>.</p>`,
+      num: perModel(M => `distance to N(0,1): ${nsUsed().map(nn => `n = ${int(nn)}: ${fnum(cltDist(SIM, M, SIM.cp.indexOf(nn)), 3)}`).join(' · ')}. Noise level 1.36/√m = ${fnum(1.36 / Math.sqrt(m), 3)}.`),
+      tip: 'Try m = 5,000: the noise level drops to 0.019 and the downward trend can be followed to larger n. For Bernoulli with p far from ½ the approach is slower (the distribution is skewed), which the larger Berry–Esseen constant ρ/σ³ reflects.' }
+  };
+  return D[view];
+}
+function story() {
+  const n = SIM.n, m = SIM.m, jl = SIM.cp.length - 1, B = SIM.models.bern, R = SIM.models.rad, sb = statsAt(SIM, B, jl), sr = statsAt(SIM, R, jl);
+  const extreme = (M, s) => `the luckiest of the ${int(m)} attackers ends at ${fnum(s.maxA * 100, 2)}% and the unluckiest at ${fnum(s.minA * 100, 2)}%`;
+  return `<div class="grid">
+    <div class="mini"><h4>🎯 Bernoulli: successful penetrations</h4><p>Each attacker succeeds on a system with probability p = ${fnum(SIM.p, 2)}. With n = ${int(n)} systems an attacker penetrates on average <b>${int(sb.meanS)}</b> of them, with a typical deviation of only <b>±${fnum(Math.sqrt(sb.varS), 0)}</b> systems, i.e. a success rate of ${fnum(sb.meanA * 100, 2)}% ± ${fnum(Math.sqrt(sb.varA) * 100, 2)}%. Attackers become <i>almost interchangeable</i>: ${extreme(B, sb)}.</p></div>
+    <div class="mini"><h4>⚖️ Rademacher: a fair game</h4><p>With symmetric ±1 results the expected net score is 0 for everybody, but individual attackers end at about <b>±${fnum(Math.sqrt(sr.varS), 0)}</b> (= √n). Per system this is a net score of 0 ± ${fnum(Math.sqrt(sr.varA), 4)}: luck cancels out on average, and the gap between best (${fnum(sr.maxA, 4)}) and worst (${fnum(sr.minA, 4)}) attacker shrinks as n grows.</p></div>
+    <div class="mini"><h4>🏢 Effect of the number of systems n</h4><p>The total score grows ∝ n, its absolute spread ∝ √n, so the <b>relative</b> spread (the spread of Sₙ/n) shrinks like 1/√n. For a defender this means that results become more and more predictable: with many systems the aggregate penetration rate is almost certain, but a few unlucky systems always remain.</p></div>
+    <div class="mini"><h4>🥷 Effect of the number of attackers m</h4><p>m does <b>not</b> change the typical outcome or the limit: it only makes the histogram of attackers more precise (noise ≈ 1/√m) and makes the <b>extremes</b> more extreme: the best of m attackers sits roughly σ√(2 ln m / n) above μ. Many attackers also mean that, somewhere, one of them is unusually lucky.</p></div>
+  </div>`;
+}
+function tableHtml() {
+  const ns = nsUsed(), hdr = ['n', 'mean Sₙ/n (μ)', 'std Sₙ/n (σ/√n)', 'std Sₙ (σ√n)', 'std Sₙ/√n (σ)', 'worst … best Sₙ/n', 'distance to N(0,1)'];
+  let h = `<table><tr>${hdr.map(x => `<th>${x}</th>`).join('')}</tr>`;
+  for (const M of activeModels()) {
+    h += `<tr><td colspan="7" style="background:#f4f5ff"><b>${M.name}</b> · μ = ${fnum(M.mu, 2)}, σ = ${fnum(M.sigma, 3)}</td></tr>`;
+    for (const nn of ns) { const s = statsAt(SIM, M, SIM.cp.indexOf(nn)); h += `<tr><td>${int(nn)}</td><td>${fnum(s.meanA, 4)} (${fnum(M.mu, 2)})</td><td>${fnum(Math.sqrt(s.varA), 4)} (${fnum(M.sigma / Math.sqrt(nn), 4)})</td><td>${fnum(Math.sqrt(s.varS), 2)} (${fnum(M.sigma * Math.sqrt(nn), 2)})</td><td>${fnum(Math.sqrt(s.varN), 3)} (${fnum(M.sigma, 3)})</td><td>${fnum(s.minA, 3)} … ${fnum(s.maxA, 3)}</td><td>${fnum(cltDist(SIM, M, SIM.cp.indexOf(nn)), 3)}</td></tr>`; }
+  }
+  return h + '</table>';
+}
+
+// =============== render / interaction ===============
+function render() {
+  if (!SIM) return; P.resize();
+  const v = ST.view;
+  ['o_logx', 'o_norm', 'o_z'].forEach(id => $(id).style.display = 'none');
+  $('replay').style.display = v.startsWith('traj') ? '' : 'none';
+  if (v === 'trajS') drawTraj('S'); else if (v === 'trajA') drawTraj('A'); else if (v === 'trajN') drawTraj('N');
+  else if (v === 'distS') drawDist('S'); else if (v === 'distA') drawDist('A'); else if (v === 'distN') drawDist('N');
+  else if (v === 'var') drawVar(); else if (v === 'lln') drawLln(); else if (v === 'clt') drawClt();
+  const d = describe(v); $('vtitle').textContent = d.t; $('ex_see').innerHTML = d.see; $('ex_num').innerHTML = d.num; $('ex_tip').innerHTML = '💡 ' + d.tip;
+  $('story').innerHTML = story(); $('tbl').innerHTML = tableHtml();
+  $('note').textContent = SIM.note || '';
+}
+function setView(v, replay = true) {
+  ST.view = v; document.querySelectorAll('.vbtn').forEach(b => b.classList.toggle('on', b.dataset.view === v)); stopAnim(); render();
+  if (replay && v.startsWith('traj')) startAnim();
+}
+function startAnim() {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  stopAnim(); const t0 = performance.now(), dur = 3600;
+  const step = now => { const f = Math.min(1, (now - t0) / dur); ST.reveal = f >= 1 ? null : 1 - Math.pow(1 - f, 2); render(); if (f < 1) timer = requestAnimationFrame(step); else timer = null; };
+  timer = requestAnimationFrame(step);
+}
+function stopAnim() { if (timer) cancelAnimationFrame(timer); timer = null; ST.reveal = null; }
+async function run() {
+  if (busy) { pending = true; return; } busy = true; stopAnim();
+  const n = +$('n').value; let m = +$('m').value, note = '';
+  if (n * m > 1e8) { const opts = [50, 200, 1000, 5000].filter(o => n * o <= 1e8); m = opts[opts.length - 1]; $('m').value = m; note = `With n = ${int(n)} the number of attackers was limited to ${int(m)} to keep the simulation fast.`; }
+  const bz = $('busy'); bz.style.display = ''; bz.textContent = 'Simulating… 0%';
+  SIM = await simulate({ n, m, p: ST.p, seed: ST.seed }, f => { bz.textContent = `Simulating… ${Math.round(f * 100)}%`; });
+  SIM.note = note; bz.style.display = 'none'; busy = false; render(); if (ST.view.startsWith('traj')) startAnim();
+  if (pending) { pending = false; run(); }
+}
+document.querySelectorAll('.vbtn').forEach(b => b.onclick = () => setView(b.dataset.view));
+document.querySelectorAll('#modelseg button').forEach(b => b.onclick = () => { ST.model = b.dataset.model; document.querySelectorAll('#modelseg button').forEach(x => x.classList.toggle('on', x === b)); if (SIM) { stopAnim(); render(); if (ST.view.startsWith('traj')) startAnim(); } });
+$('p').oninput = () => { ST.p = +$('p').value; $('pv').textContent = ST.p.toFixed(2); clearTimeout(run.t); run.t = setTimeout(run, 250); };
+$('n').onchange = run; $('m').onchange = run;
+$('redraw').onclick = () => { ST.seed = Math.floor(Math.random() * 1e9); run(); };
+$('replay').onclick = () => { render(); startAnim(); };
+$('logx').onchange = () => { const k = ST.view; if (k in ST.logx) { ST.logx[k] = $('logx').checked; stopAnim(); render(); } };
+$('norm').onchange = () => { ST.norm[ST.view] = $('norm').checked; render(); };
+$('z').onchange = () => { ST.z = $('z').checked; render(); };
+window.addEventListener('resize', () => { clearTimeout(window._rz); window._rz = setTimeout(() => { if (SIM && !timer) render(); }, 120); });
+$('cv').addEventListener('mousemove', e => {
+  if (!SIM || !P.o) return; const r = $('cv').getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top, ro = $('readout');
+  if (px < P.x0 || px > P.x1 || py < P.y1 || py > P.y0) { ro.style.display = 'none'; return; }
+  ro.style.display = ''; ro.textContent = `x = ${fmtTick(P.invX(px), false)}   y = ${fmtTick(P.invY(py), false)}`;
+});
+$('cv').addEventListener('mouseleave', () => { $('readout').style.display = 'none'; });
+run();
+</script>
+</body></html>
