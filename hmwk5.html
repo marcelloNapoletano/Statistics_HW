@@ -117,7 +117,7 @@ details summary{cursor:pointer;color:var(--violet)}
 .chk{display:inline-flex;align-items:center;gap:6px;margin:0;cursor:pointer}
 .chk input{width:auto;accent-color:var(--violet)}
 .chartwrap{position:relative;width:100%;margin-top:6px}
-.chartwrap canvas{display:block;border-radius:14px}
+.chartwrap canvas{display:block;border-radius:14px;max-width:none;width:100%;border:1px solid var(--line)}
 .busy{position:absolute;inset:0;background:rgba(255,255,255,.8);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--violet);border-radius:14px}
 .readout{position:absolute;top:10px;right:24px;background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:10px;padding:3px 10px;font-size:12.5px;color:var(--mute);display:none;pointer-events:none;white-space:pre}
 .sw{display:inline-block;width:22px;height:3px;margin-right:6px;vertical-align:3px}
@@ -168,8 +168,16 @@ variance = SS / (k - 1)</pre>
 
 <div class="card">
   <h3>🧪 Try it on your own numbers</h3>
-  <p class="note">Type numbers separated by commas or spaces. The table shows the three recurrences step by step and checks the final result against the textbook two-pass formula.</p>
+  <p class="note">Type numbers separated by commas or spaces. Move the slider (or press Play) to watch the mean and the spread being updated one value at a time; the table shows the recurrences and checks the final result against the textbook two-pass formula.</p>
   <div class="ctrls" style="align-items:end"><div style="flex:1;min-width:240px"><label>Data</label><input type="text" id="wdata" value="2, 7, 4, 9, 5, 3"></div></div>
+  <div class="ctrls" style="align-items:center;margin-top:10px">
+    <button class="btn" id="wprev">◀</button><button class="btn primary" id="wplay">▶ Play</button><button class="btn" id="wnext">▶</button>
+    <div style="flex:1;min-width:200px"><label>Step k = <b id="wkv">6</b></label><input type="range" id="wk" min="1" max="6" step="1" value="6"></div>
+    <button class="btn" id="wrand">🎲 Random data</button>
+  </div>
+  <div class="chartwrap" style="margin-top:6px"><canvas id="wcv"></canvas></div>
+  <div class="legend" id="wleg"><span><i class="dot" style="background:#7c5cff"></i>values x<sub>k</sub> (grey = not yet seen)</span><span><i class="sw" style="background:#1fa971"></i>running mean M<sub>k</sub></span><span><i class="sw" style="background:#c9b8ff"></i>M<sub>k</sub> ± s<sub>k</sub></span><span><i class="sw" style="background:#f08a24"></i>old gap x<sub>k</sub> − M<sub>k−1</sub></span><span><i class="sw" style="background:#e5484d"></i>new gap x<sub>k</sub> − M<sub>k</sub></span></div>
+  <div class="tip" id="wstep" style="background:#f4f5ff;color:#272a44"></div>
   <div id="wtab" style="overflow-x:auto;margin-top:8px"></div>
   <div id="wcheck" class="tip"></div>
   <p class="say" style="margin-top:12px"><b>Why use it?</b> The "textbook" shortcut SS = Σx² − k·M² subtracts two huge, almost equal numbers when the data are large and close together, and loses all its digits. Welford never does.</p>
@@ -529,11 +537,31 @@ async function run() {
 }
 // ---- Exercise 1 widgets
 function welford(xs) { let M = 0, SS = 0; const rows = []; xs.forEach((x, i) => { const k = i + 1, d = x - M; M += d / k; SS += d * (x - M); rows.push({ k, x, d, M, SS, s2: k > 1 ? SS / (k - 1) : NaN }); }); return rows; }
+let wk = 6, wxs = [], wtimer = null;
+const WP = new Plot($('wcv'));
+WP.resize = function () { const dpr = window.devicePixelRatio || 1, w = Math.max(300, this.cv.parentElement.clientWidth), h = 270; this.cv.style.width = w + 'px'; this.cv.style.height = h + 'px'; this.cv.width = Math.round(w * dpr); this.cv.height = Math.round(h * dpr); this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0); this.W = w; this.H = h; };
+function wDraw() {
+  const xs = wxs, n = xs.length; if (n < 2) return; WP.resize(); const rows = welford(xs), r = rows[wk - 1], prev = wk > 1 ? rows[wk - 2] : null;
+  let lo = Math.min(...xs), hi = Math.max(...xs); for (const q of rows) if (q.k >= 2) { const sd = Math.sqrt(q.s2); lo = Math.min(lo, q.M - sd); hi = Math.max(hi, q.M + sd); }
+  const pad = (hi - lo) * 0.12 || 1; WP.m.l = 56; WP.setup({ x: [0.4, n + 0.6], y: [lo - pad, hi + pad], xlabel: 'k = number of values seen so far', ylabel: 'value' });
+  const vis = rows.filter(q => q.k <= wk), env = vis.filter(q => q.k >= 2);
+  if (env.length > 1) WP.band(env.map(q => [q.k, q.M + Math.sqrt(q.s2)]), env.map(q => [q.k, q.M - Math.sqrt(q.s2)]), '#7c5cff', 0.14);
+  WP.dots(rows.filter(q => q.k > wk).map(q => [q.k, q.x]), { c: '#c3c8e6', r: 3.6 });
+  WP.line(vis.map(q => [q.k, q.M]), { c: '#1fa971', w: 2.2 }); WP.dots(vis.map(q => [q.k, q.M]), { c: '#1fa971', r: 3 });
+  WP.dots(vis.map(q => [q.k, q.x]), { c: '#7c5cff', r: 4.2 });
+  if (prev) { WP.line([[wk - 0.12, prev.M], [wk - 0.12, r.x]], { c: '#f08a24', w: 3 }); WP.line([[wk + 0.12, r.M], [wk + 0.12, r.x]], { c: '#e5484d', w: 3 }); }
+  const f = v => Number(v.toPrecision(5)).toString();
+  $('wstep').innerHTML = prev ? `<b>Step ${wk}:</b> the new value is ${f(r.x)}. Old gap d = ${f(r.x)} − ${f(prev.M)} = <b style="color:#c4660a">${f(r.d)}</b>. The mean moves by d/k = ${f(r.d / wk)}, to M = ${f(r.M)}. New gap = ${f(r.x - r.M)}. SS grows by (old gap)×(new gap) = ${f(r.d)} × ${f(r.x - r.M)} = <b>${f(r.d * (r.x - r.M))}</b>, so SS = ${f(r.SS)} and s² = ${f(r.s2)}.` : `<b>Step 1:</b> with one value the mean is that value (${f(r.x)}) and SS = 0. The variance needs at least two values.`;
+  $('wkv').textContent = wk;
+}
 function wRender() {
   const xs = $('wdata').value.split(/[\s,;]+/).filter(Boolean).map(Number).filter(Number.isFinite);
   if (xs.length < 2) { $('wtab').innerHTML = '<p class="note">Enter at least two numbers.</p>'; $('wcheck').textContent = ''; return; }
+  if (xs.length !== wxs.length || xs.some((v, j) => v !== wxs[j])) { wxs = xs; $('wk').max = xs.length; if (wk > xs.length || wk < 1) wk = xs.length; }
+  $('wk').value = wk;
+
   const rows = welford(xs), f = v => Number(v.toPrecision(7)).toString();
-  $('wtab').innerHTML = `<table><tr><th>k</th><th>x<sub>k</sub></th><th>gap d = x<sub>k</sub> − M<sub>k−1</sub></th><th>M<sub>k</sub> = M<sub>k−1</sub> + d/k</th><th>SS<sub>k</sub> = SS<sub>k−1</sub> + d·(x<sub>k</sub> − M<sub>k</sub>)</th><th>s²<sub>k</sub> = SS<sub>k</sub>/(k−1)</th></tr>${rows.map(r => `<tr><td>${r.k}</td><td>${f(r.x)}</td><td>${f(r.d)}</td><td>${f(r.M)}</td><td>${f(r.SS)}</td><td>${r.k > 1 ? f(r.s2) : '—'}</td></tr>`).join('')}</table>`;
+  $('wtab').innerHTML = `<table><tr><th>k</th><th>x<sub>k</sub></th><th>gap d = x<sub>k</sub> − M<sub>k−1</sub></th><th>M<sub>k</sub> = M<sub>k−1</sub> + d/k</th><th>SS<sub>k</sub> = SS<sub>k−1</sub> + d·(x<sub>k</sub> − M<sub>k</sub>)</th><th>s²<sub>k</sub> = SS<sub>k</sub>/(k−1)</th></tr>${rows.map(r => `<tr${r.k === wk ? ' style="background:#fff3d6"' : ''}><td>${r.k}</td><td>${f(r.x)}</td><td>${f(r.d)}</td><td>${f(r.M)}</td><td>${f(r.SS)}</td><td>${r.k > 1 ? f(r.s2) : '—'}</td></tr>`).join('')}</table>`;
   const n = xs.length, mean = xs.reduce((a, b) => a + b, 0) / n, ss = xs.reduce((a, b) => a + (b - mean) ** 2, 0), L = rows[n - 1], ok = Math.abs(L.M - mean) < 1e-9 * (1 + Math.abs(mean)) && Math.abs(L.SS - ss) < 1e-9 * (1 + ss);
   $('wcheck').innerHTML = `${ok ? '✅' : '⚠️'} Two-pass check: mean = ${f(mean)}, SS = ${f(ss)}, s² = ${f(ss / (n - 1))}. ${ok ? 'The recurrences give exactly the same numbers.' : 'Mismatch!'}`;
 }
@@ -550,7 +578,6 @@ $('redraw').onclick = () => { ST.seed = Math.floor(Math.random() * 1e9); run(); 
 $('replay').onclick = () => { render(); startAnim(); };
 $('logx').onchange = () => { const k = ST.view; if (k in ST.logx) { ST.logx[k] = $('logx').checked; stopAnim(); render(); } };
 $('norm').onchange = () => { ST.norm[ST.view] = $('norm').checked; render(); };
-$('wdata').oninput = wRender;
 window.addEventListener('resize', () => { clearTimeout(window._rz); window._rz = setTimeout(() => { if (SIM && !timer) render(); }, 120); });
 $('cv').addEventListener('mousemove', e => {
   if (!SIM || !P.o) return; const r = $('cv').getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top, ro = $('readout');
@@ -558,6 +585,15 @@ $('cv').addEventListener('mousemove', e => {
   ro.style.display = ''; ro.textContent = `x = ${fmtTick(P.invX(px), false)}   y = ${fmtTick(P.invY(py), false)}`;
 });
 $('cv').addEventListener('mouseleave', () => { $('readout').style.display = 'none'; });
-wRender(); wStab(); run();
+function wSet(k) { wk = Math.max(1, Math.min(wxs.length, k)); wRender(); wDraw(); }
+$('wdata').oninput = () => { wRender(); wDraw(); };
+$('wk').oninput = () => { wk = +$('wk').value; wRender(); wDraw(); };
+const wStop = () => { clearInterval(wtimer); wtimer = null; $('wplay').textContent = '▶ Play'; };
+$('wprev').onclick = () => { wStop(); wSet(wk - 1); };
+$('wnext').onclick = () => { wStop(); wSet(wk + 1); };
+$('wplay').onclick = () => { if (wtimer) { wStop(); return; } if (wk >= wxs.length) wSet(1); $('wplay').textContent = '⏸ Pause'; wtimer = setInterval(() => { if (wk >= wxs.length) { wStop(); return; } wSet(wk + 1); }, 800); };
+$('wrand').onclick = () => { wStop(); $('wdata').value = Array.from({ length: 8 }, () => Math.floor(Math.random() * 11)).join(', '); wk = 1; wRender(); wSet(1); };
+window.addEventListener('resize', () => { if (wxs.length) wDraw(); });
+wRender(); wDraw(); wStab(); run();
 </script>
 </body></html>
