@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HMWK 5</title>
+<style>
+:root{
+  --ink:#272a44; --mute:#6a6f91; --line:#e3e6f6; --soft:#f4f5ff; --card:rgba(255,255,255,.9);
+  --violet:#7c5cff; --blue:#2f7dff; --orange:#f08a24; --green:#1fa971; --red:#e5484d; --yellow:#e6b800; --pink:#ec5fa5;
+  --shadow:0 12px 34px rgba(88,80,170,.12);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;color:var(--ink);font:16px/1.65 "Nunito","Quicksand",ui-rounded,"SF Pro Rounded","Segoe UI",system-ui,sans-serif;min-height:100vh;
+  background:radial-gradient(900px 500px at 6% -6%,#e5dfff 0,transparent 60%),radial-gradient(800px 520px at 100% 0,#ffe1f0 0,transparent 55%),radial-gradient(900px 600px at 50% 112%,#d6f4ff 0,transparent 60%),#f7f7ff;background-attachment:fixed}
+header,main{max-width:1080px;margin:0 auto;padding:0 20px}
+header{padding-top:26px}
+.back{display:inline-flex;align-items:center;gap:6px;color:var(--mute);text-decoration:none;font-size:14px;border-radius:99px;padding:6px 14px;background:#fff;box-shadow:0 2px 8px rgba(88,80,170,.10);transition:.18s}
+.back:hover{color:var(--violet);transform:translateX(-2px)}
+h1{margin:14px 0 6px;font-size:clamp(26px,4.5vw,38px);line-height:1.15;letter-spacing:-.3px;background:linear-gradient(90deg,var(--violet),var(--blue) 60%,#14b8c4);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{margin:0 0 6px;color:var(--mute);font-size:17px;max-width:760px}
+h3{margin:0 0 6px;font-size:19px}
+.tabs{display:inline-flex;flex-wrap:wrap;gap:4px;background:#fff;border-radius:99px;padding:5px;box-shadow:0 4px 16px rgba(88,80,170,.10);margin:16px 0 4px}
+.tabs button{border:0;background:transparent;color:var(--mute);padding:9px 18px;border-radius:99px;cursor:pointer;font:inherit;font-weight:700;transition:.2s}
+.tabs button:hover{color:var(--violet)}
+.tabs button.on{background:linear-gradient(135deg,var(--violet),var(--blue));color:#fff;box-shadow:0 6px 16px rgba(124,92,255,.35)}
+main{padding-bottom:70px}
+section.tab{display:none}
+section.tab.on{display:block;animation:rise .45s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.card{background:var(--card);border:1px solid rgba(124,92,255,.10);border-radius:24px;padding:22px 26px;margin:18px 0;box-shadow:var(--shadow)}
+.card.hero{background:linear-gradient(135deg,rgba(124,92,255,.10),rgba(47,125,255,.08));}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.mini{background:var(--soft);border-radius:18px;padding:16px 18px;transition:.2s}
+.mini:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(88,80,170,.12);background:#fff}
+.mini h4{margin:0 0 4px;font-size:16.5px}
+.mini p{margin:4px 0}
+.row{display:flex;gap:18px;flex-wrap:wrap}
+.row>*{flex:1 1 320px;min-width:0}
+.say{color:#3d4160;margin:2px 0 12px}
+.tip{background:#fff8e6;border-radius:14px;padding:10px 14px;margin-top:12px;color:#6b4e0c;font-size:15px}
+.note{color:var(--mute);font-size:14.5px}
+.m{color:var(--mute);font-size:13px}
+label{color:var(--mute);font-size:13px;font-weight:700;display:block;margin-bottom:4px}
+input,select{background:#fff;color:var(--ink);border:1.5px solid var(--line);border-radius:12px;padding:9px 12px;font:inherit;transition:.15s}
+input:focus,select:focus{outline:none;border-color:var(--violet);box-shadow:0 0 0 3px rgba(124,92,255,.15)}
+input[type=range]{padding:0;width:100%;accent-color:var(--violet);border:0}
+input[type=text]{width:100%}
+.btn{background:#fff;color:var(--ink);border:1.5px solid var(--line);border-radius:99px;padding:9px 18px;font:inherit;font-weight:700;cursor:pointer;transition:.18s}
+.btn:hover{border-color:var(--violet);color:var(--violet);transform:translateY(-1px)}
+.btn.primary{background:linear-gradient(135deg,var(--violet),var(--blue));color:#fff;border-color:transparent;box-shadow:0 6px 16px rgba(124,92,255,.32)}
+.btn.primary:hover{color:#fff;box-shadow:0 9px 22px rgba(124,92,255,.42)}
+.ctrls{display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin:10px 0}
+code,.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+.pub{font-size:clamp(17px,3vw,23px);font-weight:800;background:linear-gradient(135deg,#dcfbe9,#e0f2ff);color:#0e6b45;border-radius:18px;padding:14px 20px;margin:12px 0}
+.chips{display:flex;flex-wrap:wrap;gap:6px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px}
+.chip{background:var(--soft);border-radius:99px;padding:3px 10px}
+.chip.last{background:#dcfbe9;color:#0e6b45;font-weight:700}
+.chip.rep{background:#ede9ff;color:#5b3fd6}
+canvas{width:100%;max-width:560px;height:auto;background:#fbfbff;border-radius:18px;display:block;border:1px solid var(--line)}
+.legend span{display:inline-block;margin:0 14px 4px 0;font-size:13.5px;color:var(--mute)}
+.dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+#log{max-height:520px;overflow:auto;background:#fbfbff;border:1px solid var(--line);border-radius:18px;padding:8px}
+#log .r{padding:8px 12px;border-radius:12px;cursor:pointer;color:var(--mute);font-size:14px;transition:.15s}
+#log .r:hover{background:var(--soft)}
+#log .r.cur{background:#ede9ff;color:var(--ink)}
+#log .r p{margin:3px 0}
+#log .r .m{display:none}
+#log.math .r.cur .m{display:block;font-family:ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap}
+.cap{background:var(--soft);border-radius:14px;padding:10px 14px;margin:10px 0;min-height:66px;font-size:15px}
+.hexout{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;word-break:break-all;background:var(--soft);border-radius:14px;padding:10px 14px;margin:6px 0}
+.ok{color:var(--green);font-weight:700}.bad{color:var(--red);font-weight:700}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:14.5px;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+th,td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+th{background:var(--soft);color:var(--mute);font-weight:800}
+.tag{display:inline-block;font-size:11.5px;font-weight:700;border-radius:99px;padding:2px 10px;margin:0 4px 4px 0}
+.t-der{background:#efe9ff;color:#6a3fd8}.t-pk{background:#e0edff;color:#1f63d6}.t-hash{background:#ffeedb;color:#b45f0a}.t-chk{background:#dcf7e9;color:#13774f}.t-enc{background:#fff4c9;color:#8a6a00}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.tile{background:var(--soft);border-radius:18px;padding:14px 16px}
+.tile b{display:block;font-size:28px;line-height:1.2;background:linear-gradient(90deg,var(--violet),var(--blue));-webkit-background-clip:text;background-clip:text;color:transparent}
+.tile small{color:var(--mute)}
+.meter{display:grid;grid-template-columns:150px 1fr 48px;gap:12px;align-items:center;margin:8px 0;font-size:14px}
+.track{position:relative;height:12px;background:var(--soft);border-radius:99px}
+.track i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--violet),var(--blue))}
+.track u{position:absolute;top:-5px;bottom:-5px;width:2px;background:var(--ink);opacity:.4}
+.mv{font-weight:800;text-align:right}
+svg.plot text,svg.bars text,#timeline text{fill:var(--mute);font-family:inherit}
+.pipe{display:flex;flex-wrap:wrap;align-items:stretch;gap:6px;margin:12px 0}
+.node{background:#fff;border-radius:18px;padding:12px 12px;min-width:118px;flex:1 1 118px;text-align:center;box-shadow:0 4px 14px rgba(88,80,170,.10);transition:.2s}
+.node:hover{transform:translateY(-4px)}
+.node .e{font-size:26px;display:block}
+.node b{display:block;font-size:14.5px}
+.node small{color:var(--mute);font-size:12.5px}
+.arrow{align-self:center;color:var(--violet);text-align:center;font-size:12px;font-weight:700;min-width:84px}
+.hl{display:flex;gap:10px;align-items:flex-start;margin:8px 0}
+.hl .e{font-size:22px;line-height:1.4}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+textarea{width:100%;background:#fff;color:var(--ink);border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;font:13.5px ui-monospace,Menlo,Consolas,monospace;resize:vertical}
+textarea:focus{outline:none;border-color:var(--violet);box-shadow:0 0 0 3px rgba(124,92,255,.15)}
+details summary{cursor:pointer;color:var(--violet)}
+.legend{margin:6px 0 4px}
+</style>
+<style>
+.seg{display:inline-flex;background:#fff;border:1.5px solid var(--line);border-radius:99px;padding:3px}
+.seg button{border:0;background:transparent;color:var(--mute);padding:7px 14px;border-radius:99px;cursor:pointer;font:inherit;font-weight:700}
+.seg button.on{background:linear-gradient(135deg,var(--violet),var(--blue));color:#fff}
+.vgroups{display:flex;flex-wrap:wrap;gap:14px 26px;margin:16px 0 8px}
+.vgroup{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.vlab{font-weight:800;color:var(--ink);margin-right:4px}
+.vbtn{border:1.5px solid var(--line);background:#fff;color:var(--mute);padding:8px 14px;border-radius:99px;cursor:pointer;font:inherit;font-weight:700;transition:.18s}
+.vbtn:hover{border-color:var(--violet);color:var(--violet)}
+.vbtn.on{background:linear-gradient(135deg,var(--violet),var(--blue));color:#fff;border-color:transparent;box-shadow:0 6px 16px rgba(124,92,255,.32)}
+.opts{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;margin:8px 0}
+.chk{display:inline-flex;align-items:center;gap:6px;margin:0;cursor:pointer}
+.chk input{width:auto;accent-color:var(--violet)}
+.chartwrap{position:relative;width:100%;margin-top:6px}
+.chartwrap canvas{display:block;border-radius:14px}
+.busy{position:absolute;inset:0;background:rgba(255,255,255,.8);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--violet);border-radius:14px}
+.readout{position:absolute;top:10px;right:24px;background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:10px;padding:3px 10px;font-size:12.5px;color:var(--mute);display:none;pointer-events:none;white-space:pre}
+.sw{display:inline-block;width:22px;height:3px;margin-right:6px;vertical-align:3px}
+.dia{display:inline-block;width:9px;height:9px;transform:rotate(45deg);margin-right:7px}
+.mini-t{border-collapse:collapse;font-size:14px}.mini-t th,.mini-t td{padding:3px 10px;text-align:left;border-bottom:1px solid var(--line)}
+</style>
+<style>.eq{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:8px 12px;margin:6px 0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14px;overflow-x:auto}pre.code{background:#272a44;color:#e9ebff;border-radius:14px;padding:14px 16px;overflow-x:auto;font-size:14px;line-height:1.55;margin:6px 0 0}</style>
+</head>
+<body>
+<header>
+  <a class="back" href="index.html">← Home</a>
+  <h1>HMWK 5 · Welford's recurrences and sampling estimates</h1>
+  <p class="sub">How to compute the mean and the variance of a stream of scores in a single pass, and what the sampling mean and sampling variance of m hackers tell us about the true μ and σ².</p>
+</header>
+<main>
+
+<div class="card hero">
+  <h3>Exercise 1 · Welford's recurrence formulas</h3>
+  <p class="say">Goal: compute the mean and the variance of a stream of numbers <b>one value at a time</b>, without storing the data and without reading it twice. Knuth's formula does it for the mean; Welford's does it for the sum of squares (SS) and hence the variance.
+  Notation: after k values, <b>M<sub>k</sub></b> is the mean and <b>SS<sub>k</sub> = Σ (x<sub>i</sub> − M<sub>k</sub>)²</b> the sum of squared deviations from that mean.</p>
+  <div class="grid">
+    <div class="mini"><h4>① The mean (Knuth)</h4>
+      <p>The sum of the first k values is k·M<sub>k</sub> = (k−1)·M<sub>k−1</sub> + x<sub>k</sub>. Divide by k and rearrange:</p>
+      <div class="eq">M<sub>k</sub> = M<sub>k−1</sub> + (x<sub>k</sub> − M<sub>k−1</sub>) / k</div>
+      <p class="note">The new mean is the old one, moved towards the new value by a fraction 1/k of the gap.</p></div>
+    <div class="mini"><h4>② The sum of squares (Welford)</h4>
+      <p>Expanding the square gives SS<sub>k</sub> = Σ x<sub>i</sub>² − k·M<sub>k</sub>². Subtract the same formula for k−1:</p>
+      <div class="eq">SS<sub>k</sub> − SS<sub>k−1</sub> = x<sub>k</sub>² − k·M<sub>k</sub>² + (k−1)·M<sub>k−1</sub>²</div>
+      <p>Since (k−1)·M<sub>k−1</sub> = k·M<sub>k</sub> − x<sub>k</sub>, the last term is (k·M<sub>k</sub> − x<sub>k</sub>)·M<sub>k−1</sub>, so</p>
+      <div class="eq">= x<sub>k</sub>(x<sub>k</sub> − M<sub>k−1</sub>) − k·M<sub>k</sub>(M<sub>k</sub> − M<sub>k−1</sub>)</div>
+      <p>By ①, k(M<sub>k</sub> − M<sub>k−1</sub>) = x<sub>k</sub> − M<sub>k−1</sub>, hence the difference is (x<sub>k</sub> − M<sub>k−1</sub>)(x<sub>k</sub> − M<sub>k</sub>):</p>
+      <div class="eq"><b>SS<sub>k</sub> = SS<sub>k−1</sub> + (x<sub>k</sub> − M<sub>k−1</sub>)(x<sub>k</sub> − M<sub>k</sub>)</b></div>
+      <p class="note">Start from M<sub>0</sub> = 0, SS<sub>0</sub> = 0. The "old gap" times the "new gap" is never negative, so SS can only grow.</p></div>
+    <div class="mini"><h4>③ The variance</h4>
+      <p>The <b>sampling variance</b> divides by k−1 (unbiased), the "plug-in" variance by k:</p>
+      <div class="eq">s<sub>k</sub>² = SS<sub>k</sub> / (k − 1) &nbsp;&nbsp; (k ≥ 2)</div>
+      <p>Because M<sub>k</sub> − x<sub>k</sub> = −(1 − 1/k)(x<sub>k</sub> − M<sub>k−1</sub>), one also gets a direct recurrence for the variance:</p>
+      <div class="eq">s<sub>k</sub>² = (k−2)/(k−1) · s<sub>k−1</sub>² + (x<sub>k</sub> − M<sub>k−1</sub>)² / k</div></div>
+  </div>
+  <p class="say" style="margin-top:12px"><b>The code.</b> The core of the algorithm is three lines inside the loop:</p>
+<pre class="code">M = SS = 0
+for k, x in enumerate(data, 1):      # Python  (the JavaScript used in this page is identical)
+    d = x - M          # gap from the OLD mean
+    M += d / k         # Knuth: new mean
+    SS += d * (x - M)  # Welford: (x - M_old) * (x - M_new)
+variance = SS / (k - 1)</pre>
+</div>
+
+<div class="card">
+  <h3>🧪 Try it on your own numbers</h3>
+  <p class="note">Type numbers separated by commas or spaces. The table shows the three recurrences step by step and checks the final result against the textbook two-pass formula.</p>
+  <div class="ctrls" style="align-items:end"><div style="flex:1;min-width:240px"><label>Data</label><input type="text" id="wdata" value="2, 7, 4, 9, 5, 3"></div></div>
+  <div id="wtab" style="overflow-x:auto;margin-top:8px"></div>
+  <div id="wcheck" class="tip"></div>
+  <p class="say" style="margin-top:12px"><b>Why use it?</b> The "textbook" shortcut SS = Σx² − k·M² subtracts two huge, almost equal numbers when the data are large and close together, and loses all its digits. Welford never does.</p>
+  <div id="wstab" class="tip" style="background:#eefaf4;color:#14573d"></div>
+</div>
+
+<div class="card hero">
+  <h3>Exercise 2 · Sampling mean and variance of m hackers</h3>
+  <p class="say">This continues HMWK 4. Now every attempt gets a <b>score between 0 and 10</b>, drawn from a fixed distribution that you choose (its true mean μ and variance σ² are computed exactly from the probabilities).
+  <b>m hackers</b> each attack <b>n systems</b>, so every hacker collects n scores. For <b>each hacker</b> the page runs Welford's recurrences along the n scores and obtains the hacker's <b>sampling mean x̄</b> and <b>sampling variance s²</b>.
+  Then it averages the m sampling means and the m sampling variances and compares them with μ and σ². Everything is done for many values of n at once, so you can see what changes when each hacker attacks more systems.</p>
+</div>
+
+<div class="card">
+  <div class="ctrls" style="align-items:end">
+    <div style="min-width:280px"><label>Score distribution (values 0 … 10)</label><select id="dist" style="width:100%"></select></div>
+    <div><label>n = systems per hacker</label><select id="n"><option value="1000">1,000</option><option value="10000" selected>10,000</option><option value="100000">100,000</option></select></div>
+    <div><label>m = hackers</label><select id="m"><option value="50">50</option><option value="200">200</option><option value="1000" selected>1,000</option><option value="2000">2,000</option></select></div>
+    <button class="btn" id="redraw">🎲 New random draw</button>
+  </div>
+  <p class="note" id="theory" style="margin:8px 0 0"></p>
+
+  <div class="vgroups">
+    <div class="vgroup"><span class="vlab">🎯 Setting</span>
+      <button class="vbtn" data-view="pmf">The scores</button></div>
+    <div class="vgroup"><span class="vlab">📈 One hacker at a time</span>
+      <button class="vbtn on" data-view="meanT">Sampling mean x̄</button>
+      <button class="vbtn" data-view="varT">Sampling variance s²</button></div>
+    <div class="vgroup"><span class="vlab">⚖️ Average over the m hackers</span>
+      <button class="vbtn" data-view="avgM">Mean of the x̄</button>
+      <button class="vbtn" data-view="avgV">Mean of the s²</button></div>
+    <div class="vgroup"><span class="vlab">📉 Variability</span>
+      <button class="vbtn" data-view="spread">Spread vs n</button>
+      <button class="vbtn" data-view="distM">Distribution of x̄</button>
+      <button class="vbtn" data-view="distV">Distribution of s²</button></div>
+  </div>
+
+  <div class="opts">
+    <label class="chk" id="o_logx"><input type="checkbox" id="logx"> log scale for n</label>
+    <label class="chk" id="o_norm"><input type="checkbox" id="norm"> same height for every curve</label>
+    <button class="btn" id="replay">▶ Replay</button>
+    <span id="note" class="note"></span>
+  </div>
+
+  <div class="chartwrap">
+    <canvas id="cv"></canvas>
+    <div id="busy" class="busy" style="display:none"></div>
+    <div id="readout" class="readout"></div>
+  </div>
+  <div id="legend" class="legend"></div>
+</div>
+
+<div class="card">
+  <h3 id="vtitle">What you are seeing</h3>
+  <div class="grid">
+    <div class="mini"><h4>👀 What the picture shows</h4><div id="ex_see" class="say"></div></div>
+    <div class="mini"><h4>🔢 The numbers behind it</h4><div id="ex_num" class="say"></div></div>
+  </div>
+  <div class="tip" id="ex_tip"></div>
+</div>
+
+<div class="card">
+  <h3>💬 Conclusions</h3>
+  <div class="grid">
+    <div class="mini"><h4>1 · The averages hit the targets</h4><p>The average of the m sampling means is on μ and the average of the m sampling variances (with n−1) is on σ², <b>for every n, even n = 2</b>. The differences you see are only random noise of size σ/√(nm) and shrink when m grows. We say that x̄ and s² are <b>unbiased</b> estimators.</p>
+      <p>Dividing SS by n instead of n−1 gives an average of σ²·(n−1)/n: too small, noticeably so for small n (button "Mean of the s²").</p></div>
+    <div class="mini"><h4>2 · Why this matters in inference</h4><p>In practice μ and σ² are unknown and we have <b>one</b> data set: one x̄ and one s². Unbiasedness tells us that, over many possible data sets, these numbers are right on average, so they are legitimate estimates. Moreover s² can replace σ² in the standard error s/√n, which is what confidence intervals and tests need. Welford's recurrences compute both online, in one pass.</p></div>
+    <div class="mini"><h4>3 · What changes with n</h4><p>Both estimators become <b>more precise</b>: the spread of x̄ across hackers is σ/√n, the spread of s² is √((μ₄ − σ⁴)/n) (μ₄ is the 4th central moment): both shrink like 1/√n, i.e. four times more systems halve the error. The distributions of x̄ and s² narrow around μ and σ² and become bell-shaped (Central Limit Theorem). This is consistency. Increasing m, instead, does not make each hacker more precise: it only makes our <i>picture</i> of the averages more precise.</p></div>
+  </div>
+</div>
+
+<div class="card">
+  <h3>📋 Numbers for this simulation</h3>
+  <p class="note">One row per n. Measured values over the m hackers, theory in brackets.</p>
+  <div id="tbl" style="overflow-x:auto"></div>
+</div>
+
+</main>
+<script id="core">
+// =====================================================================
+//  m hackers, n systems, scores 0..10, Welford's recurrences
+// =====================================================================
+function mulberry32(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const CP_BASE = [2, 3, 5, 7, 10, 15, 20, 30, 50, 70, 100, 150, 200, 300, 500, 700, 1000, 1500, 2000, 3000, 5000, 7000, 10000, 15000, 20000, 30000, 50000, 70000, 100000];
+function checkpoints(n) { const cp = CP_BASE.filter(v => v <= n); if (cp[cp.length - 1] !== n) cp.push(n); return cp; }
+const tick = () => new Promise(r => setTimeout(r, 0));
+const binomC = (n, k) => { let c = 1; for (let i = 1; i <= k; i++) c = c * (n - k + i) / i; return c; };
+const DISTS = {
+  binom: { name: 'Binomial(10, 0.3): typical score about 3', w: k => binomC(10, k) * Math.pow(0.3, k) * Math.pow(0.7, 10 - k) },
+  unif: { name: 'Uniform on 0…10: every score equally likely', w: () => 1 },
+  geo: { name: 'Mostly low scores, rare high ones (geometric-like)', w: k => Math.pow(0.6, k) },
+  bimodal: { name: 'All or nothing: mostly 0 or 10', w: k => [0.30, 0.10, 0.04, 0.02, 0.01, 0.01, 0.01, 0.02, 0.04, 0.10, 0.35][k] }
+};
+function distInfo(id) {
+  const raw = Array.from({ length: 11 }, (_, k) => DISTS[id].w(k)), tot = raw.reduce((a, b) => a + b, 0), pmf = raw.map(v => v / tot);
+  const mu = pmf.reduce((s, p, k) => s + p * k, 0), v = pmf.reduce((s, p, k) => s + p * (k - mu) ** 2, 0), mu4 = pmf.reduce((s, p, k) => s + p * (k - mu) ** 4, 0);
+  const cdf = []; let c = 0; for (const p of pmf) { c += p; cdf.push(c); } cdf[10] = 1;
+  return { id, name: DISTS[id].name, pmf, cdf, mu, var: v, mu4 };
+}
+// exact variance of the sampling variance s^2 (n >= 2)
+const varOfS2 = (D, n) => (D.mu4 - (n - 3) / (n - 1) * D.var * D.var) / n;
+
+async function simulate({ n, m, dist, seed, K = 25 }, onProgress) {
+  const D = distInfo(dist), cdf = D.cdf, cp = checkpoints(n), ncp = cp.length, rnd = mulberry32(seed);
+  const M = new Float64Array(m * ncp), SS = new Float64Array(m * ncp), pm = new Float32Array(K * (n + 1)), pv = new Float32Array(K * (n + 1)), counts = new Float64Array(11);
+  let last = performance.now();
+  for (let a = 0; a < m; a++) {
+    let mean = 0, ss = 0, j = 0, next = cp[0]; const base = a * ncp, pb = a * (n + 1), keep = a < K;
+    for (let k = 1; k <= n; k++) {
+      const u = rnd(); let x = 0; while (x < 10 && u >= cdf[x]) x++;
+      counts[x]++;
+      const d = x - mean; mean += d / k; ss += d * (x - mean);            // Welford: the 3 core lines
+      if (keep) { pm[pb + k] = mean; pv[pb + k] = k > 1 ? ss / (k - 1) : NaN; }
+      if (k === next) { M[base + j] = mean; SS[base + j] = ss; j++; next = cp[j]; }
+    }
+    if (performance.now() - last > 40) { last = performance.now(); onProgress && onProgress((a + 1) / m); await tick(); }
+  }
+  return { n, m, D, K, cp, M, SS, pm, pv, counts, seed };
+}
+function statsAt(sim, j) {
+  const n = sim.cp[j], nc = sim.cp.length, m = sim.m, means = new Float64Array(m), vu = new Float64Array(m), vb = new Float64Array(m);
+  for (let a = 0; a < m; a++) { means[a] = sim.M[a * nc + j]; const ss = sim.SS[a * nc + j]; vu[a] = ss / (n - 1); vb[a] = ss / n; }
+  const mv = x => { let s = 0; for (const v of x) s += v; const mu = s / x.length; let q = 0; for (const v of x) q += (v - mu) * (v - mu); return [mu, Math.sqrt(q / x.length)]; };
+  const [avgMean, stdMean] = mv(means), [avgVu, stdVu] = mv(vu), [avgVb, stdVb] = mv(vb);
+  return { n, means, vu, vb, avgMean, stdMean, avgVu, stdVu, avgVb, stdVb };
+}
+function histo(vals, lo, hi, bins, minW = 0) {
+  let w = (hi - lo) / bins; if (minW) w = Math.max(minW, Math.round(w / minW) * minW);
+  const nb = Math.max(1, Math.ceil((hi - lo) / w)), c = new Float64Array(nb);
+  for (const v of vals) { const b = Math.floor((v - lo) / w); if (b >= 0 && b < nb) c[b]++; }
+  const xs = [], ds = []; for (let b = 0; b < nb; b++) { xs.push(lo + b * w); ds.push(c[b] / (vals.length * w)); }
+  return { xs, ds, bw: w };
+}
+const phi = z => Math.exp(-z * z / 2) / Math.sqrt(2 * Math.PI);
+</script>
+<script>
+const NCOLS = { 10: '#7c5cff', 100: '#2f7dff', 1000: '#1fa971', 10000: '#f08a24', 100000: '#e5484d' };
+const CM = '#7c5cff', CV = '#f08a24', CB = '#e5484d';
+const ST = { dist: 'binom', view: 'meanT', seed: 2026, logx: { meanT: true, varT: true }, norm: { distM: false, distV: false }, reveal: null };
+let SIM = null, busy = false, pending = false, timer = null;
+const $ = id => document.getElementById(id);
+const fnum = (v, d = 3) => Number(v).toFixed(d), int = v => Math.round(v).toLocaleString('en'), sci = v => Number(v).toExponential(2);
+const nsUsed = () => [10, 100, 1000, 10000, 100000].filter(v => v <= SIM.n && SIM.cp.includes(v));
+function niceTicks(lo, hi, target = 6) {
+  const span = hi - lo, raw = span / target, mag = Math.pow(10, Math.floor(Math.log10(raw))), nr = raw / mag, step = (nr < 1.5 ? 1 : nr < 3 ? 2 : nr < 7 ? 5 : 10) * mag, t = [];
+  for (let v = Math.ceil(lo / step - 1e-9) * step; v <= hi + step * 1e-6; v += step) t.push(+v.toPrecision(12));
+  return t;
+}
+function logTicks(lo, hi) { const major = [], minor = []; for (let e = Math.floor(Math.log10(lo)) - 1; e <= Math.ceil(Math.log10(hi)); e++) for (const k of [1, 2, 5]) { const v = k * Math.pow(10, e); if (v < lo * 0.9999 || v > hi * 1.0001) continue; (k === 1 ? major : minor).push(v); } return { major, minor }; }
+function fmtTick(v, log) {
+  const a = Math.abs(v); if (a === 0) return '0';
+  if (log) return a >= 1 && a < 1e6 ? a.toLocaleString('en') : (a < 1 && a >= 0.001 ? String(+v.toPrecision(2)) : v.toExponential(0).replace('e+', 'e'));
+  if (a >= 10000) return v.toExponential(1).replace('e+', 'e').replace('.0e', 'e'); if (a >= 1000) return v.toLocaleString('en');
+  if (a >= 1) return String(+v.toPrecision(4)); if (a >= 0.001) return String(+v.toPrecision(3)); return v.toExponential(0);
+}
+class Plot {
+  constructor(cv) { this.cv = cv; this.ctx = cv.getContext('2d'); this.m = { l: 74, r: 18, t: 14, b: 52 }; }
+  resize() {
+    const dpr = window.devicePixelRatio || 1, w = Math.max(320, this.cv.parentElement.clientWidth), h = Math.round(Math.max(340, Math.min(620, w * 0.56)));
+    this.cv.style.width = w + 'px'; this.cv.style.height = h + 'px'; this.cv.width = Math.round(w * dpr); this.cv.height = Math.round(h * dpr);
+    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0); this.W = w; this.H = h;
+  }
+  setup(o) {
+    this.o = o; const c = this.ctx, m = this.m; this.x0 = m.l; this.x1 = this.W - m.r; this.y0 = this.H - m.b; this.y1 = m.t;
+    const f = (v, a, b, lg) => lg ? (Math.log(v) - Math.log(a)) / (Math.log(b) - Math.log(a)) : (v - a) / (b - a);
+    this.X = v => this.x0 + f(v, o.x[0], o.x[1], o.xlog) * (this.x1 - this.x0);
+    this.Y = v => this.y0 + f(v, o.y[0], o.y[1], o.ylog) * (this.y1 - this.y0);
+    this.invX = px => { const t = (px - this.x0) / (this.x1 - this.x0); return o.xlog ? Math.exp(Math.log(o.x[0]) + t * (Math.log(o.x[1]) - Math.log(o.x[0]))) : o.x[0] + t * (o.x[1] - o.x[0]); };
+    this.invY = py => { const t = (py - this.y0) / (this.y1 - this.y0); return o.ylog ? Math.exp(Math.log(o.y[0]) + t * (Math.log(o.y[1]) - Math.log(o.y[0]))) : o.y[0] + t * (o.y[1] - o.y[0]); };
+    c.clearRect(0, 0, this.W, this.H); c.fillStyle = '#fbfbff'; c.fillRect(this.x0, this.y1, this.x1 - this.x0, this.y0 - this.y1);
+    c.font = '12px system-ui, sans-serif'; c.lineWidth = 1;
+    const xt = o.xlog ? logTicks(o.x[0], o.x[1]) : { major: niceTicks(o.x[0], o.x[1], 8), minor: [] }, yt = o.ylog ? logTicks(o.y[0], o.y[1]) : { major: niceTicks(o.y[0], o.y[1], 7), minor: [] };
+    c.strokeStyle = '#eef0fb'; for (const v of xt.minor) { const x = this.X(v); c.beginPath(); c.moveTo(x, this.y0); c.lineTo(x, this.y1); c.stroke(); } for (const v of yt.minor) { const y = this.Y(v); c.beginPath(); c.moveTo(this.x0, y); c.lineTo(this.x1, y); c.stroke(); }
+    c.strokeStyle = '#e1e4f6'; c.fillStyle = '#6a6f91';
+    c.textAlign = 'center'; for (const v of xt.major) { const x = this.X(v); c.beginPath(); c.moveTo(x, this.y0); c.lineTo(x, this.y1); c.stroke(); c.fillText(fmtTick(v, o.xlog), x, this.y0 + 17); }
+    c.textAlign = 'right'; for (const v of yt.major) { const y = this.Y(v); c.beginPath(); c.moveTo(this.x0, y); c.lineTo(this.x1, y); c.stroke(); c.fillText(fmtTick(v, o.ylog), this.x0 - 8, y + 4); }
+    c.strokeStyle = '#c3c8e6'; c.strokeRect(this.x0, this.y1, this.x1 - this.x0, this.y0 - this.y1);
+    c.fillStyle = '#4a4f73'; c.font = '13px system-ui, sans-serif'; c.textAlign = 'center'; c.fillText(o.xlabel || '', (this.x0 + this.x1) / 2, this.H - 8);
+    c.save(); c.translate(16, (this.y0 + this.y1) / 2); c.rotate(-Math.PI / 2); c.fillText(o.ylabel || '', 0, 0); c.restore();
+  }
+  clip(fn) { const c = this.ctx; c.save(); c.beginPath(); c.rect(this.x0, this.y1, this.x1 - this.x0, this.y0 - this.y1); c.clip(); fn(c); c.restore(); }
+  line(pts, { c = '#000', w = 1.5, a = 1, dash = [] } = {}) {
+    this.clip(g => { g.globalAlpha = a; g.strokeStyle = c; g.lineWidth = w; g.setLineDash(dash); g.lineJoin = 'round'; g.beginPath(); let open = false;
+      for (const [x, y] of pts) { if (!isFinite(x) || !isFinite(y)) { open = false; continue; } const px = this.X(x), py = this.Y(y); if (open) g.lineTo(px, py); else { g.moveTo(px, py); open = true; } } g.stroke(); });
+  }
+  band(up, lo, color, a = 0.12) {
+    this.clip(g => { g.globalAlpha = a; g.fillStyle = color; g.beginPath(); up.forEach(([x, y], i) => i ? g.lineTo(this.X(x), this.Y(y)) : g.moveTo(this.X(x), this.Y(y))); for (let i = lo.length - 1; i >= 0; i--) g.lineTo(this.X(lo[i][0]), this.Y(lo[i][1])); g.closePath(); g.fill(); });
+  }
+  hist(xs, ds, bw, { c = '#000', fill = 0.25, w = 2, dash = [] } = {}) {
+    this.clip(g => { g.setLineDash(dash); g.lineWidth = w; g.strokeStyle = c; g.fillStyle = c; g.lineJoin = 'round'; g.beginPath(); const yb = this.Y(0);
+      g.moveTo(this.X(xs[0]), yb); xs.forEach((x, i) => { g.lineTo(this.X(x), this.Y(ds[i])); g.lineTo(this.X(x + bw), this.Y(ds[i])); }); g.lineTo(this.X(xs[xs.length - 1] + bw), yb);
+      if (fill) { g.globalAlpha = fill; g.fill(); g.globalAlpha = 1; } g.stroke(); });
+  }
+  dots(pts, { c = '#000', r = 3.4, shape = 'o' } = {}) {
+    this.clip(g => { g.fillStyle = c; for (const [x, y] of pts) { if (!isFinite(x) || !isFinite(y)) continue; const px = this.X(x), py = this.Y(y); g.beginPath(); if (shape === 'o') g.arc(px, py, r, 0, 7); else { g.moveTo(px, py - r * 1.3); g.lineTo(px + r * 1.3, py); g.lineTo(px, py + r * 1.3); g.lineTo(px - r * 1.3, py); g.closePath(); } g.fill(); } });
+  }
+  text(t, px, py, { c = '#4a4f73', align = 'left', size = 12, bold = false } = {}) { const g = this.ctx; g.fillStyle = c; g.font = `${bold ? '700 ' : ''}${size}px system-ui, sans-serif`; g.textAlign = align; g.fillText(t, px, py); }
+}
+const P = new Plot($('cv'));
+// =============== helpers ===============
+function sampleIdx(n, lo, log, maxPts = 1300) {
+  const set = new Set([lo, n]);
+  if (log) { const a = Math.log(lo), L = Math.log(n) - a; for (let k = 0; k <= maxPts; k++) set.add(Math.max(lo, Math.min(n, Math.round(Math.exp(a + L * k / maxPts))))); }
+  else { const st = Math.max(1, Math.ceil(n / maxPts)); for (let i = lo; i <= n; i += st) set.add(i); for (let i = lo; i <= Math.min(60, n); i++) set.add(i); }
+  return [...set].sort((a, b) => a - b);
+}
+function setLegend(items) {
+  $('legend').innerHTML = items.map(it => {
+    const sw = it.dash ? `<i class="sw" style="background:none;border-top:3px dashed ${it.c}"></i>` : it.diamond ? `<i class="dia" style="background:${it.c}"></i>` : it.line ? `<i class="sw" style="background:${it.c}"></i>` : `<i class="dot" style="background:${it.c}"></i>`;
+    return `<span>${sw}${it.t}</span>`;
+  }).join('');
+}
+const hideOpts = () => ['o_logx', 'o_norm'].forEach(id => $(id).style.display = 'none');
+const hue = k => `hsl(${Math.round((k * 137.5) % 360)} 70% 46%)`;
+
+// =============== views ===============
+function drawPmf() {
+  const D = SIM.D, tot = SIM.counts.reduce((a, b) => a + b, 0), emp = Array.from(SIM.counts, c => c / tot), ymax = Math.max(...D.pmf, ...emp) * 1.18, sd = Math.sqrt(D.var);
+  P.setup({ x: [-0.8, 10.8], y: [0, ymax], xlabel: 'score of one attempt', ylabel: 'probability' });
+  P.band([[D.mu - sd, ymax], [D.mu + sd, ymax]], [[D.mu - sd, 0], [D.mu + sd, 0]], '#7c5cff', 0.1);
+  P.hist(D.pmf.map((_, k) => k - 0.4), D.pmf, 0.8, { c: CM, fill: 0.3, w: 1.8 });
+  P.line([[D.mu, 0], [D.mu, ymax]], { c: '#3b2fa8', w: 2, dash: [7, 5] });
+  P.dots(emp.map((v, k) => [k, v]), { c: CV, r: 4.2 });
+  setLegend([{ c: CM, t: 'true probabilities of the chosen distribution' }, { c: CV, t: `frequencies observed in the simulation (${int(tot)} scores)` }, { c: '#3b2fa8', dash: 1, t: `true mean μ = ${fnum(D.mu, 3)}` }, { c: '#b9a8ff', line: 1, t: `μ ± σ (σ² = ${fnum(D.var, 3)})` }]);
+  hideOpts();
+}
+function drawTraj(kind) {
+  const n = SIM.n, K = SIM.K, D = SIM.D, lo = kind === 'mean' ? 1 : 2, key = kind === 'mean' ? `meanT` : `varT`, logx = ST.logx[key], idx = sampleIdx(n, lo, logx), arr = kind === 'mean' ? SIM.pm : SIM.pv;
+  const v = (k, i) => arr[k * (n + 1) + i], sd = D.var ** 0.5;
+  const half = i => kind === 'mean' ? 2 * sd / Math.sqrt(i) : 2 * Math.sqrt(varOfS2(D, i)), cen = kind === 'mean' ? D.mu : D.var;
+  let ylo, yhi;
+  if (kind === 'mean') { ylo = Infinity; yhi = -Infinity; for (let k = 0; k < K; k++) for (const i of idx) { const x = v(k, i); ylo = Math.min(ylo, x); yhi = Math.max(yhi, x); } const pad = (yhi - ylo) * 0.05 || 1; ylo -= pad; yhi += pad; }
+  else { let mx = 0; for (let k = 0; k < K; k++) for (const i of idx) if (i >= 5) mx = Math.max(mx, v(k, i)); ylo = 0; yhi = Math.max(2.2 * D.var, mx) * 1.06; }
+  const cut = ST.reveal == null ? n : (logx ? Math.exp(Math.log(lo) + (Math.log(n) - Math.log(lo)) * ST.reveal) : n * ST.reveal), ix = idx.filter(i => i <= cut);
+  P.setup({ x: logx ? [lo, n] : [0, n], y: [ylo, yhi], xlog: logx, xlabel: 'n = number of systems attacked so far', ylabel: kind === 'mean' ? 'sampling mean x̄ₙ (Welford)' : 'sampling variance sₙ² (Welford)' });
+  P.band(idx.map(i => [i, cen + half(i)]), idx.map(i => [i, Math.max(0, cen - half(i))]), CM, 0.12);
+  P.line([[lo, cen], [n, cen]], { c: '#3b2fa8', w: 2, dash: [7, 5] });
+  for (let k = 0; k < K; k++) P.line(ix.map(i => [i, v(k, i)]), { c: hue(k), w: 1.35, a: 0.8 });
+  setLegend([{ c: '#7c5cff', t: `${K} of the ${int(SIM.m)} hackers, one colour each` }, { c: '#3b2fa8', dash: 1, t: kind === 'mean' ? `true mean μ = ${fnum(D.mu, 2)}` : `true variance σ² = ${fnum(D.var, 2)}` }, { c: '#b9a8ff', line: 1, t: kind === 'mean' ? 'μ ± 2σ/√n (about 95% of hackers)' : 'σ² ± 2·sd(s²) (theory, about 95%)' }]);
+  hideOpts(); $('o_logx').style.display = ''; $('logx').checked = logx;
+}
+function seriesStats() { return SIM.cp.map((n, j) => statsAt(SIM, j)); }
+function drawAvgM() {
+  const D = SIM.D, rows = seriesStats(), m = SIM.m, sd = Math.sqrt(D.var), se = n => sd / Math.sqrt(n * m);
+  let lo = Infinity, hi = -Infinity; for (const r of rows) { lo = Math.min(lo, r.avgMean, D.mu - 2.3 * se(r.n)); hi = Math.max(hi, r.avgMean, D.mu + 2.3 * se(r.n)); }
+  const pad = (hi - lo) * 0.12; lo -= pad; hi += pad;
+  P.setup({ x: [2, SIM.n], y: [lo, hi], xlog: true, xlabel: 'n = number of systems per hacker', ylabel: `average of the ${int(m)} sampling means` });
+  const a = rows.map(r => [r.n, D.mu + 2 * se(r.n)]), b = rows.map(r => [r.n, D.mu - 2 * se(r.n)]);
+  P.band(a, b, CM, 0.14); P.line([[2, D.mu], [SIM.n, D.mu]], { c: '#3b2fa8', w: 2, dash: [7, 5] });
+  const pts = rows.map(r => [r.n, r.avgMean]); P.line(pts, { c: CM, w: 2.2 }); P.dots(pts, { c: CM, r: 3.4 });
+  setLegend([{ c: CM, t: 'average of the sampling means' }, { c: '#3b2fa8', dash: 1, t: `true mean μ = ${fnum(D.mu, 3)}` }, { c: '#b9a8ff', line: 1, t: '± 2 standard errors σ/√(nm): where the dots can land by chance' }]);
+  hideOpts();
+}
+function drawAvgV() {
+  const D = SIM.D, rows = seriesStats(), m = SIM.m;
+  P.setup({ x: [2, SIM.n], y: [0, D.var * 1.18], xlog: true, xlabel: 'n = number of systems per hacker', ylabel: `average of the ${int(m)} sampling variances` });
+  P.band(rows.map(r => [r.n, D.var + 2 * Math.sqrt(varOfS2(D, r.n) / m)]), rows.map(r => [r.n, D.var - 2 * Math.sqrt(varOfS2(D, r.n) / m)]), CV, 0.16);
+  P.line([[2, D.var], [SIM.n, D.var]], { c: '#8a4a00', w: 2, dash: [7, 5] });
+  P.line(SIM.cp.map(n => [n, D.var * (n - 1) / n]), { c: CB, w: 1.4, dash: [3, 4], a: 0.8 });
+  const pu = rows.map(r => [r.n, r.avgVu]), pb = rows.map(r => [r.n, r.avgVb]);
+  P.line(pb, { c: CB, w: 2.2 }); P.dots(pb, { c: CB, r: 3.2 }); P.line(pu, { c: CV, w: 2.4 }); P.dots(pu, { c: CV, r: 3.6 });
+  setLegend([{ c: CV, t: 's² = SS/(n−1): average of the sampling variances' }, { c: CB, t: 'SS/n (divide by n): average falls short' }, { c: '#8a4a00', dash: 1, t: `true variance σ² = ${fnum(D.var, 3)}` }, { c: CB, dash: 1, t: 'theory for SS/n: σ²(n−1)/n' }, { c: '#f6c58f', line: 1, t: '± 2 standard errors for the s² average' }]);
+  hideOpts();
+}
+function drawSpread() {
+  const D = SIM.D, rows = seriesStats(), sd = Math.sqrt(D.var);
+  let lo = Infinity, hi = 0; for (const r of rows) for (const v of [r.stdMean, r.stdVu]) if (v > 0) { lo = Math.min(lo, v); hi = Math.max(hi, v); }
+  lo = Math.min(lo, sd / Math.sqrt(SIM.n)); hi = Math.max(hi, Math.sqrt(varOfS2(D, 2)), sd);
+  P.setup({ x: [2, SIM.n], y: [lo / 1.6, hi * 1.6], xlog: true, ylog: true, xlabel: 'n = number of systems per hacker', ylabel: 'spread across the hackers (log scale)' });
+  P.line(SIM.cp.map(n => [n, sd / Math.sqrt(n)]), { c: '#3b2fa8', w: 1.4, dash: [6, 4] });
+  P.line(SIM.cp.map(n => [n, Math.sqrt(varOfS2(D, n))]), { c: '#8a4a00', w: 1.4, dash: [6, 4] });
+  const pm = rows.map(r => [r.n, r.stdMean]), pv = rows.map(r => [r.n, r.stdVu]);
+  P.line(pm, { c: CM, w: 2.2 }); P.dots(pm, { c: CM, r: 3.4 }); P.line(pv, { c: CV, w: 2.2 }); P.dots(pv, { c: CV, r: 3.4 });
+  setLegend([{ c: CM, t: 'standard deviation of the sampling means x̄' }, { c: CV, t: 'standard deviation of the sampling variances s²' }, { c: '#3b2fa8', dash: 1, t: 'theory: σ/√n' }, { c: '#8a4a00', dash: 1, t: 'theory: √Var(s²), about √((μ₄−σ⁴)/n)' }]);
+  hideOpts();
+}
+function drawDist(kind) {
+  const D = SIM.D, norm = ST.norm[kind === 'mean' ? 'distM' : 'distV'], ns = nsUsed().filter(n => kind === 'mean' || n >= 10), sd = Math.sqrt(D.var), cs = [];
+  let xlo = Infinity, xhi = -Infinity, ymax = 0;
+  for (const n of ns) {
+    const s = statsAt(SIM, SIM.cp.indexOf(n)), c = kind === 'mean' ? D.mu : D.var, w = kind === 'mean' ? sd / Math.sqrt(n) : Math.sqrt(varOfS2(D, n)), vals = kind === 'mean' ? s.means : s.vu;
+    const lo = Math.max(kind === 'mean' ? -1e9 : 0, c - 4.2 * w), hi = c + 4.2 * w, h = histo(vals, lo, hi, 50, kind === 'mean' ? 1 / n : 0), pk = Math.max(...h.ds);
+    cs.push({ n, c, w, h, pk }); xlo = Math.min(xlo, lo); xhi = Math.max(xhi, hi); ymax = Math.max(ymax, norm ? 1 : pk);
+  }
+  P.setup({ x: [xlo, xhi], y: [0, ymax * 1.12], xlabel: kind === 'mean' ? 'sampling mean x̄ of one hacker' : 'sampling variance s² of one hacker', ylabel: norm ? 'relative height (peak = 1)' : 'density (area = 1)' });
+  for (const q of cs) { const ln = []; for (let i = 0; i <= 200; i++) { const x = q.c - 4.2 * q.w + 8.4 * q.w * i / 200; if (kind === 'var' && x < 0) continue; const d = phi((x - q.c) / q.w) / q.w; ln.push([x, norm ? d / (phi(0) / q.w) : d]); } P.line(ln, { c: '#222', w: 1.1, dash: [4, 3], a: 0.7 }); }
+  for (const q of cs) P.hist(q.h.xs, q.h.ds.map(d => norm ? d / q.pk : d), q.h.bw, { c: NCOLS[q.n], fill: 0.26, w: 1.8 });
+  const L = cs.map(q => ({ c: NCOLS[q.n], t: `n = ${int(q.n)}` })); L.push({ c: '#222', dash: 1, t: 'normal curve with the same centre and spread' }); setLegend(L);
+  hideOpts(); $('o_norm').style.display = ''; $('norm').checked = norm;
+}
+
+// =============== explanations ===============
+function describe(v) {
+  const D = SIM.D, n = SIM.n, m = SIM.m, jl = SIM.cp.length - 1, s = statsAt(SIM, jl), sd = Math.sqrt(D.var), ns = nsUsed(), rows = seriesStats();
+  const nrow = (fn) => `<table class="mini-t"><tr><th>n</th>${fn.h.map(x => `<th>${x}</th>`).join('')}</tr>${ns.map(nn => { const r = rows[SIM.cp.indexOf(nn)]; return `<tr><td>${int(nn)}</td>${fn.f(r, nn).map(x => `<td>${x}</td>`).join('')}</tr>`; }).join('')}</table>`;
+  const T = {
+    pmf: { t: 'The scores: the distribution you chose', see: `<p>Every attempt on a system gives a score from 0 to 10. The violet bars are the <b>true probabilities</b> of the distribution you picked; the orange dots are the frequencies actually seen in the simulation (all ${int(n * m)} scores), which sit on the bars. The dashed line is the true mean <b>μ</b> and the shaded band is μ ± σ. These two numbers, μ and σ², are what we want to recover from data.</p>`,
+      num: `<p>μ = Σ k·P(k) = <b>${fnum(D.mu, 3)}</b></p><p>σ² = Σ (k−μ)²·P(k) = <b>${fnum(D.var, 3)}</b> (σ = ${fnum(sd, 3)})</p><p>4th central moment μ₄ = ${fnum(D.mu4, 2)} (it controls the precision of s²)</p>`,
+      tip: 'Try the other distributions from the menu: the shape changes, but every conclusion below holds for all of them.' },
+    meanT: { t: 'Sampling mean x̄ of each hacker, updated by Welford at every system', see: `<p>Each line is one hacker: the mean of the scores collected so far, updated with Knuth's recurrence after each new system. At the beginning the lines are wild (after one system the mean is just the one score), then they <b>funnel into the true mean μ</b> (dashed). The shaded funnel is μ ± 2σ/√n: about 95% of hackers fall inside it.</p>`,
+      num: `<p>After n = ${int(n)} systems the ${int(m)} sampling means average ${fnum(s.avgMean, 4)} (μ = ${fnum(D.mu, 3)}) and have spread ${fnum(s.stdMean, 4)} (theory σ/√n = ${fnum(sd / Math.sqrt(n), 4)}).</p>`,
+      tip: 'Same picture as the Law of Large Numbers of HMWK 4: the "average score" of a hacker settles on μ.' },
+    varT: { t: 'Sampling variance s² of each hacker, updated by Welford at every system', see: `<p>Each line is the sampling variance s² of one hacker computed with the recurrence SS<sub>k</sub> = SS<sub>k−1</sub> + (x<sub>k</sub> − M<sub>k−1</sub>)(x<sub>k</sub> − M<sub>k</sub>), divided by k−1. It starts from very scattered values (two scores can be identical or far apart) and then <b>settles on the true variance σ²</b> (dashed). The funnel is σ² ± 2·sd(s²), computed exactly from μ₄ and σ². The first few values of some hackers are larger than the vertical scale shows.</p>`,
+      num: `<p>After n = ${int(n)} systems the ${int(m)} sampling variances average ${fnum(s.avgVu, 4)} (σ² = ${fnum(D.var, 3)}) with spread ${fnum(s.stdVu, 4)} (theory ${fnum(Math.sqrt(varOfS2(D, n)), 4)}).</p>`,
+      tip: 'The sampling variance needs at least 2 values, so these lines start at n = 2.' },
+    avgM: { t: 'Average of the m sampling means vs μ', see: `<p>For each n we average the m sampling means (violet dots) and compare with the true μ (dashed). The dots sit on the line <b>at every n, even n = 2</b>: the sampling mean is <b>unbiased</b>, E[x̄] = μ. The shaded band shows how far the dots can wander by pure chance (±2 standard errors σ/√(nm)): all of them stay inside. The vertical scale is magnified, so the tiny wiggles are noise, not bias.</p>`,
+      num: nrow({ h: ['avg of x̄', 'μ', 'difference'], f: (r, nn) => [fnum(r.avgMean, 4), fnum(D.mu, 3), (r.avgMean - D.mu >= 0 ? '+' : '') + fnum(r.avgMean - D.mu, 4)] }),
+      tip: 'Use "New random draw": the dots jump around μ, never systematically above or below.' },
+    avgV: { t: 'Average of the m sampling variances vs σ²', see: `<p>Orange: the average of the sampling variances s² = SS/(n−1). It lies on the true variance σ² (dashed) <b>at every n</b>: s² is <b>unbiased</b>. Red: what happens if SS is divided by n instead of n−1: the average is σ²(n−1)/n (dotted red), below the truth, by half at n = 2, and the gap closes only slowly. That is why the sampling variance uses n−1: the deviations are measured from x̄, which is fitted to the same data and makes them a bit too small.</p>`,
+      num: nrow({ h: ['avg of s² (n−1)', 'avg of SS/n', 'σ²'], f: (r, nn) => [fnum(r.avgVu, 4), fnum(r.avgVb, 4), fnum(D.var, 3)] }),
+      tip: 'Small n shows the difference best: at n = 2 the "divide by n" version averages σ²/2.' },
+    spread: { t: 'How much do the estimates vary from hacker to hacker?', see: `<p>For each n, violet is the standard deviation of the m sampling means and orange the standard deviation of the m sampling variances. Both axes are logarithmic, so a power law is a straight line: <b>both decrease with slope −½</b>, i.e. like 1/√n. The dashed lines are the exact theory: σ/√n for x̄ and √((μ₄ − (n−3)/(n−1)·σ⁴)/n) for s². Each hacker's estimates become more reliable as the number of attacked systems grows: this is called consistency.</p>`,
+      num: nrow({ h: ['std of x̄ (σ/√n)', 'std of s² (theory)'], f: (r, nn) => [`${fnum(r.stdMean, 4)} (${fnum(sd / Math.sqrt(nn), 4)})`, `${fnum(r.stdVu, 4)} (${fnum(Math.sqrt(varOfS2(D, nn)), 4)})`] }),
+      tip: 'To halve the error you need four times more systems; to get 10 times more precision, one hundred times more.' },
+    distM: { t: 'Distribution of the sampling mean across hackers', see: `<p>Histograms of the m sampling means for increasing n. The centre does not move (it is μ) while the curve gets <b>narrower</b>, with width σ/√n, and <b>more bell-shaped</b> even if the scores themselves are not (Central Limit Theorem). The dashed curve is the normal distribution with the same centre and spread.</p>`,
+      num: nrow({ h: ['mean of x̄', 'std of x̄'], f: (r, nn) => [fnum(r.avgMean, 4), fnum(r.stdMean, 4)] }),
+      tip: 'Untick "same height" to see the true densities: the n = 10,000 curve becomes extremely tall because the same unit of probability is squeezed into a very narrow interval.' },
+    distV: { t: 'Distribution of the sampling variance across hackers', see: `<p>Histograms of the m sampling variances. As n grows the curve <b>concentrates on σ²</b> and its width shrinks like 1/√n. For small n the distribution is <b>skewed</b> (a variance cannot be negative, and large values are possible when a hacker meets a few extreme scores) and the normal curve does not fit well; for large n it does.</p>`,
+      num: nrow({ h: ['mean of s²', 'std of s² (theory)'], f: (r, nn) => [fnum(r.avgVu, 4), `${fnum(r.stdVu, 4)} (${fnum(Math.sqrt(varOfS2(D, nn)), 4)})`] }),
+      tip: 'The skewness is stronger for distributions with heavy tails such as "mostly low scores" or "all or nothing".' }
+  };
+  return T[v];
+}
+function tableHtml() {
+  const D = SIM.D, sd = Math.sqrt(D.var), pick = [2, 10, 100, 1000, 10000, 100000].filter(v => SIM.cp.includes(v)), hdr = ['n', 'avg of x̄ (μ)', 'std of x̄ (σ/√n)', 'avg of s² (σ²)', 'avg of SS/n (σ²(n−1)/n)', 'std of s² (theory)'];
+  let h = `<table><tr>${hdr.map(x => `<th>${x}</th>`).join('')}</tr>`;
+  for (const n of pick) { const r = statsAt(SIM, SIM.cp.indexOf(n)); h += `<tr><td>${int(n)}</td><td>${fnum(r.avgMean, 4)} (${fnum(D.mu, 3)})</td><td>${fnum(r.stdMean, 4)} (${fnum(sd / Math.sqrt(n), 4)})</td><td>${fnum(r.avgVu, 4)} (${fnum(D.var, 3)})</td><td>${fnum(r.avgVb, 4)} (${fnum(D.var * (n - 1) / n, 4)})</td><td>${fnum(r.stdVu, 4)} (${fnum(Math.sqrt(varOfS2(D, n)), 4)})</td></tr>`; }
+  return h + '</table>';
+}
+
+// =============== render / interaction ===============
+function render() {
+  if (!SIM) return; P.resize(); const v = ST.view;
+  $('replay').style.display = (v === 'meanT' || v === 'varT') ? '' : 'none';
+  ({ pmf: drawPmf, meanT: () => drawTraj('mean'), varT: () => drawTraj('var'), avgM: drawAvgM, avgV: drawAvgV, spread: drawSpread, distM: () => drawDist('mean'), distV: () => drawDist('var') })[v]();
+  const d = describe(v); $('vtitle').textContent = d.t; $('ex_see').innerHTML = d.see; $('ex_num').innerHTML = d.num; $('ex_tip').innerHTML = '💡 ' + d.tip;
+  $('tbl').innerHTML = tableHtml(); $('note').textContent = SIM.note || '';
+  $('theory').innerHTML = `True values for this distribution: <b>μ = ${fnum(SIM.D.mu, 3)}</b>, <b>σ² = ${fnum(SIM.D.var, 3)}</b>. Each hacker's x̄ and s² are computed with Welford's recurrences.`;
+}
+const isTraj = v => v === 'meanT' || v === 'varT';
+function setView(v, replay = true) { ST.view = v; document.querySelectorAll('.vbtn').forEach(b => b.classList.toggle('on', b.dataset.view === v)); stopAnim(); render(); if (replay && isTraj(v)) startAnim(); }
+function startAnim() {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  stopAnim(); const t0 = performance.now(), dur = 3600;
+  const step = now => { const f = Math.min(1, (now - t0) / dur); ST.reveal = f >= 1 ? null : 1 - Math.pow(1 - f, 2); render(); timer = f < 1 ? requestAnimationFrame(step) : null; };
+  timer = requestAnimationFrame(step);
+}
+function stopAnim() { if (timer) cancelAnimationFrame(timer); timer = null; ST.reveal = null; }
+async function run() {
+  if (busy) { pending = true; return; } busy = true; stopAnim();
+  const n = +$('n').value; let m = +$('m').value, note = '';
+  if (n * m > 2e7) { const opts = [50, 200, 1000, 2000].filter(o => n * o <= 2e7); m = opts[opts.length - 1] || 50; $('m').value = m; note = `With n = ${int(n)} the number of hackers was limited to ${int(m)} to keep the simulation fast.`; }
+  const bz = $('busy'); bz.style.display = ''; bz.textContent = 'Simulating… 0%';
+  SIM = await simulate({ n, m, dist: ST.dist, seed: ST.seed }, f => { bz.textContent = `Simulating… ${Math.round(f * 100)}%`; });
+  SIM.note = note; bz.style.display = 'none'; busy = false; render(); if (isTraj(ST.view)) startAnim();
+  if (pending) { pending = false; run(); }
+}
+// ---- Exercise 1 widgets
+function welford(xs) { let M = 0, SS = 0; const rows = []; xs.forEach((x, i) => { const k = i + 1, d = x - M; M += d / k; SS += d * (x - M); rows.push({ k, x, d, M, SS, s2: k > 1 ? SS / (k - 1) : NaN }); }); return rows; }
+function wRender() {
+  const xs = $('wdata').value.split(/[\s,;]+/).filter(Boolean).map(Number).filter(Number.isFinite);
+  if (xs.length < 2) { $('wtab').innerHTML = '<p class="note">Enter at least two numbers.</p>'; $('wcheck').textContent = ''; return; }
+  const rows = welford(xs), f = v => Number(v.toPrecision(7)).toString();
+  $('wtab').innerHTML = `<table><tr><th>k</th><th>x<sub>k</sub></th><th>gap d = x<sub>k</sub> − M<sub>k−1</sub></th><th>M<sub>k</sub> = M<sub>k−1</sub> + d/k</th><th>SS<sub>k</sub> = SS<sub>k−1</sub> + d·(x<sub>k</sub> − M<sub>k</sub>)</th><th>s²<sub>k</sub> = SS<sub>k</sub>/(k−1)</th></tr>${rows.map(r => `<tr><td>${r.k}</td><td>${f(r.x)}</td><td>${f(r.d)}</td><td>${f(r.M)}</td><td>${f(r.SS)}</td><td>${r.k > 1 ? f(r.s2) : '—'}</td></tr>`).join('')}</table>`;
+  const n = xs.length, mean = xs.reduce((a, b) => a + b, 0) / n, ss = xs.reduce((a, b) => a + (b - mean) ** 2, 0), L = rows[n - 1], ok = Math.abs(L.M - mean) < 1e-9 * (1 + Math.abs(mean)) && Math.abs(L.SS - ss) < 1e-9 * (1 + ss);
+  $('wcheck').innerHTML = `${ok ? '✅' : '⚠️'} Two-pass check: mean = ${f(mean)}, SS = ${f(ss)}, s² = ${f(ss / (n - 1))}. ${ok ? 'The recurrences give exactly the same numbers.' : 'Mismatch!'}`;
+}
+function wStab() {
+  const xs = [4, 7, 13, 16].map(v => 1e9 + v), n = xs.length, sx2 = xs.reduce((a, b) => a + b * b, 0), mean = xs.reduce((a, b) => a + b) / n, naive = (sx2 - n * mean * mean) / (n - 1), w = welford(xs)[n - 1];
+  $('wstab').innerHTML = `Test: the four numbers 1,000,000,004 · 1,000,000,007 · 1,000,000,013 · 1,000,000,016 have s² = 30 exactly. Shortcut (Σx² − n·x̄²)/(n−1) in floating point gives <b>${Number(naive.toPrecision(6))}</b>; Welford gives <b>${Number((w.SS / (n - 1)).toPrecision(6))}</b>.`;
+}
+
+document.querySelectorAll('.vbtn').forEach(b => b.onclick = () => setView(b.dataset.view));
+$('dist').innerHTML = Object.entries(DISTS).map(([k, d]) => `<option value="${k}">${d.name}</option>`).join('');
+$('dist').onchange = () => { ST.dist = $('dist').value; run(); };
+$('n').onchange = run; $('m').onchange = run;
+$('redraw').onclick = () => { ST.seed = Math.floor(Math.random() * 1e9); run(); };
+$('replay').onclick = () => { render(); startAnim(); };
+$('logx').onchange = () => { const k = ST.view; if (k in ST.logx) { ST.logx[k] = $('logx').checked; stopAnim(); render(); } };
+$('norm').onchange = () => { ST.norm[ST.view] = $('norm').checked; render(); };
+$('wdata').oninput = wRender;
+window.addEventListener('resize', () => { clearTimeout(window._rz); window._rz = setTimeout(() => { if (SIM && !timer) render(); }, 120); });
+$('cv').addEventListener('mousemove', e => {
+  if (!SIM || !P.o) return; const r = $('cv').getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top, ro = $('readout');
+  if (px < P.x0 || px > P.x1 || py < P.y1 || py > P.y0) { ro.style.display = 'none'; return; }
+  ro.style.display = ''; ro.textContent = `x = ${fmtTick(P.invX(px), false)}   y = ${fmtTick(P.invY(py), false)}`;
+});
+$('cv').addEventListener('mouseleave', () => { $('readout').style.display = 'none'; });
+wRender(); wStab(); run();
+</script>
+</body></html>
