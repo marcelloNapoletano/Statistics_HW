@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HMWK 7</title>
+<style>
+:root{
+  --ink:#272a44; --mute:#6a6f91; --line:#e3e6f6; --soft:#f4f5ff; --card:rgba(255,255,255,.9);
+  --violet:#7c5cff; --blue:#2f7dff; --orange:#f08a24; --green:#1fa971; --red:#e5484d; --yellow:#e6b800; --pink:#ec5fa5;
+  --shadow:0 12px 34px rgba(88,80,170,.12);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;color:var(--ink);font:16px/1.65 "Nunito","Quicksand",ui-rounded,"SF Pro Rounded","Segoe UI",system-ui,sans-serif;min-height:100vh;
+  background:radial-gradient(900px 500px at 6% -6%,#e5dfff 0,transparent 60%),radial-gradient(800px 520px at 100% 0,#ffe1f0 0,transparent 55%),radial-gradient(900px 600px at 50% 112%,#d6f4ff 0,transparent 60%),#f7f7ff;background-attachment:fixed}
+header,main{max-width:1080px;margin:0 auto;padding:0 20px}
+header{padding-top:26px}
+.back{display:inline-flex;align-items:center;gap:6px;color:var(--mute);text-decoration:none;font-size:14px;border-radius:99px;padding:6px 14px;background:#fff;box-shadow:0 2px 8px rgba(88,80,170,.10);transition:.18s}
+.back:hover{color:var(--violet);transform:translateX(-2px)}
+h1{margin:14px 0 6px;font-size:clamp(26px,4.5vw,38px);line-height:1.15;letter-spacing:-.3px;background:linear-gradient(90deg,var(--violet),var(--blue) 60%,#14b8c4);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{margin:0 0 6px;color:var(--mute);font-size:17px;max-width:760px}
+h3{margin:0 0 6px;font-size:19px}
+.tabs{display:inline-flex;flex-wrap:wrap;gap:4px;background:#fff;border-radius:99px;padding:5px;box-shadow:0 4px 16px rgba(88,80,170,.10);margin:16px 0 4px}
+.tabs button{border:0;background:transparent;color:var(--mute);padding:9px 18px;border-radius:99px;cursor:pointer;font:inherit;font-weight:700;transition:.2s}
+.tabs button:hover{color:var(--violet)}
+.tabs button.on{background:linear-gradient(135deg,var(--violet),var(--blue));color:#fff;box-shadow:0 6px 16px rgba(124,92,255,.35)}
+main{padding-bottom:70px}
+section.tab{display:none}
+section.tab.on{display:block;animation:rise .45s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.card{background:var(--card);border:1px solid rgba(124,92,255,.10);border-radius:24px;padding:22px 26px;margin:18px 0;box-shadow:var(--shadow)}
+.card.hero{background:linear-gradient(135deg,rgba(124,92,255,.10),rgba(47,125,255,.08));}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.mini{background:var(--soft);border-radius:18px;padding:16px 18px;transition:.2s}
+.mini:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(88,80,170,.12);background:#fff}
+.mini h4{margin:0 0 4px;font-size:16.5px}
+.mini p{margin:4px 0}
+.row{display:flex;gap:18px;flex-wrap:wrap}
+.row>*{flex:1 1 320px;min-width:0}
+.say{color:#3d4160;margin:2px 0 12px}
+.tip{background:#fff8e6;border-radius:14px;padding:10px 14px;margin-top:12px;color:#6b4e0c;font-size:15px}
+.note{color:var(--mute);font-size:14.5px}
+.m{color:var(--mute);font-size:13px}
+label{color:var(--mute);font-size:13px;font-weight:700;display:block;margin-bottom:4px}
+input,select{background:#fff;color:var(--ink);border:1.5px solid var(--line);border-radius:12px;padding:9px 12px;font:inherit;transition:.15s}
+input:focus,select:focus{outline:none;border-color:var(--violet);box-shadow:0 0 0 3px rgba(124,92,255,.15)}
+input[type=range]{padding:0;width:100%;accent-color:var(--violet);border:0}
+input[type=text]{width:100%}
+.btn{background:#fff;color:var(--ink);border:1.5px solid var(--line);border-radius:99px;padding:9px 18px;font:inherit;font-weight:700;cursor:pointer;transition:.18s}
+.btn:hover{border-color:var(--violet);color:var(--violet);transform:translateY(-1px)}
+.btn.primary{background:linear-gradient(135deg,var(--violet),var(--blue));color:#fff;border-color:transparent;box-shadow:0 6px 16px rgba(124,92,255,.32)}
+.btn.primary:hover{color:#fff;box-shadow:0 9px 22px rgba(124,92,255,.42)}
+.ctrls{display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin:10px 0}
+code,.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+.pub{font-size:clamp(17px,3vw,23px);font-weight:800;background:linear-gradient(135deg,#dcfbe9,#e0f2ff);color:#0e6b45;border-radius:18px;padding:14px 20px;margin:12px 0}
+.chips{display:flex;flex-wrap:wrap;gap:6px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px}
+.chip{background:var(--soft);border-radius:99px;padding:3px 10px}
+.chip.last{background:#dcfbe9;color:#0e6b45;font-weight:700}
+.chip.rep{background:#ede9ff;color:#5b3fd6}
+canvas{width:100%;max-width:560px;height:auto;background:#fbfbff;border-radius:18px;display:block;border:1px solid var(--line)}
+.legend span{display:inline-block;margin:0 14px 4px 0;font-size:13.5px;color:var(--mute)}
+.dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+#log{max-height:520px;overflow:auto;background:#fbfbff;border:1px solid var(--line);border-radius:18px;padding:8px}
+#log .r{padding:8px 12px;border-radius:12px;cursor:pointer;color:var(--mute);font-size:14px;transition:.15s}
+#log .r:hover{background:var(--soft)}
+#log .r.cur{background:#ede9ff;color:var(--ink)}
+#log .r p{margin:3px 0}
+#log .r .m{display:none}
+#log.math .r.cur .m{display:block;font-family:ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap}
+.cap{background:var(--soft);border-radius:14px;padding:10px 14px;margin:10px 0;min-height:66px;font-size:15px}
+.hexout{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;word-break:break-all;background:var(--soft);border-radius:14px;padding:10px 14px;margin:6px 0}
+.ok{color:var(--green);font-weight:700}.bad{color:var(--red);font-weight:700}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:14.5px;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+th,td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+th{background:var(--soft);color:var(--mute);font-weight:800}
+.tag{display:inline-block;font-size:11.5px;font-weight:700;border-radius:99px;padding:2px 10px;margin:0 4px 4px 0}
+.t-der{background:#efe9ff;color:#6a3fd8}.t-pk{background:#e0edff;color:#1f63d6}.t-hash{background:#ffeedb;color:#b45f0a}.t-chk{background:#dcf7e9;color:#13774f}.t-enc{background:#fff4c9;color:#8a6a00}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.tile{background:var(--soft);border-radius:18px;padding:14px 16px}
+.tile b{display:block;font-size:28px;line-height:1.2;background:linear-gradient(90deg,var(--violet),var(--blue));-webkit-background-clip:text;background-clip:text;color:transparent}
+.tile small{color:var(--mute)}
+.meter{display:grid;grid-template-columns:150px 1fr 48px;gap:12px;align-items:center;margin:8px 0;font-size:14px}
+.track{position:relative;height:12px;background:var(--soft);border-radius:99px}
+.track i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--violet),var(--blue))}
+.track u{position:absolute;top:-5px;bottom:-5px;width:2px;background:var(--ink);opacity:.4}
+.mv{font-weight:800;text-align:right}
+svg.plot text,svg.bars text,#timeline text{fill:var(--mute);font-family:inherit}
+.pipe{display:flex;flex-wrap:wrap;align-items:stretch;gap:6px;margin:12px 0}
+.node{background:#fff;border-radius:18px;padding:12px 12px;min-width:118px;flex:1 1 118px;text-align:center;box-shadow:0 4px 14px rgba(88,80,170,.10);transition:.2s}
+.node:hover{transform:translateY(-4px)}
+.node .e{font-size:26px;display:block}
+.node b{display:block;font-size:14.5px}
+.node small{color:var(--mute);font-size:12.5px}
+.arrow{align-self:center;color:var(--violet);text-align:center;font-size:12px;font-weight:700;min-width:84px}
+.hl{display:flex;gap:10px;align-items:flex-start;margin:8px 0}
+.hl .e{font-size:22px;line-height:1.4}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+textarea{width:100%;background:#fff;color:var(--ink);border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;font:13.5px ui-monospace,Menlo,Consolas,monospace;resize:vertical}
+textarea:focus{outline:none;border-color:var(--violet);box-shadow:0 0 0 3px rgba(124,92,255,.15)}
+details summary{cursor:pointer;color:var(--violet)}
+.legend{margin:6px 0 4px}
+</style>
+<style>
+.seg{display:inline-flex;background:#fff;border:1.5px solid var(--line);border-radius:99px;padding:3px}
+.seg button{border:0;background:transparent;color:var(--mute);padding:7px 14px;border-radius:99px;cursor:pointer;font:inherit;font-weight:700}
+.seg button.on{background:linear-gradient(135deg,var(--violet),var(--blue));color:#fff}
+.vgroups{display:flex;flex-wrap:wrap;gap:14px 26px;margin:16px 0 8px}
+.vgroup{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.vlab{font-weight:800;color:var(--ink);margin-right:4px}
+.vbtn{border:1.5px solid var(--line);background:#fff;color:var(--mute);padding:8px 14px;border-radius:99px;cursor:pointer;font:inherit;font-weight:700;transition:.18s}
+.vbtn:hover{border-color:var(--violet);color:var(--violet)}
+.vbtn.on{background:linear-gradient(135deg,var(--violet),var(--blue));color:#fff;border-color:transparent;box-shadow:0 6px 16px rgba(124,92,255,.32)}
+.opts{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;margin:8px 0}
+.chk{display:inline-flex;align-items:center;gap:6px;margin:0;cursor:pointer}
+.chk input{width:auto;accent-color:var(--violet)}
+.chartwrap{position:relative;width:100%;margin-top:6px}
+.chartwrap canvas{display:block;border-radius:14px;max-width:none;width:100%;border:1px solid var(--line)}
+.busy{position:absolute;inset:0;background:rgba(255,255,255,.8);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--violet);border-radius:14px}
+.readout{position:absolute;top:10px;right:24px;background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:10px;padding:3px 10px;font-size:12.5px;color:var(--mute);display:none;pointer-events:none;white-space:pre}
+.sw{display:inline-block;width:22px;height:3px;margin-right:6px;vertical-align:3px}
+.dia{display:inline-block;width:9px;height:9px;transform:rotate(45deg);margin-right:7px}
+.mini-t{border-collapse:collapse;font-size:14px}.mini-t th,.mini-t td{padding:3px 10px;text-align:left;border-bottom:1px solid var(--line)}
+</style>
+<style>.eq{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:8px 12px;margin:6px 0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14px;overflow-x:auto}pre.code{background:#272a44;color:#e9ebff;border-radius:14px;padding:14px 16px;overflow-x:auto;font-size:14px;line-height:1.55;margin:6px 0 0}</style>
+<style>.cg{background:#e4f7ee}.cy{background:#fff6d9}.cr{background:#fde8e8}code{background:var(--soft);padding:1px 5px;border-radius:6px}</style>
+</head>
+<body>
+<header>
+  <a class="back" href="index.html">← Home</a>
+  <h1>HMWK 7 · Statistical independence: contingency tables and χ²</h1>
+  <p class="sub">From a list of pairs (X, F) to a table of counts, then the expected counts under independence, the chi-square statistic and its p-value, and what the result does (and does not) say.</p>
+</header>
+<main>
+<div class="card hero">
+  <h3>Do two things go together, or are they unrelated?</h3>
+  <p class="say">Take a group of people and write down two facts for each: <b>X</b> (say, the ticket class on the Titanic) and <b>F</b> (did the person survive?). If X tells you <i>nothing</i> about F, the two are <b>independent</b>. If knowing X changes what you expect for F, they are <b>dependent</b> (or "associated"). Here we count, compare with what independence would predict, and measure the gap with the <b>χ² (chi-square) test</b>.</p>
+  <div class="grid">
+    <div class="mini"><h4>🎲 Independence in probability</h4><p>Events A and B are independent when P(A∩B) = P(A)·P(B). For two variables: P(X=i, F=j) = P(X=i)·P(F=j) for <b>every</b> pair (i, j). Same thing in words: P(F=j | X=i) = P(F=j), so the <b>conditional</b> frequencies in every row equal the <b>marginal</b> ones.</p></div>
+    <div class="mini"><h4>🧮 Independence in data</h4><p>From the table of counts O<sub>ij</sub> (row totals r<sub>i</sub>, column totals c<sub>j</sub>, total n) independence predicts the <b>expected counts</b> E<sub>ij</sub> = r<sub>i</sub>·c<sub>j</sub> / n. The statistic is χ² = Σ (O−E)² / E: small if data look independent, large if not.</p></div>
+    <div class="mini"><h4>📉 The p-value</h4><p>If X and F were really independent, χ² would still wobble by chance, following a χ² distribution with df = (rows−1)(columns−1). The <b>p-value</b> is the chance of getting a χ² at least as large as ours <i>just by luck</i>. A small p (below α) means "luck is not a good explanation".</p></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="vgroups" style="margin-top:0">
+    <div class="vgroup"><span class="vlab">🗂️ Dataset (X, F)</span><span id="dsb"></span></div>
+  </div>
+  <div class="ctrls" id="simc" style="align-items:end;display:none">
+    <div style="min-width:220px;flex:1"><label>Strength of the link s: <b id="sv">0.50</b> (0 = independent)</label><input type="range" id="sl" min="0" max="1" step="0.05" value="0.5"></div>
+    <div><label>Sample size n</label><select id="sn"><option>60</option><option selected>200</option><option>1000</option><option>5000</option></select></div>
+    <div><button class="btn" id="rs">🎲 New sample</button></div>
+  </div>
+  <div id="cuc" style="display:none;margin-top:10px">
+    <label>Your own data: one pair per line as <code>X,F</code> or <code>X,F,count</code> (no header)</label>
+    <textarea id="cut" rows="6"></textarea>
+    <div class="opts"><button class="btn" id="cub">▶ Analyse</button><span class="note" id="cum"></span></div>
+  </div>
+  <p class="note" id="dsn" style="margin:8px 0 0"></p>
+  <div class="opts"><label class="chk" style="font-weight:700">Significance level α <select id="al"><option value="0.10">0.10</option><option value="0.05" selected>0.05</option><option value="0.01">0.01</option></select></label>
+    <label class="chk"><input type="checkbox" id="pm"> run Monte-Carlo check (shuffle F 4000 times)</label></div>
+  <div class="vgroups">
+    <div class="vgroup"><span class="vlab">📊 Counts</span>
+      <button class="vbtn on" data-v="obs">Observed vs expected</button></div>
+    <div class="vgroup"><span class="vlab">📐 Frequencies</span>
+      <button class="vbtn" data-v="cond">Conditional frequencies</button>
+      <button class="vbtn" data-v="mos">Mosaic plot</button></div>
+    <div class="vgroup"><span class="vlab">🧪 The test</span>
+      <button class="vbtn" data-v="con">Who contributes to χ²</button>
+      <button class="vbtn" data-v="chi">χ² and p-value</button></div>
+  </div>
+  <div class="opts" id="condopt" style="display:none"><span class="vlab">Condition on:</span>
+    <label class="chk"><input type="radio" name="cd" value="row" checked> X (each row: P(F | X))</label>
+    <label class="chk"><input type="radio" name="cd" value="col"> F (each column: P(X | F))</label></div>
+  <div class="chartwrap"><canvas id="cv"></canvas><div id="ro" class="readout"></div></div>
+  <div id="lg" class="legend"></div>
+</div>
+
+<div class="card">
+  <h3 id="vt">What you are seeing</h3>
+  <div class="grid">
+    <div class="mini"><h4>👀 What the picture shows</h4><div id="see" class="say"></div></div>
+    <div class="mini"><h4>🔢 The numbers behind it</h4><div id="num" class="say"></div></div>
+  </div>
+  <div class="tip" id="tip"></div>
+</div>
+
+<div class="card">
+  <h3>📋 Step by step: from raw pairs to the test</h3>
+  <p class="note">Red = more than expected, blue = fewer (in the contribution table). Counts are always whole numbers; expected counts are not.</p>
+  <div id="tabs7" style="overflow-x:auto"></div>
+</div>
+
+<div class="card">
+  <h3>✅ Result and verdict</h3>
+  <div id="res"></div>
+</div>
+
+<div class="card">
+  <h3>🧠 Association is not causality</h3>
+  <div class="grid">
+    <div class="mini"><h4>🔗 What the test can say</h4><p>Only that the two variables are <b>statistically associated</b>: knowing one changes the odds of the other. A tiny p-value says the link is unlikely to be luck. It does <b>not</b> say how strong the link is (look at Cramér's V) nor <i>why</i> it exists.</p></div>
+    <div class="mini"><h4>🧩 What it cannot say</h4><p>X may cause F, F may cause X, or a hidden third variable (a <b>confounder</b>) may drive both. A non-significant result is not proof of independence either: with few data the test simply has little power.</p></div>
+    <div class="mini"><h4>📏 Big n, tiny effects</h4><p>With thousands of observations even a negligible difference becomes "significant". Always read p <i>together</i> with the effect size V (0 = nothing, 1 = perfect link). Try the simulator with n = 5000 and a very small s.</p></div>
+  </div>
+  <div class="tip" id="cause"></div>
+</div>
+
+<div class="card">
+  <h3>💻 How it is computed</h3>
+  <pre class="code">// 1. contingency table from raw pairs (x_k, f_k)
+O[x_k][f_k] += 1                    for k = 1..n
+// 2. marginals and conditional frequencies
+r_i = Σ_j O_ij ;  c_j = Σ_i O_ij ;  n = Σ r_i
+P(F=j | X=i) = O_ij / r_i ;  P(X=i | F=j) = O_ij / c_j
+// 3. expected counts if independent
+E_ij = r_i · c_j / n
+// 4. statistic and p-value
+χ² = Σ (O_ij − E_ij)² / E_ij ;  df = (R−1)(C−1)
+p  = Q(df/2, χ²/2)                  // upper incomplete gamma
+V  = sqrt( χ² / (n · min(R−1, C−1)) )</pre>
+</div>
+</main>
+<script>
+// =====================================================================
+//  Independence of two categorical variables: contingency table, chi-square, p-value
+// =====================================================================
+function mulberry(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+// ---- chi-square distribution (regularised incomplete gamma function)
+const LG = [0.99999999999980993, 676.5203681218851, -1259.1392167224028, 771.32342877765313, -176.61502916214059, 12.507343278686905, -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7];
+function lgamma(x) { if (x < 0.5) return Math.log(Math.PI / Math.abs(Math.sin(Math.PI * x))) - lgamma(1 - x); x -= 1; let a = LG[0]; const t = x + 7.5; for (let i = 1; i < 9; i++) a += LG[i] / (x + i); return 0.5 * Math.log(2 * Math.PI) + (x + 0.5) * Math.log(t) - t + Math.log(a); }
+function gammaQ(a, x) {                      // upper regularised gamma Q(a, x) = 1 - P(a, x)
+  if (x <= 0) return 1; const lg = lgamma(a);
+  if (x < a + 1) { let sum = 1 / a, term = sum; for (let n = 1; n < 1000; n++) { term *= x / (a + n); sum += term; if (Math.abs(term) < Math.abs(sum) * 1e-16) break; } return Math.max(0, 1 - sum * Math.exp(-x + a * Math.log(x) - lg)); }
+  let b = x + 1 - a, c = 1e300, d = 1 / b, h = d; for (let i = 1; i < 1000; i++) { const an = -i * (i - a); b += 2; d = an * d + b; if (Math.abs(d) < 1e-300) d = 1e-300; c = b + an / c; if (Math.abs(c) < 1e-300) c = 1e-300; d = 1 / d; const del = d * c; h *= del; if (Math.abs(del - 1) < 1e-16) break; }
+  return Math.exp(-x + a * Math.log(x) - lg) * h;
+}
+const chi2sf = (x, k) => x <= 0 ? 1 : gammaQ(k / 2, x / 2);
+const chi2pdf = (x, k) => x <= 0 ? 0 : Math.exp((k / 2 - 1) * Math.log(x) - x / 2 - (k / 2) * Math.LN2 - lgamma(k / 2));
+function chi2quant(p, k) { let lo = 0, hi = 10; while (chi2sf(hi, k) > p) hi *= 2; for (let i = 0; i < 200; i++) { const m = (lo + hi) / 2; if (chi2sf(m, k) > p) lo = m; else hi = m; } return (lo + hi) / 2; }
+// ---- step 1: contingency table from raw pairs (x_i, f_i)
+function crosstab(xs, fs, rowOrder, colOrder) {
+  const rows = rowOrder || [...new Set(xs)], cols = colOrder || [...new Set(fs)], ri = new Map(rows.map((v, i) => [v, i])), ci = new Map(cols.map((v, i) => [v, i]));
+  const O = rows.map(() => new Array(cols.length).fill(0)); for (let i = 0; i < xs.length; i++) O[ri.get(xs[i])][ci.get(fs[i])]++;
+  return { rows, cols, O, xi: Int32Array.from(xs, v => ri.get(v)), fi: Int32Array.from(fs, v => ci.get(v)) };
+}
+// ---- steps 2-4: marginals, conditional frequencies, expected counts, chi-square, p-value
+function analyse(T) {
+  const r = T.rows.length, c = T.cols.length, O = T.O, R = O.map(row => row.reduce((a, b) => a + b, 0)), C = Array.from({ length: c }, (_, j) => O.reduce((a, row) => a + row[j], 0)), n = R.reduce((a, b) => a + b, 0);
+  const E = O.map((row, i) => row.map((_, j) => R[i] * C[j] / n)), contrib = O.map((row, i) => row.map((o, j) => (o - E[i][j]) ** 2 / E[i][j])), res = O.map((row, i) => row.map((o, j) => (o - E[i][j]) / Math.sqrt(E[i][j])));
+  const chi = contrib.flat().reduce((a, b) => a + b, 0), df = (r - 1) * (c - 1), p = chi2sf(chi, df), minE = Math.min(...E.flat()), lt5 = E.flat().filter(v => v < 5).length;
+  const rowProf = O.map((row, i) => row.map(o => o / R[i])), colProf = O.map(row => row.map((o, j) => o / C[j]));
+  const V = Math.sqrt(chi / (n * Math.min(r - 1, c - 1))), CC = Math.sqrt(chi / (chi + n));
+  let yates = null; if (r === 2 && c === 2) yates = O.flat().reduce((s, o, k) => { const e = E[k >> 1][k & 1]; return s + (Math.max(Math.abs(o - e) - 0.5, 0)) ** 2 / e; }, 0);
+  let G = 0; O.forEach((row, i) => row.forEach((o, j) => { if (o > 0) G += 2 * o * Math.log(o / E[i][j]); }));
+  return { r, c, O, R, C, n, E, contrib, res, chi, df, p, minE, lt5, rowProf, colProf, V, CC, yates, G, pG: chi2sf(G, df), pY: yates === null ? null : chi2sf(yates, 1) };
+}
+// ---- Monte-Carlo check: shuffle the F labels (this breaks any link with X) and recompute chi-square
+function permutation(T, A, B, seed) {
+  const rnd = mulberry(seed), n = A.n, xi = T.xi, fi = Int32Array.from(T.fi), c = A.c, E = A.E, out = new Float64Array(B), cnt = new Float64Array(A.r * c);
+  for (let b = 0; b < B; b++) {
+    for (let i = n - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)), t = fi[i]; fi[i] = fi[j]; fi[j] = t; }
+    cnt.fill(0); for (let i = 0; i < n; i++) cnt[xi[i] * c + fi[i]]++;
+    let s = -n; for (let i = 0; i < A.r; i++) for (let j = 0; j < c; j++) s += cnt[i * c + j] ** 2 / E[i][j]; out[b] = s;
+  }
+  return out;
+}
+function niceTicks(lo, hi, target = 6) {
+  const span = hi - lo, raw = span / target, mag = Math.pow(10, Math.floor(Math.log10(raw))), nr = raw / mag, step = (nr < 1.5 ? 1 : nr < 3 ? 2 : nr < 7 ? 5 : 10) * mag, t = [];
+  for (let v = Math.ceil(lo / step - 1e-9) * step; v <= hi + step * 1e-6; v += step) t.push(+v.toPrecision(12));
+  return t;
+}
+function logTicks(lo, hi) { const major = [], minor = []; for (let e = Math.floor(Math.log10(lo)) - 1; e <= Math.ceil(Math.log10(hi)); e++) for (const k of [1, 2, 5]) { const v = k * Math.pow(10, e); if (v < lo * 0.9999 || v > hi * 1.0001) continue; (k === 1 ? major : minor).push(v); } return { major, minor }; }
+function fmtTick(v, log) {
+  const a = Math.abs(v); if (a === 0) return '0';
+  if (log) return a >= 1 && a < 1e6 ? a.toLocaleString('en') : (a < 1 && a >= 0.001 ? String(+v.toPrecision(2)) : v.toExponential(0).replace('e+', 'e'));
+  if (a >= 10000) return v.toExponential(1).replace('e+', 'e').replace('.0e', 'e'); if (a >= 1000) return v.toLocaleString('en');
+  if (a >= 1) return String(+v.toPrecision(4)); if (a >= 0.001) return String(+v.toPrecision(3)); return v.toExponential(0);
+}
+class Plot {
+  constructor(cv) { this.cv = cv; this.ctx = cv.getContext('2d'); this.m = { l: 74, r: 18, t: 14, b: 52 }; }
+  resize() {
+    const dpr = window.devicePixelRatio || 1, w = Math.max(320, this.cv.parentElement.clientWidth), h = Math.round(Math.max(340, Math.min(620, w * 0.56)));
+    this.cv.style.width = w + 'px'; this.cv.style.height = h + 'px'; this.cv.width = Math.round(w * dpr); this.cv.height = Math.round(h * dpr);
+    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0); this.W = w; this.H = h;
+  }
+  setup(o) {
+    this.o = o; const c = this.ctx, m = this.m; this.x0 = m.l; this.x1 = this.W - m.r; this.y0 = this.H - m.b; this.y1 = m.t;
+    const f = (v, a, b, lg) => lg ? (Math.log(v) - Math.log(a)) / (Math.log(b) - Math.log(a)) : (v - a) / (b - a);
+    this.X = v => this.x0 + f(v, o.x[0], o.x[1], o.xlog) * (this.x1 - this.x0);
+    this.Y = v => this.y0 + f(v, o.y[0], o.y[1], o.ylog) * (this.y1 - this.y0);
+    this.invX = px => { const t = (px - this.x0) / (this.x1 - this.x0); return o.xlog ? Math.exp(Math.log(o.x[0]) + t * (Math.log(o.x[1]) - Math.log(o.x[0]))) : o.x[0] + t * (o.x[1] - o.x[0]); };
+    this.invY = py => { const t = (py - this.y0) / (this.y1 - this.y0); return o.ylog ? Math.exp(Math.log(o.y[0]) + t * (Math.log(o.y[1]) - Math.log(o.y[0]))) : o.y[0] + t * (o.y[1] - o.y[0]); };
+    c.clearRect(0, 0, this.W, this.H); c.fillStyle = '#fbfbff'; c.fillRect(this.x0, this.y1, this.x1 - this.x0, this.y0 - this.y1);
+    c.font = '12px system-ui, sans-serif'; c.lineWidth = 1;
+    const xt = o.xlog ? logTicks(o.x[0], o.x[1]) : { major: niceTicks(o.x[0], o.x[1], 8), minor: [] }, yt = o.ylog ? logTicks(o.y[0], o.y[1]) : { major: niceTicks(o.y[0], o.y[1], 7), minor: [] };
+    c.strokeStyle = '#eef0fb'; for (const v of xt.minor) { const x = this.X(v); c.beginPath(); c.moveTo(x, this.y0); c.lineTo(x, this.y1); c.stroke(); } for (const v of yt.minor) { const y = this.Y(v); c.beginPath(); c.moveTo(this.x0, y); c.lineTo(this.x1, y); c.stroke(); }
+    c.strokeStyle = '#e1e4f6'; c.fillStyle = '#6a6f91';
+    c.textAlign = 'center'; for (const v of xt.major) { const x = this.X(v); c.beginPath(); c.moveTo(x, this.y0); c.lineTo(x, this.y1); c.stroke(); if (!o.noxt) c.fillText(fmtTick(v, o.xlog), x, this.y0 + 17); }
+    c.textAlign = 'right'; for (const v of yt.major) { const y = this.Y(v); c.beginPath(); c.moveTo(this.x0, y); c.lineTo(this.x1, y); c.stroke(); if (!o.noyt) c.fillText(fmtTick(v, o.ylog), this.x0 - 8, y + 4); }
+    c.strokeStyle = '#c3c8e6'; c.strokeRect(this.x0, this.y1, this.x1 - this.x0, this.y0 - this.y1);
+    c.fillStyle = '#4a4f73'; c.font = '13px system-ui, sans-serif'; c.textAlign = 'center'; c.fillText(o.xlabel || '', (this.x0 + this.x1) / 2, this.H - 8);
+    c.save(); c.translate(16, (this.y0 + this.y1) / 2); c.rotate(-Math.PI / 2); c.fillText(o.ylabel || '', 0, 0); c.restore();
+  }
+  clip(fn) { const c = this.ctx; c.save(); c.beginPath(); c.rect(this.x0, this.y1, this.x1 - this.x0, this.y0 - this.y1); c.clip(); fn(c); c.restore(); }
+  line(pts, { c = '#000', w = 1.5, a = 1, dash = [] } = {}) {
+    this.clip(g => { g.globalAlpha = a; g.strokeStyle = c; g.lineWidth = w; g.setLineDash(dash); g.lineJoin = 'round'; g.beginPath(); let open = false;
+      for (const [x, y] of pts) { if (!isFinite(x) || !isFinite(y)) { open = false; continue; } const px = this.X(x), py = this.Y(y); if (open) g.lineTo(px, py); else { g.moveTo(px, py); open = true; } } g.stroke(); });
+  }
+  band(up, lo, color, a = 0.12) {
+    this.clip(g => { g.globalAlpha = a; g.fillStyle = color; g.beginPath(); up.forEach(([x, y], i) => i ? g.lineTo(this.X(x), this.Y(y)) : g.moveTo(this.X(x), this.Y(y))); for (let i = lo.length - 1; i >= 0; i--) g.lineTo(this.X(lo[i][0]), this.Y(lo[i][1])); g.closePath(); g.fill(); });
+  }
+  hist(xs, ds, bw, { c = '#000', fill = 0.25, w = 2, dash = [] } = {}) {
+    this.clip(g => { g.setLineDash(dash); g.lineWidth = w; g.strokeStyle = c; g.fillStyle = c; g.lineJoin = 'round'; g.beginPath(); const yb = this.Y(0);
+      g.moveTo(this.X(xs[0]), yb); xs.forEach((x, i) => { g.lineTo(this.X(x), this.Y(ds[i])); g.lineTo(this.X(x + bw), this.Y(ds[i])); }); g.lineTo(this.X(xs[xs.length - 1] + bw), yb);
+      if (fill) { g.globalAlpha = fill; g.fill(); g.globalAlpha = 1; } g.stroke(); });
+  }
+  dots(pts, { c = '#000', r = 3.4, shape = 'o' } = {}) {
+    this.clip(g => { g.fillStyle = c; for (const [x, y] of pts) { if (!isFinite(x) || !isFinite(y)) continue; const px = this.X(x), py = this.Y(y); g.beginPath(); if (shape === 'o') g.arc(px, py, r, 0, 7); else { g.moveTo(px, py - r * 1.3); g.lineTo(px + r * 1.3, py); g.lineTo(px, py + r * 1.3); g.lineTo(px - r * 1.3, py); g.closePath(); } g.fill(); } });
+  }
+  text(t, px, py, { c = '#4a4f73', align = 'left', size = 12, bold = false } = {}) { const g = this.ctx; g.fillStyle = c; g.font = `${bold ? '700 ' : ''}${size}px system-ui, sans-serif`; g.textAlign = align; g.fillText(t, px, py); }
+}
+
+
+Plot.prototype.rect = function (x0, x1, y0, y1, { c = '#000', a = 0.2, stroke = null, sa = 1, w = 1 } = {}) {
+  this.clip(g => { const X0 = this.X(x0), X1 = this.X(x1), Y0 = this.Y(y0), Y1 = this.Y(y1), top = Math.min(Y0, Y1), hh = Math.abs(Y1 - Y0); g.globalAlpha = a; g.fillStyle = c; g.fillRect(X0, top, X1 - X0, hh); if (stroke) { g.globalAlpha = sa; g.strokeStyle = stroke; g.lineWidth = w; g.strokeRect(X0, top, X1 - X0, hh); } });
+};
+// =====================================================================
+//  UI
+// =====================================================================
+const $ = id => document.getElementById(id);
+const PAL = ['#7c5cff', '#2f7dff', '#1fa971', '#f08a24', '#e5484d', '#ec5fa5', '#e6b800', '#14b8c4'], INK = '#272a44';
+const col = i => PAL[i % PAL.length], tr = (s, n) => s.length > n ? s.slice(0, n - 1) + '…' : s;
+const f2 = v => v.toFixed(2), pc = v => (100 * v).toFixed(1) + '%', fi = v => Math.round(v).toLocaleString('en');
+const fp = p => p < 1e-4 ? p.toExponential(2) : p.toFixed(4), fc = v => v >= 1e5 ? v.toExponential(2) : v.toFixed(2);
+function rcol(z, a = 0.85) { const t = Math.min(Math.abs(z) / 4, 1), c = z >= 0 ? [229, 72, 77] : [47, 125, 255]; return `rgba(${c.map(v => Math.round(255 + (v - 255) * t)).join(',')},${a})`; }
+function rhex(z) { const t = Math.min(Math.abs(z) / 4, 1), c = z >= 0 ? [229, 72, 77] : [47, 125, 255]; return '#' + c.map(v => Math.round(255 + (v - 255) * t).toString(16).padStart(2, '0')).join(''); }
+function setLegend(items) { $('lg').innerHTML = items.map(it => `<span>${it.sw ? `<i class="sw" style="background:${it.c};${it.b ? 'border:2px solid ' + it.b : ''}"></i>` : it.dash ? `<i class="sw" style="background:none;border-top:3px dashed ${it.c}"></i>` : `<i class="dot" style="background:${it.c}"></i>`}${it.t}</span>`).join(''); }
+
+// ---- datasets: each one is turned into raw pairs (x_k, f_k), then crosstab() builds the table
+function expand(rows, cols, M) { const xs = [], fs = []; rows.forEach((r, i) => cols.forEach((c, j) => { for (let k = 0; k < M[i][j]; k++) { xs.push(r); fs.push(c); } })); return { xs, fs, rows, cols }; }
+const SIMR = ['Phishing', 'Malware', 'Brute force'], SIMC = ['Blocked', 'Penetrated'];
+const DS = {
+  titanic: { b: '🚢 Titanic', xn: 'Class', fn: 'Outcome', note: 'Real data: the 2201 people aboard the Titanic (passengers and crew), ticket class × survived or not.', cause: 'Class is strongly associated with survival, yet "being in 3rd class" is not by itself what killed people. Sex, age, the deck of the cabin, distance from the lifeboats and the "women and children first" rule are all tangled with class: they are <b>confounders</b>. The test shows the link, not the mechanism.', build: () => expand(['1st', '2nd', '3rd', 'Crew'], ['Died', 'Survived'], [[122, 203], [167, 118], [528, 178], [673, 212]]) },
+  hair: { b: '👁️ Hair & eyes', xn: 'Hair colour', fn: 'Eye colour', note: 'Real data (Snee, 1974): 592 statistics students, hair colour × eye colour.', cause: 'Hair and eye colour are both inherited traits that travel together through ancestry (a <b>common cause</b>); hair colour does not change eye colour, nor the other way round. Also, 592 students of one university are a convenience sample, not the whole world.', build: () => expand(['Black', 'Brown', 'Red', 'Blond'], ['Brown', 'Blue', 'Hazel', 'Green'], [[68, 20, 15, 5], [119, 84, 54, 29], [26, 17, 14, 14], [7, 94, 10, 16]]) },
+  sim: { b: '🛡️ Simulated attacks', xn: 'Attack type', fn: 'Outcome', note: 'SIMULATED data (not real): each of n attacks has a random type (50% phishing, 30% malware, 20% brute force); the chance of penetrating is 30% + s·(−15%, 0, +30%) by type. s = 0 means truly independent.', cause: 'Here we <i>know</i> the truth, because we wrote the generator: penetration depends on the attack type only when s &gt; 0. With real data nobody hands you the rule, and even then "type → outcome" could hide a confounder (e.g. brute force may hit weaker servers).', build: () => { const rnd = mulberry(S.seed), xs = [], fs = [], n = +$('sn').value, d = [-0.15, 0, 0.30]; for (let k = 0; k < n; k++) { const u = rnd(), j = u < 0.5 ? 0 : u < 0.8 ? 1 : 2, pen = rnd() < 0.30 + S.s * d[j]; xs.push(SIMR[j]); fs.push(pen ? 'Penetrated' : 'Blocked'); } return { xs, fs, rows: SIMR, cols: SIMC }; } },
+  custom: { b: '✏️ My own data', xn: 'X', fn: 'F', note: 'Your own pairs. The numbers in the box at first are made up, just to show the format.', cause: 'With your own data, ask the same question: is there a third variable that could produce both X and F, and could the arrow point the other way round?', build: () => parseCustom() }
+};
+function parseCustom() {
+  const xs = [], fs = [], lines = $('cut').value.split('\n').map(s => s.trim()).filter(Boolean); let tot = 0;
+  for (const ln of lines) { const p = ln.split(/[,;\t]/).map(s => s.trim()); if (p.length < 2 || !p[0] || !p[1]) throw new Error('Bad line: "' + ln + '"'); const k = p.length > 2 ? +p[2] : 1; if (!(k >= 0) || k !== Math.floor(k)) throw new Error('The count must be a whole number: "' + ln + '"'); tot += k; if (tot > 200000) throw new Error('Too many observations (max 200,000).'); for (let q = 0; q < k; q++) { xs.push(p[0]); fs.push(p[1]); } }
+  if (new Set(xs).size < 2 || new Set(fs).size < 2) throw new Error('X and F each need at least 2 different categories.');
+  return { xs, fs };
+}
+const S = { ds: 'titanic', view: 'obs', cond: 'row', alpha: 0.05, s: 0.5, seed: 12345, T: null, A: null, perm: null, permP: null };
+const P = new Plot($('cv'));
+let HOVER = null;
+
+function load() {
+  let d; try { d = DS[S.ds].build(); $('cum').textContent = S.ds === 'custom' ? '✔ ' + d.xs.length.toLocaleString('en') + ' observations read' : ''; } catch (e) { $('cum').textContent = '⚠ ' + e.message; return false; }
+  S.T = crosstab(d.xs, d.fs, d.rows, d.cols); S.A = analyse(S.T); S.perm = null; S.permP = null; return true;
+}
+function runPerm(cb) {
+  if (!$('pm').checked || S.perm) return cb();
+  const w = document.createElement('div'); w.className = 'busy'; w.textContent = 'Shuffling F … 🎲'; $('cv').parentElement.appendChild(w);
+  setTimeout(() => { const B = Math.max(500, Math.min(4000, Math.floor(8e6 / S.A.n))); S.perm = permutation(S.T, S.A, B, 777); let k = 0; for (const v of S.perm) if (v >= S.A.chi - 1e-9) k++; S.permP = (1 + k) / (S.perm.length + 1); w.remove(); cb(); }, 30);
+}
+const crit = () => chi2quant(S.alpha, S.A.df);
+const names = () => ({ xn: S.ds === 'custom' ? 'X' : DS[S.ds].xn, fn: S.ds === 'custom' ? 'F' : DS[S.ds].fn });
+
+// ---------------------------------------------------------------- views
+function vObs(A, T) {
+  const r = A.r, c = A.c, ym = Math.max(...A.O.flat(), ...A.E.flat()) * 1.12; P.m = { l: 74, r: 18, t: 14, b: 60 };
+  P.setup({ x: [0, r], y: [0, ym], noxt: true, xlabel: names().xn + ' (X)', ylabel: 'number of people / events' });
+  const w = 0.8 / c;
+  for (let i = 0; i < r; i++) {
+    for (let j = 0; j < c; j++) { const x0 = i + 0.1 + j * w, cl = col(j); P.rect(x0, x0 + w, 0, A.E[i][j], { c: cl, a: 0.2, stroke: cl, w: 1.6 }); P.rect(x0 + w * 0.2, x0 + w * 0.8, 0, A.O[i][j], { c: cl, a: 1 }); if (r * c <= 14) P.text(fi(A.O[i][j]), P.X(x0 + w / 2), P.Y(Math.max(A.O[i][j], A.E[i][j])) - 5, { align: 'center', size: 11.5, bold: true, c: INK }); }
+    P.text(tr(T.rows[i], 14), P.X(i + 0.5), P.y0 + 18, { align: 'center', size: 12.5, bold: true, c: INK });
+  }
+  HOVER = (x, y) => { const i = Math.floor(x), j = Math.floor((x - i - 0.1) / w); if (i < 0 || i >= r || j < 0 || j >= c) return null; return `${T.rows[i]} · ${T.cols[j]}:  O = ${A.O[i][j]},  E = ${f2(A.E[i][j])}`; };
+  setLegend([...T.cols.map((v, j) => ({ c: col(j), t: `${names().fn} = ${tr(v, 16)}` })), { c: '#9aa0c8', sw: 1, t: 'solid = observed O' }, { c: '#fff', b: '#9aa0c8', sw: 1, t: 'outline = expected E (if independent)' }]);
+  let big = [], bi = 0; A.res.forEach((row, i) => row.forEach((z, j) => { if (Math.abs(z) > Math.abs(bi)) { bi = z; big = [i, j]; } }));
+  return { title: 'Observed counts versus what independence predicts', see: `Each group is a value of X, each colour a value of F. The <b>solid</b> bar is what we really counted (O); the wide <b>outline</b> is how tall it would be if X and F were unrelated (E). If the two were independent, every solid bar would reach its outline.${Math.abs(bi) > 0.5 ? ` The biggest gap here is <b>${T.rows[big[0]]} × ${T.cols[big[1]]}</b>: ${A.O[big[0]][big[1]]} observed against ${f2(A.E[big[0]][big[1]])} expected.` : ''}`, num: `n = ${fi(A.n)} observations in ${r}×${c} = ${r * c} cells. E<sub>ij</sub> = r<sub>i</sub>·c<sub>j</sub>/n, so E keeps the same row and column totals as O: only the <i>pattern</i> changes.`, tip: '💡 Big solid bars poking out of (or falling short of) their outlines are the cells that push χ² up. The next views make these gaps easier to compare.' };
+}
+function vCond(A, T) {
+  const row = S.cond === 'row', nb = (row ? A.r : A.c), ns = row ? A.c : A.r, labB = row ? T.rows : T.cols, labS = row ? T.cols : T.rows;
+  const val = (b, s) => b === nb ? (row ? A.C[s] / A.n : A.R[s] / A.n) : (row ? A.rowProf[b][s] : A.O[s][b] / A.C[b]);
+  P.m = { l: 74, r: 18, t: 14, b: 60 }; P.setup({ x: [0, nb + 1], y: [0, 1], noxt: true, xlabel: row ? names().xn + ' (X)  — each bar is P(F | X=…)' : names().fn + ' (F)  — each bar is P(X | F=…)', ylabel: 'share of the group' });
+  for (let b = 0; b <= nb; b++) { let cum = 0; for (let s = 0; s < ns; s++) { const v = val(b, s); P.rect(b + 0.12, b + 0.88, cum, cum + v, { c: col(s), a: b === nb ? 0.55 : 0.95, stroke: '#fff', w: 1.5 }); if (v > 0.06) P.text(pc(v), P.X(b + 0.5), P.Y(cum + v / 2) + 4, { align: 'center', size: 11.5, bold: true, c: '#fff' }); cum += v; }
+    P.text(b === nb ? 'All (marginal)' : tr(labB[b], 14), P.X(b + 0.5), P.y0 + 18, { align: 'center', size: 12.5, bold: true, c: INK }); }
+  let cm = 0; for (let s = 0; s < ns - 1; s++) { cm += val(nb, s); P.line([[0, cm], [nb + 1, cm]], { c: INK, w: 1.4, a: 0.55, dash: [6, 5] }); }
+  HOVER = null; setLegend([...labS.map((v, s) => ({ c: col(s), t: tr(v, 18) })), { c: INK, dash: 1, t: 'dashed = marginal share (independence)' }]);
+  let dev = 0, wb = 0; for (let b = 0; b < nb; b++) for (let s = 0; s < ns; s++) { const d = Math.abs(val(b, s) - val(nb, s)); if (d > dev) { dev = d; wb = [b, s]; } }
+  return { title: row ? 'Conditional frequencies P(F | X)' : 'Conditional frequencies P(X | F)', see: `Every bar is one group (${row ? 'a value of X' : 'a value of F'}) and is cut into the shares of the other variable. The pale bar on the right, <b>All</b>, is the marginal distribution, and the <b>dashed lines</b> carry it across. <b>Independence means every bar looks like the All bar</b>: the coloured boundaries sit on the dashed lines.${dev > 0.02 ? ` The largest departure is <b>${labB[wb[0]]}</b>: ${tr(labS[wb[1]], 16)} is ${pc(val(wb[0], wb[1]))} there, against ${pc(val(nb, wb[1]))} overall.` : ' Here all bars are close to the dashed lines.'}`, num: `P(F=j | X=i) = O<sub>ij</sub>/r<sub>i</sub> and P(F=j) = c<sub>j</sub>/n. Independence ⇔ P(F=j | X=i) = P(F=j) for all i, j. Largest gap between a conditional and a marginal share: <b>${pc(dev)}</b> points.`, tip: '💡 Use the "Condition on" switch: independence is symmetric, so if the rows match the marginal, the columns do too (and the other way round).' };
+}
+function vMos(A, T) {
+  P.m = { l: 74, r: 18, t: 14, b: 60 }; P.setup({ x: [0, 1], y: [0, 1], noxt: true, xlabel: names().xn + ' (X): width = how many people', ylabel: names().fn + ' (F): height = share' }); const cells = []; let x = 0;
+  for (let i = 0; i < A.r; i++) { const w = A.R[i] / A.n; let y = 0; for (let j = 0; j < A.c; j++) { const h = A.rowProf[i][j]; P.rect(x, x + w, y, y + h, { c: rhex(A.res[i][j]), a: 1, stroke: '#fff', w: 2.5 }); cells.push([x, x + w, y, y + h, i, j]); const pw = w * (P.x1 - P.x0), ph = h * (P.y0 - P.y1); if (pw > 56 && ph > 17) P.text(tr(T.cols[j], Math.floor(pw / 7)) + (ph > 32 ? '' : ''), P.X(x + w / 2), P.Y(y + h / 2) + 4, { align: 'center', size: 11.5, bold: true, c: INK }); y += h; }
+    P.text(tr(T.rows[i], Math.max(3, Math.floor(w * (P.x1 - P.x0) / 7))), P.X(x + w / 2), P.y0 + 18, { align: 'center', size: 12, bold: true, c: INK }); x += w; }
+  HOVER = (px, py) => { const q = cells.find(c => px >= c[0] && px <= c[1] && py >= c[2] && py <= c[3]); return q ? `${T.rows[q[4]]} · ${T.cols[q[5]]}:  O = ${A.O[q[4]][q[5]]}, E = ${f2(A.E[q[4]][q[5]])}, residual = ${f2(A.res[q[4]][q[5]])}` : null; };
+  setLegend([{ c: rhex(4), t: 'more than expected (residual +4 or more)' }, { c: rhex(2), t: '+2' }, { c: '#ffffff', b: '#c3c8e6', sw: 1, t: '0 = as expected' }, { c: rhex(-2), t: '−2' }, { c: rhex(-4), t: 'fewer than expected (−4 or less)' }]);
+  return { title: 'Mosaic plot: sizes and colours', see: `Column widths show how big each X group is; inside a column the heights are the shares of F. The colour is the <b>Pearson residual</b> z = (O−E)/√E: <b style="color:#e5484d">red</b> = more people than independence predicts, <b style="color:#2f7dff">blue</b> = fewer, <b>white</b> = as expected. Under independence all columns would be cut at the same heights and the whole picture would be white.`, num: `As a rough rule, |z| &gt; 2 is a surprising cell and |z| &gt; 4 a very surprising one. Residuals squared add up to χ² = <b>${fc(A.chi)}</b>. Hover over a cell to see its numbers.`, tip: '💡 The mosaic shows <i>where</i> the dependence is, not just that it exists: a single strongly coloured cell can be responsible for most of χ².' };
+}
+function vCon(A, T) {
+  const cells = []; A.contrib.forEach((row, i) => row.forEach((v, j) => cells.push({ i, j, v, z: A.res[i][j] }))); cells.sort((a, b) => b.v - a.v); const sh = cells.slice(0, 16), k = sh.length;
+  P.m = { l: 190, r: 90, t: 14, b: 52 }; P.setup({ x: [0, Math.max(sh[0].v, 1e-9) * 1.1], y: [0, k], noyt: true, xlabel: 'contribution (O−E)²/E to the χ² statistic', ylabel: '' });
+  sh.forEach((q, idx) => { const yc = k - idx - 0.5; P.rect(0, q.v, yc - 0.36, yc + 0.36, { c: q.z >= 0 ? '#e5484d' : '#2f7dff', a: 0.9 }); P.text(tr(T.rows[q.i] + ' × ' + T.cols[q.j], 26), P.x0 - 8, P.Y(yc) + 4, { align: 'right', size: 12, bold: true, c: INK }); P.text(`${f2(q.v)}  (${(100 * q.v / A.chi).toFixed(0)}%)`, P.X(q.v) + 6, P.Y(yc) + 4, { size: 11.5, c: '#4a4f73' }); });
+  HOVER = null; setLegend([{ c: '#e5484d', t: 'more than expected (O &gt; E)' }, { c: '#2f7dff', t: 'fewer than expected (O &lt; E)' }]);
+  const t3 = sh.slice(0, 3).reduce((s, q) => s + q.v, 0) / A.chi, q0 = sh[0];
+  return { title: 'Which cells push χ² up?', see: `Each bar is one cell of the table, sorted from the largest contribution. The sum of <i>all</i> bars is χ². The longest bar is <b>${T.rows[q0.i]} × ${T.cols[q0.j]}</b> (${q0.z >= 0 ? 'more' : 'fewer'} than expected: O = ${A.O[q0.i][q0.j]}, E = ${f2(A.E[q0.i][q0.j])}), worth ${(100 * q0.v / A.chi).toFixed(0)}% of the total.${k < cells.length ? ` Only the 16 largest of ${cells.length} cells are shown.` : ''}`, num: `The top 3 cells give ${(100 * t3).toFixed(0)}% of χ² = ${fc(A.chi)}. Squaring makes every gap positive, and dividing by E stops large cells from dominating just because they are large.`, tip: '💡 If one or two bars dominate, the dependence is "local" (a few cells deviate); if many bars are similar, the link is spread over the whole table.' };
+}
+function vChi(A) {
+  const k = A.df, cr = crit(); let xm = Math.max(cr * 1.8, k + 6 * Math.sqrt(2 * k)); if (S.perm) { const s = Float64Array.from(S.perm).sort(), q = s[Math.floor(0.995 * s.length)]; xm = Math.max(xm, q * 1.1); } if (A.chi < xm * 0.97 || A.chi < cr * 3) xm = Math.max(xm, A.chi * 1.15); const off = A.chi > xm * 0.97; if (off) xm = Math.max(cr * 1.8, k + 6 * Math.sqrt(2 * k));
+  const N = 400, pts = []; let ym = 0; for (let i = 1; i <= N; i++) { const x = xm * i / N, y = chi2pdf(x, k); pts.push([x, y]); if (i > 8 || k > 2) ym = Math.max(ym, y); } ym = Math.min(ym, chi2pdf(xm / 50, k) * 1.3 + ym * (k > 2 ? 1 : 0)) ;
+  let hist = null; if (S.perm) { const nb = 40, bw = xm / nb, ct = new Array(nb).fill(0); for (const v of S.perm) { const b = Math.floor(v / bw); if (b < nb) ct[b]++; } hist = { xs: ct.map((_, i) => i * bw), ds: ct.map(c => c / (S.perm.length * bw)), bw }; ym = Math.max(ym, ...hist.ds.slice(k > 2 ? 0 : 2)); }
+  ym *= 1.15; P.m = { l: 74, r: 18, t: 14, b: 52 }; P.setup({ x: [0, xm], y: [0, ym], xlabel: 'value of χ²', ylabel: 'density (how typical)' });
+  P.band(pts.filter(p => p[0] >= cr), pts.filter(p => p[0] >= cr).map(p => [p[0], 0]), '#f08a24', 0.22);
+  if (!off) { const tp = pts.filter(p => p[0] >= A.chi); if (tp.length) P.band(tp, tp.map(p => [p[0], 0]), '#e5484d', 0.5); }
+  if (hist) P.hist(hist.xs, hist.ds, hist.bw, { c: '#1fa971', fill: 0.28, w: 1.2 });
+  P.line(pts, { c: '#7c5cff', w: 2.8 }); P.line([[cr, 0], [cr, ym]], { c: '#f08a24', w: 2, dash: [7, 5] }); P.text(`critical value ${f2(cr)}  (α = ${S.alpha})`, P.X(cr) + 6, P.y1 + 16, { c: '#c46a0c', bold: true, size: 12.5 });
+  if (!off) { P.line([[A.chi, 0], [A.chi, ym]], { c: '#e5484d', w: 2.6 }); const right = P.X(A.chi) < P.x0 + (P.x1 - P.x0) * 0.7; P.text(`observed χ² = ${f2(A.chi)}`, P.X(A.chi) + (right ? 6 : -6), P.y1 + 36, { c: '#e5484d', bold: true, size: 12.5, align: right ? 'left' : 'right' }); }
+  else { const g = P.ctx; g.fillStyle = '#e5484d'; g.beginPath(); g.moveTo(P.x1 - 4, P.Y(ym * 0.35)); g.lineTo(P.x1 - 22, P.Y(ym * 0.35) - 9); g.lineTo(P.x1 - 22, P.Y(ym * 0.35) + 9); g.fill(); P.text(`observed χ² = ${f2(A.chi)} → far off to the right`, P.x1 - 28, P.Y(ym * 0.35) + 4, { c: '#e5484d', bold: true, size: 12.5, align: 'right' }); }
+  HOVER = (x, y) => `χ² = ${f2(x)}   density = ${y.toFixed(4)}   P(χ² ≥ x) = ${fp(chi2sf(x, k))}`;
+  setLegend([{ c: '#7c5cff', sw: 1, t: `χ² distribution, df = ${k} (what luck produces if independent)` }, { c: '#f08a24', sw: 1, t: `rejection zone (area α = ${S.alpha})` }, { c: '#e5484d', sw: 1, t: 'area to the right of our χ² = the p-value' }, ...(hist ? [{ c: '#1fa971', sw: 1, t: 'Monte-Carlo: χ² of 1000s of shuffled datasets' }] : [])]);
+  const rej = A.p < S.alpha;
+  return { title: 'Is our χ² unusually large?', see: `The purple curve shows how χ² behaves when X and F really are independent (only chance at work). The <b style="color:#e5484d">red area</b> to the right of our value is the <b>p-value</b>. The orange dashed line marks the critical value: if we pass it, we reject independence at level α.${off ? ' Our χ² is so large it falls off the picture.' : ''}${hist ? ' The <b style="color:#1fa971">green histogram</b> is built by shuffling F many times (which destroys any link) and recomputing χ²: it follows the curve, a check that the theory is right.' : ''}`, num: `χ² = <b>${fc(A.chi)}</b>, df = ${k}, p = <b>${fp(A.p)}</b>, critical value = ${f2(cr)} → <b>${rej ? 'reject' : 'do not reject'}</b> independence at α = ${S.alpha}.${S.permP !== null ? ` Monte-Carlo p ≈ ${fp(S.permP)}.` : ''}`, tip: `💡 ${rej ? 'Our value is in the rejection zone: such a gap would be very rare under independence.' : 'Our value is inside the typical range: such a gap is easily produced by chance alone.'} Change α above and watch the orange line move.` };
+}
+const VIEWS = { obs: vObs, cond: vCond, mos: vMos, con: vCon, chi: vChi };
+
+// ---------------------------------------------------------------- tables, results
+function tbl(head, rows, o = {}) { return `<table class="mini-t"><tr><th>${o.corner || ''}</th>${head.map(h => `<th>${tr(h, 14)}</th>`).join('')}</tr>${rows.map(r => `<tr><th>${tr(r[0], 14)}</th>${r.slice(1).map((v, j) => `<td${o.bg && o.bg[j] ? ` style="background:${o.bg[j]}"` : ''}>${v}</td>`).join('')}</tr>`).join('')}</table>`; }
+function tables(A, T) {
+  const nm = names(), mk = (t, h, b) => `<div class="mini"><h4>${t}</h4><div style="overflow-x:auto">${h}</div>${b || ''}</div>`;
+  const H = [...T.cols, 'Total'], corner = `${nm.xn} \\ ${nm.fn}`;
+  const t1 = tbl(H, [...T.rows.map((r, i) => [r, ...A.O[i], A.R[i]]), ['Total', ...A.C, A.n]], { corner });
+  const t2 = tbl(['count', 'frequency'], [...T.rows.map((r, i) => [r, A.R[i], pc(A.R[i] / A.n)]), ...T.cols.map((c, j) => [c, A.C[j], pc(A.C[j] / A.n)])], { corner: 'marginal' });
+  const t3 = tbl(T.cols, [...T.rows.map((r, i) => [r, ...A.rowProf[i].map(pc)]), ['All', ...A.C.map(c => pc(c / A.n))]], { corner: 'P(F | X)' });
+  const t4 = tbl([...T.cols, 'All'], T.rows.map((r, i) => [r, ...A.O[i].map((o, j) => pc(o / A.C[j])), pc(A.R[i] / A.n)]), { corner: 'P(X | F)' });
+  const t5 = tbl(H, [...T.rows.map((r, i) => [r, ...A.E[i].map(f2), f2(A.R[i])]), ['Total', ...A.C.map(f2), f2(A.n)]], { corner: 'E = r·c / n' });
+  const cells = A.contrib.map((row, i) => row.map((v, j) => f2(v) + ` <span style="color:#8a8fb0">(z=${f2(A.res[i][j])})</span>`));
+  const t6 = `<table class="mini-t"><tr><th>(O−E)²/E</th>${T.cols.map(h => `<th>${tr(h, 14)}</th>`).join('')}</tr>${T.rows.map((r, i) => `<tr><th>${tr(r, 14)}</th>${cells[i].map((v, j) => `<td style="background:${rcol(A.res[i][j], 0.5)}">${v}</td>`).join('')}</tr>`).join('')}<tr><th>Σ = χ²</th><td colspan="${A.c}"><b>${fc(A.chi)}</b></td></tr></table>`;
+  return `<div class="grid">${mk('1 · Contingency table (observed counts)', t1, '<p class="note">Built from the raw pairs: one count per (X, F) combination, with row and column totals.</p>')}${mk('2 · Marginal frequencies', t2, '<p class="note">How common each category is on its own, ignoring the other variable.</p>')}${mk('3 · Conditional: P(F | X)', t3, '<p class="note">Each row sums to 100%. Independence: every row equals the All row.</p>')}${mk('4 · Conditional: P(X | F)', t4, '<p class="note">Each column sums to 100%. Independence: every column equals the All column.</p>')}${mk('5 · Expected counts under independence', t5, '<p class="note">Same totals as the observed table, but no link between X and F.</p>')}${mk('6 · Contributions to χ² and residuals z', t6, '<p class="note">Red = more than expected, blue = fewer. The z next to each value is (O−E)/√E.</p>')}</div>`;
+}
+function results(A) {
+  const rej = A.p < S.alpha, ds = Math.min(A.r - 1, A.c - 1), vs = A.V * Math.sqrt(ds), str = vs < 0.1 ? 'negligible' : vs < 0.3 ? 'weak' : vs < 0.5 ? 'moderate' : 'strong', st = (l, v, n) => `<div class="mini"><h4>${l}</h4><div class="say" style="font-size:22px;font-weight:800">${v}</div>${n ? `<p class="note">${n}</p>` : ''}</div>`;
+  const warn = A.minE < 1 || A.lt5 / (A.r * A.c) > 0.2, cut = rej ? 'cr' : 'cg';
+  let h = `<div class="grid">${st('χ² statistic', fc(A.chi), 'Σ (O−E)² / E')}${st('degrees of freedom', A.df, `(${A.r}−1)·(${A.c}−1)`)}${st('p-value', fp(A.p), 'P(χ² ≥ observed | independence)')}${st('critical value', f2(crit()), `at α = ${S.alpha}`)}${st("Cramér's V", f2(A.V), `effect size: ${str}`)}${st('likelihood-ratio G', fc(A.G), 'p = ' + fp(A.pG) + ' (a close cousin of χ²)')}${A.yates !== null ? st('Yates-corrected χ² (2×2)', fc(A.yates), 'p = ' + fp(A.pY) + ' (more cautious)') : ''}${S.permP !== null ? st('Monte-Carlo p-value', fp(S.permP), `from ${S.perm.length} shuffles of F`) : ''}</div>`;
+  h += `<div class="say ${cut}" style="padding:12px 16px;border-radius:14px;margin-top:12px"><b>${rej ? '❌ Independence rejected.' : '✔ Independence not rejected.'}</b> ${rej ? `p = ${fp(A.p)} is below α = ${S.alpha}: if ${names().xn} and ${names().fn} were independent, a table this far from the expected one would be very rare. We conclude they are <b>statistically dependent (associated)</b>. The link is <b>${str}</b> (V = ${f2(A.V)}).` : `p = ${fp(A.p)} is not below α = ${S.alpha}: a gap like this is quite ordinary under independence. The data give <b>no evidence of association</b>. This is not a proof of independence: with so little data a real link could go unnoticed.`}</div>`;
+  if (warn) h += `<div class="say cy" style="padding:10px 14px;border-radius:14px;margin-top:10px">⚠️ <b>Small expected counts:</b> ${A.lt5} of ${A.r * A.c} cells have E &lt; 5 (smallest E = ${f2(A.minE)}). The χ² approximation can then be unreliable; tick the Monte-Carlo check above to get a p-value that does not rely on it.</div>`;
+  if (A.n > 3000 && rej && vs < 0.1) h += `<div class="say cy" style="padding:10px 14px;border-radius:14px;margin-top:10px">⚠️ <b>Large sample, tiny effect:</b> p is small only because n is huge. The effect size V shows the link is almost negligible in practice.</div>`;
+  return h;
+}
+
+// ---------------------------------------------------------------- render
+function render() {
+  if (!S.A) return; P.resize(); const A = S.A, T = S.T;
+  const doit = () => { const v = VIEWS[S.view](A, T); $('vt').textContent = v.title; $('see').innerHTML = v.see; $('num').innerHTML = v.num; $('tip').innerHTML = v.tip; $('tabs7').innerHTML = tables(A, T); $('res').innerHTML = results(A); $('cause').innerHTML = '🔎 <b>In this dataset:</b> ' + DS[S.ds].cause; $('dsn').textContent = DS[S.ds].note; };
+  runPerm(() => { P.resize(); doit(); });
+}
+function setDS(k) { S.ds = k; document.querySelectorAll('[data-ds]').forEach(b => b.classList.toggle('on', b.dataset.ds === k)); $('simc').style.display = k === 'sim' ? '' : 'none'; $('cuc').style.display = k === 'custom' ? '' : 'none'; if (load()) render(); }
+function init() {
+  $('dsb').innerHTML = Object.keys(DS).map(k => `<button class="vbtn${k === S.ds ? ' on' : ''}" data-ds="${k}">${DS[k].b}</button>`).join('');
+  $('cut').value = 'Coffee,Sleeps well,20\nCoffee,Sleeps badly,35\nTea,Sleeps well,30\nTea,Sleeps badly,30\nWater,Sleeps well,45\nWater,Sleeps badly,25';
+  document.querySelectorAll('[data-ds]').forEach(b => b.onclick = () => setDS(b.dataset.ds));
+  document.querySelectorAll('[data-v]').forEach(b => b.onclick = () => { S.view = b.dataset.v; document.querySelectorAll('[data-v]').forEach(x => x.classList.toggle('on', x === b)); $('condopt').style.display = S.view === 'cond' ? '' : 'none'; render(); });
+  document.querySelectorAll('[name=cd]').forEach(r => r.onchange = () => { S.cond = r.value; render(); });
+  $('sl').oninput = () => { S.s = +$('sl').value; $('sv').textContent = S.s.toFixed(2); if (load()) render(); };
+  $('sn').onchange = () => { if (load()) render(); };
+  $('rs').onclick = () => { S.seed = (S.seed * 1664525 + 1013904223) >>> 0; if (load()) render(); };
+  $('cub').onclick = () => { if (load()) render(); };
+  $('al').onchange = () => { S.alpha = +$('al').value; render(); };
+  $('pm').onchange = () => render();
+  $('cv').addEventListener('mousemove', e => { const ro = $('ro'); if (!P.o || !HOVER) { ro.style.display = 'none'; return; } const r = $('cv').getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top; if (px < P.x0 || px > P.x1 || py < P.y1 || py > P.y0) { ro.style.display = 'none'; return; } const t = HOVER(P.invX(px), P.invY(py)); if (!t) { ro.style.display = 'none'; return; } ro.style.display = 'block'; ro.textContent = t; });
+  $('cv').addEventListener('mouseleave', () => { $('ro').style.display = 'none'; });
+  window.addEventListener('resize', () => { clearTimeout(window._rz); window._rz = setTimeout(render, 120); });
+  setDS('titanic');
+}
+init();
+</script>
+</body></html>
