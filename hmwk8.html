@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HMWK 8</title>
+<style>
+:root{
+  --ink:#272a44; --mute:#6a6f91; --line:#e3e6f6; --soft:#f4f5ff; --card:rgba(255,255,255,.9);
+  --violet:#7c5cff; --blue:#2f7dff; --orange:#f08a24; --green:#1fa971; --red:#e5484d; --yellow:#e6b800; --pink:#ec5fa5;
+  --shadow:0 12px 34px rgba(88,80,170,.12);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;color:var(--ink);font:16px/1.65 "Nunito","Quicksand",ui-rounded,"SF Pro Rounded","Segoe UI",system-ui,sans-serif;min-height:100vh;
+  background:radial-gradient(900px 500px at 6% -6%,#e5dfff 0,transparent 60%),radial-gradient(800px 520px at 100% 0,#ffe1f0 0,transparent 55%),radial-gradient(900px 600px at 50% 112%,#d6f4ff 0,transparent 60%),#f7f7ff;background-attachment:fixed}
+header,main{max-width:1080px;margin:0 auto;padding:0 20px}
+header{padding-top:26px}
+.back{display:inline-flex;align-items:center;gap:6px;color:var(--mute);text-decoration:none;font-size:14px;border-radius:99px;padding:6px 14px;background:#fff;box-shadow:0 2px 8px rgba(88,80,170,.10);transition:.18s}
+.back:hover{color:var(--violet);transform:translateX(-2px)}
+h1{margin:14px 0 6px;font-size:clamp(26px,4.5vw,38px);line-height:1.15;letter-spacing:-.3px;background:linear-gradient(90deg,var(--violet),var(--blue) 60%,#14b8c4);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{margin:0 0 6px;color:var(--mute);font-size:17px;max-width:760px}
+h3{margin:0 0 6px;font-size:19px}
+.tabs{display:inline-flex;flex-wrap:wrap;gap:4px;background:#fff;border-radius:99px;padding:5px;box-shadow:0 4px 16px rgba(88,80,170,.10);margin:16px 0 4px}
+.tabs button{border:0;background:transparent;color:var(--mute);padding:9px 18px;border-radius:99px;cursor:pointer;font:inherit;font-weight:700;transition:.2s}
+.tabs button:hover{color:var(--violet)}
+.tabs button.on{background:linear-gradient(135deg,var(--violet),var(--blue));color:#fff;box-shadow:0 6px 16px rgba(124,92,255,.35)}
+main{padding-bottom:70px}
+section.tab{display:none}
+section.tab.on{display:block;animation:rise .45s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.card{background:var(--card);border:1px solid rgba(124,92,255,.10);border-radius:24px;padding:22px 26px;margin:18px 0;box-shadow:var(--shadow)}
+.card.hero{background:linear-gradient(135deg,rgba(124,92,255,.10),rgba(47,125,255,.08));}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.mini{background:var(--soft);border-radius:18px;padding:16px 18px;transition:.2s}
+.mini:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(88,80,170,.12);background:#fff}
+.mini h4{margin:0 0 4px;font-size:16.5px}
+.mini p{margin:4px 0}
+.row{display:flex;gap:18px;flex-wrap:wrap}
+.row>*{flex:1 1 320px;min-width:0}
+.say{color:#3d4160;margin:2px 0 12px}
+.tip{background:#fff8e6;border-radius:14px;padding:10px 14px;margin-top:12px;color:#6b4e0c;font-size:15px}
+.note{color:var(--mute);font-size:14.5px}
+.m{color:var(--mute);font-size:13px}
+label{color:var(--mute);font-size:13px;font-weight:700;display:block;margin-bottom:4px}
+input,select{background:#fff;color:var(--ink);border:1.5px solid var(--line);border-radius:12px;padding:9px 12px;font:inherit;transition:.15s}
+input:focus,select:focus{outline:none;border-color:var(--violet);box-shadow:0 0 0 3px rgba(124,92,255,.15)}
+input[type=range]{padding:0;width:100%;accent-color:var(--violet);border:0}
+input[type=text]{width:100%}
+.btn{background:#fff;color:var(--ink);border:1.5px solid var(--line);border-radius:99px;padding:9px 18px;font:inherit;font-weight:700;cursor:pointer;transition:.18s}
+.btn:hover{border-color:var(--violet);color:var(--violet);transform:translateY(-1px)}
+.btn.primary{background:linear-gradient(135deg,var(--violet),var(--blue));color:#fff;border-color:transparent;box-shadow:0 6px 16px rgba(124,92,255,.32)}
+.btn.primary:hover{color:#fff;box-shadow:0 9px 22px rgba(124,92,255,.42)}
+.ctrls{display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin:10px 0}
+code,.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+.pub{font-size:clamp(17px,3vw,23px);font-weight:800;background:linear-gradient(135deg,#dcfbe9,#e0f2ff);color:#0e6b45;border-radius:18px;padding:14px 20px;margin:12px 0}
+.chips{display:flex;flex-wrap:wrap;gap:6px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px}
+.chip{background:var(--soft);border-radius:99px;padding:3px 10px}
+.chip.last{background:#dcfbe9;color:#0e6b45;font-weight:700}
+.chip.rep{background:#ede9ff;color:#5b3fd6}
+canvas{width:100%;max-width:560px;height:auto;background:#fbfbff;border-radius:18px;display:block;border:1px solid var(--line)}
+.legend span{display:inline-block;margin:0 14px 4px 0;font-size:13.5px;color:var(--mute)}
+.dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+#log{max-height:520px;overflow:auto;background:#fbfbff;border:1px solid var(--line);border-radius:18px;padding:8px}
+#log .r{padding:8px 12px;border-radius:12px;cursor:pointer;color:var(--mute);font-size:14px;transition:.15s}
+#log .r:hover{background:var(--soft)}
+#log .r.cur{background:#ede9ff;color:var(--ink)}
+#log .r p{margin:3px 0}
+#log .r .m{display:none}
+#log.math .r.cur .m{display:block;font-family:ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap}
+.cap{background:var(--soft);border-radius:14px;padding:10px 14px;margin:10px 0;min-height:66px;font-size:15px}
+.hexout{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;word-break:break-all;background:var(--soft);border-radius:14px;padding:10px 14px;margin:6px 0}
+.ok{color:var(--green);font-weight:700}.bad{color:var(--red);font-weight:700}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:14.5px;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+th,td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+th{background:var(--soft);color:var(--mute);font-weight:800}
+.tag{display:inline-block;font-size:11.5px;font-weight:700;border-radius:99px;padding:2px 10px;margin:0 4px 4px 0}
+.t-der{background:#efe9ff;color:#6a3fd8}.t-pk{background:#e0edff;color:#1f63d6}.t-hash{background:#ffeedb;color:#b45f0a}.t-chk{background:#dcf7e9;color:#13774f}.t-enc{background:#fff4c9;color:#8a6a00}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.tile{background:var(--soft);border-radius:18px;padding:14px 16px}
+.tile b{display:block;font-size:28px;line-height:1.2;background:linear-gradient(90deg,var(--violet),var(--blue));-webkit-background-clip:text;background-clip:text;color:transparent}
+.tile small{color:var(--mute)}
+.meter{display:grid;grid-template-columns:150px 1fr 48px;gap:12px;align-items:center;margin:8px 0;font-size:14px}
+.track{position:relative;height:12px;background:var(--soft);border-radius:99px}
+.track i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--violet),var(--blue))}
+.track u{position:absolute;top:-5px;bottom:-5px;width:2px;background:var(--ink);opacity:.4}
+.mv{font-weight:800;text-align:right}
+svg.plot text,svg.bars text,#timeline text{fill:var(--mute);font-family:inherit}
+.pipe{display:flex;flex-wrap:wrap;align-items:stretch;gap:6px;margin:12px 0}
+.node{background:#fff;border-radius:18px;padding:12px 12px;min-width:118px;flex:1 1 118px;text-align:center;box-shadow:0 4px 14px rgba(88,80,170,.10);transition:.2s}
+.node:hover{transform:translateY(-4px)}
+.node .e{font-size:26px;display:block}
+.node b{display:block;font-size:14.5px}
+.node small{color:var(--mute);font-size:12.5px}
+.arrow{align-self:center;color:var(--violet);text-align:center;font-size:12px;font-weight:700;min-width:84px}
+.hl{display:flex;gap:10px;align-items:flex-start;margin:8px 0}
+.hl .e{font-size:22px;line-height:1.4}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+textarea{width:100%;background:#fff;color:var(--ink);border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;font:13.5px ui-monospace,Menlo,Consolas,monospace;resize:vertical}
+textarea:focus{outline:none;border-color:var(--violet);box-shadow:0 0 0 3px rgba(124,92,255,.15)}
+details summary{cursor:pointer;color:var(--violet)}
+.legend{margin:6px 0 4px}
+</style>
+<style>
+.seg{display:inline-flex;background:#fff;border:1.5px solid var(--line);border-radius:99px;padding:3px}
+.seg button{border:0;background:transparent;color:var(--mute);padding:7px 14px;border-radius:99px;cursor:pointer;font:inherit;font-weight:700}
+.seg button.on{background:linear-gradient(135deg,var(--violet),var(--blue));color:#fff}
+.vgroups{display:flex;flex-wrap:wrap;gap:14px 26px;margin:16px 0 8px}
+.vgroup{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.vlab{font-weight:800;color:var(--ink);margin-right:4px}
+.vbtn{border:1.5px solid var(--line);background:#fff;color:var(--mute);padding:8px 14px;border-radius:99px;cursor:pointer;font:inherit;font-weight:700;transition:.18s}
+.vbtn:hover{border-color:var(--violet);color:var(--violet)}
+.vbtn.on{background:linear-gradient(135deg,var(--violet),var(--blue));color:#fff;border-color:transparent;box-shadow:0 6px 16px rgba(124,92,255,.32)}
+.opts{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;margin:8px 0}
+.chk{display:inline-flex;align-items:center;gap:6px;margin:0;cursor:pointer}
+.chk input{width:auto;accent-color:var(--violet)}
+.chartwrap{position:relative;width:100%;margin-top:6px}
+.chartwrap canvas{display:block;border-radius:14px;max-width:none;width:100%;border:1px solid var(--line)}
+.busy{position:absolute;inset:0;background:rgba(255,255,255,.8);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--violet);border-radius:14px}
+.readout{position:absolute;top:10px;right:24px;background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:10px;padding:3px 10px;font-size:12.5px;color:var(--mute);display:none;pointer-events:none;white-space:pre}
+.sw{display:inline-block;width:22px;height:3px;margin-right:6px;vertical-align:3px}
+.dia{display:inline-block;width:9px;height:9px;transform:rotate(45deg);margin-right:7px}
+.mini-t{border-collapse:collapse;font-size:14px}.mini-t th,.mini-t td{padding:3px 10px;text-align:left;border-bottom:1px solid var(--line)}
+</style>
+<style>.eq{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:8px 12px;margin:6px 0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14px;overflow-x:auto}pre.code{background:#272a44;color:#e9ebff;border-radius:14px;padding:14px 16px;overflow-x:auto;font-size:14px;line-height:1.55;margin:6px 0 0}</style>
+<style>.cg{background:#e4f7ee}.cy{background:#fff6d9}.cr{background:#fde8e8}code{background:var(--soft);padding:1px 5px;border-radius:6px}</style>
+</head>
+<body>
+<header>
+  <a class="back" href="index.html">← Home</a>
+  <h1>HMWK 8 · Modes of convergence, and Bayesian updating</h1>
+  <p class="sub">What "converges" can mean for random sequences (and what each meaning does in the law of large numbers and the central limit theorem), and how Bayes' theorem turns prior beliefs and data into posterior beliefs.</p>
+</header>
+<div style="max-width:1080px;margin:0 auto;padding:0 20px"><div class="tabs" id="tabs">
+  <button data-t="t1" class="on">🎯 1 · Modes of convergence</button>
+  <button data-t="t2">🧠 2 · Bayes &amp; inference</button>
+</div></div>
+<main>
+<!-- ================================= PART 1 ================================= -->
+<section id="t1">
+<div class="card hero">
+  <h3>Four ways a sequence of random numbers can "settle down"</h3>
+  <p class="say">Think of Xₙ as the average of the first n coin flips. It is random, and it changes with every n. What does it mean that Xₙ "tends to" 0.5? There are <b>four different answers</b>, from the strictest to the most relaxed. They are not the same, and different theorems use different ones.</p>
+  <div class="grid">
+    <div class="mini"><h4>📏 Mean-square (L²)</h4><p>E[(Xₙ − X)²] → 0. "On average the <i>squared error</i> vanishes." Easy to compute (for a mean: σ²/n). It forces convergence in probability.</p></div>
+    <div class="mini"><h4>🎯 In probability</h4><p>For every ε &gt; 0: P(|Xₙ − X| &gt; ε) → 0. "The chance of being <i>off by more than ε</i> shrinks." At each fixed n the bad event may still happen, but it gets rarer. This is the <b>weak</b> law of large numbers.</p></div>
+    <div class="mini"><h4>🧵 Almost surely (a.s.)</h4><p>P(Xₙ → X) = 1. "Follow <i>one</i> experiment forever: its numbers converge, with probability 1." Equivalent to P(sup<sub>m≥n</sub>|Xₘ − X| &gt; ε) → 0. This is the <b>strong</b> law of large numbers.</p></div>
+    <div class="mini"><h4>🔔 In distribution</h4><p>Fₙ(x) → F(x) at every continuity point of F. "The <i>shape</i> of the histogram converges" – not the values themselves. This is the <b>central limit theorem</b>.</p></div>
+  </div>
+  <div class="say" style="margin-top:10px"><b>How they are linked.</b> a.s. ⇒ in probability ⇒ in distribution, and L² ⇒ in probability. Nothing else holds in general (see the counterexamples below), except that in distribution to a <i>constant</i> is the same as in probability.</div>
+  <svg viewBox="0 0 720 150" style="width:100%;max-width:720px;display:block;margin:10px auto 0" font-family="system-ui,sans-serif" font-size="14">
+    <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#6a6f91"/></marker></defs>
+    <rect x="10" y="12" width="170" height="44" rx="12" fill="#e4f7ee" stroke="#1fa971" stroke-width="2"/><text x="95" y="39" text-anchor="middle" fill="#272a44" font-weight="700">Almost surely</text>
+    <rect x="10" y="90" width="170" height="44" rx="12" fill="#fff6d9" stroke="#e6b800" stroke-width="2"/><text x="95" y="117" text-anchor="middle" fill="#272a44" font-weight="700">Mean-square (L²)</text>
+    <rect x="270" y="51" width="170" height="44" rx="12" fill="#e7efff" stroke="#2f7dff" stroke-width="2"/><text x="355" y="78" text-anchor="middle" fill="#272a44" font-weight="700">In probability</text>
+    <rect x="530" y="51" width="170" height="44" rx="12" fill="#f0e9ff" stroke="#7c5cff" stroke-width="2"/><text x="615" y="78" text-anchor="middle" fill="#272a44" font-weight="700">In distribution</text>
+    <path d="M182,36 L268,60" stroke="#6a6f91" stroke-width="2" marker-end="url(#ar)"/><path d="M182,112 L268,86" stroke="#6a6f91" stroke-width="2" marker-end="url(#ar)"/><path d="M442,73 L528,73" stroke="#6a6f91" stroke-width="2" marker-end="url(#ar)"/>
+    <path d="M528,90 C490,128 480,128 442,92" stroke="#b9bdd8" stroke-width="1.6" fill="none" stroke-dasharray="5 4" marker-end="url(#ar)"/><text x="485" y="140" text-anchor="middle" fill="#6a6f91" font-size="12">only if the limit is a constant</text>
+  </svg>
+</div>
+
+<div class="card">
+  <div class="ctrls" style="align-items:end">
+    <div><label>Population</label><select id="pop1"><option value="coin">Fair coin (0/1)</option><option value="exp">Exponential(1), skewed</option><option value="unif">Uniform(0,1)</option><option value="cauchy">Cauchy (no mean!)</option></select></div>
+    <div style="min-width:200px;flex:1"><label>Tolerance ε: <b id="epv">0.10</b></label><input type="range" id="ep1" min="0.02" max="0.5" step="0.01" value="0.1"></div>
+    <div><button class="btn" id="rs1">🎲 New simulation</button></div>
+  </div>
+  <div class="vgroups">
+    <div class="vgroup"><span class="vlab">🧵 Law of large numbers</span>
+      <button class="vbtn on" data-v1="paths">Sample paths</button>
+      <button class="vbtn" data-v1="prob">In prob. vs a.s.</button>
+      <button class="vbtn" data-v1="l2">Mean-square</button></div>
+    <div class="vgroup"><span class="vlab">🔔 Central limit theorem</span>
+      <button class="vbtn" data-v1="dist">In distribution</button></div>
+    <div class="vgroup"><span class="vlab">√ Why √n</span>
+      <button class="vbtn" data-v1="sq">Spread vs n</button></div>
+    <div class="vgroup"><span class="vlab">⚠️ They differ</span>
+      <button class="vbtn" data-v1="ce">Counterexamples</button></div>
+  </div>
+  <div class="opts" id="ndw" style="display:none"><label class="chk" style="font-weight:700">Sample size n of each average <select id="nd1"><option>1</option><option>2</option><option>5</option><option>10</option><option selected>30</option><option>100</option><option>500</option></select></label></div>
+  <div class="opts" id="rhow" style="display:none"><label class="chk" style="font-weight:700">Observations are <select id="rho1"><option value="0">independent (ρ = 0)</option><option value="0.1">weakly correlated (ρ = 0.1)</option><option value="0.5">strongly correlated (ρ = 0.5)</option><option value="1">identical copies (ρ = 1)</option></select></label></div>
+  <div class="opts" id="cew" style="display:none"><label class="chk" style="font-weight:700">Sequence <select id="ce1"><option value="A">A · the moving bump ("typewriter")</option><option value="B">B · the rare tall spike</option><option value="C">C · Xₙ = −Z (same shape, different values)</option></select></label></div>
+  <div class="chartwrap"><canvas id="cv1"></canvas><div id="ro1" class="readout"></div></div>
+  <div id="lg1" class="legend"></div>
+</div>
+
+<div class="card">
+  <h3 id="vt1">What you are seeing</h3>
+  <div class="grid">
+    <div class="mini"><h4>👀 What the picture shows</h4><div id="see1" class="say"></div></div>
+    <div class="mini"><h4>🔢 The numbers behind it</h4><div id="num1" class="say"></div></div>
+  </div>
+  <div class="tip" id="tip1"></div>
+</div>
+
+<div class="card">
+  <h3>🧭 Who plays which role</h3>
+  <div style="overflow-x:auto"><table class="mini-t">
+    <tr><th>Result</th><th>Statement (X₁, X₂, … independent, mean μ, variance σ²)</th><th>Mode of convergence</th><th>What it needs</th></tr>
+    <tr><td><b>Weak LLN</b></td><td>X̄ₙ → μ</td><td>in probability</td><td>finite variance (Chebyshev) – or even just a finite mean (Khinchin)</td></tr>
+    <tr><td><b>L² law</b></td><td>E[(X̄ₙ − μ)²] = σ²/n → 0</td><td>mean-square</td><td>finite variance; uncorrelated is enough</td></tr>
+    <tr><td><b>Strong LLN</b></td><td>P(X̄ₙ → μ) = 1</td><td>almost surely</td><td>a finite mean (i.i.d. case, Kolmogorov)</td></tr>
+    <tr><td><b>CLT</b></td><td>√n (X̄ₙ − μ) / σ → N(0, 1)</td><td>in distribution</td><td>finite variance, i.i.d. (or Lindeberg conditions)</td></tr>
+    <tr><td><b>Slutsky</b></td><td>if Yₙ → Y in distribution and Aₙ → a in probability, then AₙYₙ → aY</td><td>mix of the two</td><td>lets us replace σ by its estimate s</td></tr>
+    <tr><td><b>Delta method</b></td><td>√n (g(X̄ₙ) − g(μ)) → N(0, g′(μ)²σ²)</td><td>in distribution</td><td>g differentiable at μ</td></tr>
+    <tr><td><b>Consistency</b></td><td>an estimator θ̂ₙ → θ</td><td>in probability (or a.s.)</td><td>the LLN, applied to the estimator</td></tr>
+  </table></div>
+  <p class="note">Rule of thumb: the LLN says <b>where</b> the average goes (a number); the CLT says <b>how it fluctuates</b> around it (a bell curve of width σ/√n). The LLN uses the strong modes (probability, a.s., L²), the CLT the weakest one (distribution), which is enough to compute probabilities such as confidence intervals.</p>
+</div>
+
+<div class="card">
+  <h3>√ Why √n shows up everywhere</h3>
+  <div class="grid">
+    <div class="mini"><h4>➕ Variances add</h4><p>For <b>independent</b> (even just uncorrelated) variables, Var(X₁ + … + Xₙ) = nσ². The <i>variance</i> grows like n, so the <i>spread</i> (standard deviation) grows like <b>√n</b>, not like n. Errors partly cancel: some are positive, some negative.</p></div>
+    <div class="mini"><h4>➗ Averaging shrinks it</h4><p>Dividing by n: sd(X̄ₙ) = σ/√n. To halve the error you need <b>four times</b> the data. This is also the speed of the LLN in L²: E[(X̄ₙ − μ)²] = σ²/n.</p></div>
+    <div class="mini"><h4>🎚️ The only right zoom</h4><p>X̄ₙ − μ is of size 1/√n. Multiply by n and it blows up (sd ≍ √n); multiply by nothing and it collapses to 0. Multiplying by <b>√n</b> gives something of size σ, a stable shape: the normal curve of the CLT. The same √n appears in standard errors, confidence intervals, test statistics and "√n-consistent" estimators.</p></div>
+    <div class="mini"><h4>🔗 Why independence matters</h4><p>With correlation ρ between all pairs, Var(X̄ₙ) = σ²(ρ + (1−ρ)/n). It no longer goes to 0, it stalls at σ²ρ: <b>no LLN, no √n</b>. With identical copies (ρ = 1), averaging does nothing at all. Try it in the "Spread vs n" view.</p></div>
+  </div>
+</div>
+</section>
+
+<!-- ================================= PART 2 ================================= -->
+<section id="t2" style="display:none">
+<div class="card hero">
+  <h3>Updating what we believe when new data arrive</h3>
+  <p class="say">Probability is not only about dice; it also measures <b>how strongly we believe</b> something. <b>Conditional probability</b> P(A | B) = P(A ∩ B) / P(B) is "the probability of A once we know B happened". <b>Bayes' theorem</b> turns it around: from P(data | hypothesis), which is easy to compute, to P(hypothesis | data), which is what we really want.</p>
+  <div class="eq">P(θ | data) = P(data | θ) · P(θ) / P(data) &nbsp;&nbsp;⇒&nbsp;&nbsp; posterior ∝ likelihood × prior</div>
+  <div class="grid">
+    <div class="mini"><h4>🧠 Prior P(θ)</h4><p>What we believed <i>before</i> seeing the data: from earlier studies, physics, or honest ignorance (a flat prior). It is a probability distribution over the unknown θ.</p></div>
+    <div class="mini"><h4>📊 Likelihood P(data | θ)</h4><p>How well each value of θ <i>explains</i> the data we saw, seen as a function of θ. It is <b>not</b> a probability distribution over θ (it does not integrate to 1). Frequentist statistics (maximum likelihood) uses it alone.</p></div>
+    <div class="mini"><h4>🎯 Posterior P(θ | data)</h4><p>What we believe <i>after</i>: prior reweighted by likelihood and renormalised by P(data) = ∫ P(data | θ)P(θ)dθ. Today's posterior becomes tomorrow's prior, so data can be absorbed one batch at a time.</p></div>
+  </div>
+  <p class="note">In statistics, "conditional" also appears as P(F | X) (a conditional frequency, as in HMWK 7), and as the conditional distribution of a model, P(data | θ). Bayesians treat θ itself as random, because it is uncertain to us.</p>
+</div>
+
+<div class="card">
+  <div class="vgroups" style="margin-top:0">
+    <div class="vgroup"><span class="vlab">🩺 Base rates</span>
+      <button class="vbtn on" data-v2="nf">Natural frequencies</button>
+      <button class="vbtn" data-v2="pp">Posterior vs base rate</button></div>
+    <div class="vgroup"><span class="vlab">🪙 Learning a proportion</span>
+      <button class="vbtn" data-v2="bu">Prior × likelihood</button>
+      <button class="vbtn" data-v2="sq">Step by step</button>
+      <button class="vbtn" data-v2="pr">Different priors</button>
+      <button class="vbtn" data-v2="lc">Priors fade with data</button></div>
+    <div class="vgroup"><span class="vlab">📏 A continuous mean</span>
+      <button class="vbtn" data-v2="nn">Normal–Normal</button></div>
+  </div>
+  <div id="g_tst">
+    <div class="ctrls" style="align-items:end">
+      <div><label>Scenario</label><select id="sc2"><option value="med">🩺 Medical screening</option><option value="ids">🛡️ Intrusion detector</option><option value="spam">✉️ Phishing filter</option></select></div>
+      <div style="min-width:200px;flex:1"><label>Base rate P(D): <b id="pv">1.0%</b></label><input type="range" id="pr2" min="0.1" max="50" step="0.1" value="1"></div>
+      <div style="min-width:200px;flex:1"><label>Sensitivity P(+ | D): <b id="sev">95%</b></label><input type="range" id="se2" min="50" max="100" step="0.5" value="95"></div>
+      <div style="min-width:200px;flex:1"><label>Specificity P(− | not D): <b id="spv">95%</b></label><input type="range" id="sp2" min="50" max="100" step="0.5" value="95"></div>
+    </div>
+  </div>
+  <div id="g_bet" style="display:none">
+    <div class="ctrls" style="align-items:end">
+      <div id="priorw"><label>Prior for p</label><select id="pri2"><option value="unif">Flat: Beta(1,1)</option><option value="jeff">Jeffreys: Beta(½,½)</option><option value="skep">Sceptical: Beta(20,20)</option><option value="opt">Optimistic: Beta(8,2)</option><option value="pes">Pessimistic: Beta(2,8)</option></select></div>
+      <div id="nw" style="min-width:200px;flex:1"><label>Number of trials n: <b id="nv2">20</b></label><input type="range" id="n2" min="0" max="200" step="1" value="20"></div>
+      <div style="min-width:200px;flex:1"><label>True p (used to simulate the data): <b id="ptv">0.70</b></label><input type="range" id="pt2" min="0.05" max="0.95" step="0.05" value="0.7"></div>
+      <div><button class="btn" id="rs2">🎲 New data</button></div>
+    </div>
+  </div>
+  <div id="g_nrm" style="display:none">
+    <div class="ctrls" style="align-items:end">
+      <div style="min-width:170px;flex:1"><label>Prior mean μ₀: <b id="m0v">0.0</b></label><input type="range" id="m02" min="-3" max="3" step="0.1" value="0"></div>
+      <div style="min-width:170px;flex:1"><label>Prior sd τ: <b id="tav">1.0</b></label><input type="range" id="ta2" min="0.2" max="4" step="0.1" value="1"></div>
+      <div style="min-width:170px;flex:1"><label>Sample mean x̄: <b id="xbv">2.0</b></label><input type="range" id="xb2" min="-3" max="5" step="0.1" value="2"></div>
+      <div style="min-width:170px;flex:1"><label>Data sd σ: <b id="sgv">2.0</b></label><input type="range" id="sg2" min="0.5" max="5" step="0.1" value="2"></div>
+      <div style="min-width:170px;flex:1"><label>Sample size n: <b id="nnv">10</b></label><input type="range" id="nn2" min="1" max="200" step="1" value="10"></div>
+    </div>
+  </div>
+  <div class="chartwrap"><canvas id="cv2"></canvas><div id="ro2" class="readout"></div></div>
+  <div id="lg2" class="legend"></div>
+</div>
+
+<div class="card">
+  <h3 id="vt2">What you are seeing</h3>
+  <div class="grid">
+    <div class="mini"><h4>👀 What the picture shows</h4><div id="see2" class="say"></div></div>
+    <div class="mini"><h4>🔢 The numbers behind it</h4><div id="num2" class="say"></div></div>
+  </div>
+  <div class="tip" id="tip2"></div>
+</div>
+
+<div class="card">
+  <h3>🧪 Three worked examples</h3>
+  <div class="grid">
+    <div class="mini"><h4>1 · A test result (discrete prior)</h4><p>Prior: 1% of cases are real. Likelihood: the test is positive for 95% of real cases and for 5% of non-cases. Posterior: P(D | +) = 0.95·0.01 / (0.95·0.01 + 0.05·0.99) ≈ <b>16%</b>, not 95%. Most positives come from the huge healthy group: the <b>base-rate fallacy</b>. The same maths rules intrusion detectors and spam filters.</p></div>
+    <div class="mini"><h4>2 · A proportion (Beta–Binomial)</h4><p>Prior p ~ Beta(a, b); data k successes in n trials. Posterior is Beta(a + k, b + n − k): <b>the prior acts like a + b imaginary earlier trials</b>. The posterior mean (a + k)/(a + b + n) is a weighted mean of the prior mean and the observed frequency k/n, with weights (a + b) and n.</p></div>
+    <div class="mini"><h4>3 · A mean (Normal–Normal)</h4><p>Prior μ ~ N(μ₀, τ²), data x̄ ~ N(μ, σ²/n). Posterior is normal with <b>precision</b> (1/variance) = 1/τ² + n/σ² and a precision-weighted mean of μ₀ and x̄: the estimate is <i>shrunk</i> from the data towards the prior, more so when data are few or noisy.</p></div>
+  </div>
+</div>
+
+<div class="card">
+  <h3>⚖️ Advantages, limits, and influence on conclusions</h3>
+  <div class="grid">
+    <div class="mini"><h4>✅ Advantages</h4><p>Direct answers ("p lies in [0.5, 0.8] with probability 95%"). Uses prior knowledge and small data sensibly. Coherent sequential updating. Works with complicated models (hierarchical, missing data). Gives full uncertainty, not only a point estimate.</p></div>
+    <div class="mini"><h4>⚠️ Limitations</h4><p>The prior must be chosen, and it is partly subjective. A flat prior is not "neutral" for every transformation of θ (Jeffreys' prior fixes this for a proportion). The normalising integral can be hard (MCMC and approximations). A very strong wrong prior can mislead for a long time.</p></div>
+    <div class="mini"><h4>🌊 Prior vs data</h4><p>With little data the prior dominates; with a lot of data the likelihood dominates and different priors give nearly the same posterior (Bernstein–von Mises). Check this: compare posteriors for several priors and see whether the conclusion changes. If it does, the data alone are not enough.</p></div>
+    <div class="mini"><h4>🆚 Credible vs confidence</h4><p>A 95% <b>credible</b> interval says "given the data, θ is in it with probability 95%". A 95% <b>confidence</b> interval says "the procedure catches θ in 95% of repetitions". With a flat prior and lots of data they nearly coincide.</p></div>
+  </div>
+</div>
+</section>
+</main>
+<script>
+// =====================================================================
+//  Numerical core: random numbers, populations, Beta / Normal functions
+// =====================================================================
+function mulberry(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const LG = [0.99999999999980993, 676.5203681218851, -1259.1392167224028, 771.32342877765313, -176.61502916214059, 12.507343278686905, -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7];
+function lgamma(x) { if (x < 0.5) return Math.log(Math.PI / Math.abs(Math.sin(Math.PI * x))) - lgamma(1 - x); x -= 1; let a = LG[0]; const t = x + 7.5; for (let i = 1; i < 9; i++) a += LG[i] / (x + i); return 0.5 * Math.log(2 * Math.PI) + (x + 0.5) * Math.log(t) - t + Math.log(a); }
+function randn(r) { let u = 0; while (u === 0) u = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * r()); }
+const POP = {
+  coin: { name: 'Fair coin (0/1)', mu: 0.5, sd: 0.5, draw: r => r() < 0.5 ? 1 : 0 },
+  exp: { name: 'Exponential(1), skewed', mu: 1, sd: 1, draw: r => -Math.log(1 - r()) },
+  unif: { name: 'Uniform(0,1)', mu: 0.5, sd: Math.sqrt(1 / 12), draw: r => r() },
+  cauchy: { name: 'Cauchy (no mean!)', mu: 0, sd: 1, draw: r => Math.tan(Math.PI * (r() - 0.5)) }
+};
+// regularised incomplete beta I_x(a,b) (continued fraction, Lentz)
+function betacf(x, a, b) { const T = 1e-300; let c = 1, d = 1 - (a + b) * x / (a + 1); if (Math.abs(d) < T) d = T; d = 1 / d; let h = d; for (let m = 1; m < 500; m++) { const m2 = 2 * m; let aa = m * (b - m) * x / ((a + m2 - 1) * (a + m2)); d = 1 + aa * d; if (Math.abs(d) < T) d = T; c = 1 + aa / c; if (Math.abs(c) < T) c = T; d = 1 / d; h *= d * c; aa = -(a + m) * (a + b + m) * x / ((a + m2) * (a + m2 + 1)); d = 1 + aa * d; if (Math.abs(d) < T) d = T; c = 1 + aa / c; if (Math.abs(c) < T) c = T; d = 1 / d; const del = d * c; h *= del; if (Math.abs(del - 1) < 1e-15) break; } return h; }
+function betainc(x, a, b) { if (x <= 0) return 0; if (x >= 1) return 1; const bt = Math.exp(lgamma(a + b) - lgamma(a) - lgamma(b) + a * Math.log(x) + b * Math.log(1 - x)); return x < (a + 1) / (a + b + 2) ? bt * betacf(x, a, b) / a : 1 - bt * betacf(1 - x, b, a) / b; }
+function betaquant(p, a, b) { let lo = 0, hi = 1; for (let i = 0; i < 80; i++) { const m = (lo + hi) / 2; if (betainc(m, a, b) < p) lo = m; else hi = m; } return (lo + hi) / 2; }
+function betapdf(x, a, b) { if (x <= 0 || x >= 1) return (a === 1 && x === 0) || (b === 1 && x === 1) ? Math.exp(lgamma(a + b) - lgamma(a) - lgamma(b)) : 0; return Math.exp(lgamma(a + b) - lgamma(a) - lgamma(b) + (a - 1) * Math.log(x) + (b - 1) * Math.log(1 - x)); }
+const normpdf = (x, m = 0, s = 1) => Math.exp(-0.5 * ((x - m) / s) ** 2) / (s * Math.sqrt(2 * Math.PI));
+function erf(x) { const t = 1 / (1 + 0.3275911 * Math.abs(x)), y = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-x * x); return x >= 0 ? y : -y; }
+const normcdf = x => 0.5 * (1 + erf(x / Math.SQRT2));
+// ---- Part 1 simulation: M paths of running means of N draws (independent)
+function simMeans(pop, M, N, seed) {
+  const r = mulberry(seed), out = new Float64Array(M * N);
+  for (let m = 0; m < M; m++) { let s = 0; for (let n = 1; n <= N; n++) { s += pop.draw(r); out[m * N + n - 1] = s / n; } }
+  return out;
+}
+// ---- Part 1: dependent sample: X_i = sqrt(rho) Y0 + sqrt(1-rho) Y_i, with Y standardised. returns sd of Xbar_n for n list
+function simSd(pop, rho, ns, M, seed) {
+  const r = mulberry(seed), res = ns.map(() => ({ s1: 0, s2: 0 })), nmax = ns[ns.length - 1];
+  for (let m = 0; m < M; m++) { const y0 = (pop.draw(r) - pop.mu) / pop.sd, a = Math.sqrt(rho), b = Math.sqrt(1 - rho); let s = 0, k = 0; for (let i = 1; i <= nmax; i++) { s += a * y0 + b * (pop.draw(r) - pop.mu) / pop.sd; if (i === ns[k]) { const xb = s / i; res[k].s1 += xb; res[k].s2 += xb * xb; k++; } } }
+  return res.map(q => Math.sqrt(Math.max(q.s2 / M - (q.s1 / M) ** 2, 0)));
+}
+function niceTicks(lo, hi, target = 6) {
+  const span = hi - lo, raw = span / target, mag = Math.pow(10, Math.floor(Math.log10(raw))), nr = raw / mag, step = (nr < 1.5 ? 1 : nr < 3 ? 2 : nr < 7 ? 5 : 10) * mag, t = [];
+  for (let v = Math.ceil(lo / step - 1e-9) * step; v <= hi + step * 1e-6; v += step) t.push(+v.toPrecision(12));
+  return t;
+}
+function logTicks(lo, hi) { const major = [], minor = []; for (let e = Math.floor(Math.log10(lo)) - 1; e <= Math.ceil(Math.log10(hi)); e++) for (const k of [1, 2, 5]) { const v = k * Math.pow(10, e); if (v < lo * 0.9999 || v > hi * 1.0001) continue; (k === 1 ? major : minor).push(v); } return { major, minor }; }
+function fmtTick(v, log) {
+  const a = Math.abs(v); if (a === 0) return '0';
+  if (log) return a >= 1 && a < 1e6 ? a.toLocaleString('en') : (a < 1 && a >= 0.001 ? String(+v.toPrecision(2)) : v.toExponential(0).replace('e+', 'e'));
+  if (a >= 10000) return v.toExponential(1).replace('e+', 'e').replace('.0e', 'e'); if (a >= 1000) return v.toLocaleString('en');
+  if (a >= 1) return String(+v.toPrecision(4)); if (a >= 0.001) return String(+v.toPrecision(3)); return v.toExponential(0);
+}
+class Plot {
+  constructor(cv) { this.cv = cv; this.ctx = cv.getContext('2d'); this.m = { l: 74, r: 18, t: 14, b: 52 }; }
+  resize() {
+    const dpr = window.devicePixelRatio || 1, w = Math.max(320, this.cv.parentElement.clientWidth), h = Math.round(Math.max(340, Math.min(620, w * 0.56)));
+    this.cv.style.width = w + 'px'; this.cv.style.height = h + 'px'; this.cv.width = Math.round(w * dpr); this.cv.height = Math.round(h * dpr);
+    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0); this.W = w; this.H = h;
+  }
+  setup(o) {
+    this.o = o; const c = this.ctx, m = this.m; this.x0 = m.l; this.x1 = this.W - m.r; this.y0 = this.H - m.b; this.y1 = m.t;
+    const f = (v, a, b, lg) => lg ? (Math.log(v) - Math.log(a)) / (Math.log(b) - Math.log(a)) : (v - a) / (b - a);
+    this.X = v => this.x0 + f(v, o.x[0], o.x[1], o.xlog) * (this.x1 - this.x0);
+    this.Y = v => this.y0 + f(v, o.y[0], o.y[1], o.ylog) * (this.y1 - this.y0);
+    this.invX = px => { const t = (px - this.x0) / (this.x1 - this.x0); return o.xlog ? Math.exp(Math.log(o.x[0]) + t * (Math.log(o.x[1]) - Math.log(o.x[0]))) : o.x[0] + t * (o.x[1] - o.x[0]); };
+    this.invY = py => { const t = (py - this.y0) / (this.y1 - this.y0); return o.ylog ? Math.exp(Math.log(o.y[0]) + t * (Math.log(o.y[1]) - Math.log(o.y[0]))) : o.y[0] + t * (o.y[1] - o.y[0]); };
+    c.clearRect(0, 0, this.W, this.H); c.fillStyle = '#fbfbff'; c.fillRect(this.x0, this.y1, this.x1 - this.x0, this.y0 - this.y1);
+    c.font = '12px system-ui, sans-serif'; c.lineWidth = 1;
+    const xt = o.xlog ? logTicks(o.x[0], o.x[1]) : { major: niceTicks(o.x[0], o.x[1], 8), minor: [] }, yt = o.ylog ? logTicks(o.y[0], o.y[1]) : { major: niceTicks(o.y[0], o.y[1], 7), minor: [] };
+    c.strokeStyle = '#eef0fb'; for (const v of xt.minor) { const x = this.X(v); c.beginPath(); c.moveTo(x, this.y0); c.lineTo(x, this.y1); c.stroke(); } for (const v of yt.minor) { const y = this.Y(v); c.beginPath(); c.moveTo(this.x0, y); c.lineTo(this.x1, y); c.stroke(); }
+    c.strokeStyle = '#e1e4f6'; c.fillStyle = '#6a6f91';
+    c.textAlign = 'center'; for (const v of xt.major) { const x = this.X(v); c.beginPath(); c.moveTo(x, this.y0); c.lineTo(x, this.y1); c.stroke(); if (!o.noxt) c.fillText(fmtTick(v, o.xlog), x, this.y0 + 17); }
+    c.textAlign = 'right'; for (const v of yt.major) { const y = this.Y(v); c.beginPath(); c.moveTo(this.x0, y); c.lineTo(this.x1, y); c.stroke(); if (!o.noyt) c.fillText(fmtTick(v, o.ylog), this.x0 - 8, y + 4); }
+    c.strokeStyle = '#c3c8e6'; c.strokeRect(this.x0, this.y1, this.x1 - this.x0, this.y0 - this.y1);
+    c.fillStyle = '#4a4f73'; c.font = '13px system-ui, sans-serif'; c.textAlign = 'center'; c.fillText(o.xlabel || '', (this.x0 + this.x1) / 2, this.H - 8);
+    c.save(); c.translate(16, (this.y0 + this.y1) / 2); c.rotate(-Math.PI / 2); c.fillText(o.ylabel || '', 0, 0); c.restore();
+  }
+  clip(fn) { const c = this.ctx; c.save(); c.beginPath(); c.rect(this.x0, this.y1, this.x1 - this.x0, this.y0 - this.y1); c.clip(); fn(c); c.restore(); }
+  line(pts, { c = '#000', w = 1.5, a = 1, dash = [] } = {}) {
+    this.clip(g => { g.globalAlpha = a; g.strokeStyle = c; g.lineWidth = w; g.setLineDash(dash); g.lineJoin = 'round'; g.beginPath(); let open = false;
+      for (const [x, y] of pts) { if (!isFinite(x) || !isFinite(y)) { open = false; continue; } const px = this.X(x), py = this.Y(y); if (open) g.lineTo(px, py); else { g.moveTo(px, py); open = true; } } g.stroke(); });
+  }
+  band(up, lo, color, a = 0.12) {
+    this.clip(g => { g.globalAlpha = a; g.fillStyle = color; g.beginPath(); up.forEach(([x, y], i) => i ? g.lineTo(this.X(x), this.Y(y)) : g.moveTo(this.X(x), this.Y(y))); for (let i = lo.length - 1; i >= 0; i--) g.lineTo(this.X(lo[i][0]), this.Y(lo[i][1])); g.closePath(); g.fill(); });
+  }
+  hist(xs, ds, bw, { c = '#000', fill = 0.25, w = 2, dash = [] } = {}) {
+    this.clip(g => { g.setLineDash(dash); g.lineWidth = w; g.strokeStyle = c; g.fillStyle = c; g.lineJoin = 'round'; g.beginPath(); const yb = this.Y(0);
+      g.moveTo(this.X(xs[0]), yb); xs.forEach((x, i) => { g.lineTo(this.X(x), this.Y(ds[i])); g.lineTo(this.X(x + bw), this.Y(ds[i])); }); g.lineTo(this.X(xs[xs.length - 1] + bw), yb);
+      if (fill) { g.globalAlpha = fill; g.fill(); g.globalAlpha = 1; } g.stroke(); });
+  }
+  dots(pts, { c = '#000', r = 3.4, shape = 'o' } = {}) {
+    this.clip(g => { g.fillStyle = c; for (const [x, y] of pts) { if (!isFinite(x) || !isFinite(y)) continue; const px = this.X(x), py = this.Y(y); g.beginPath(); if (shape === 'o') g.arc(px, py, r, 0, 7); else { g.moveTo(px, py - r * 1.3); g.lineTo(px + r * 1.3, py); g.lineTo(px, py + r * 1.3); g.lineTo(px - r * 1.3, py); g.closePath(); } g.fill(); } });
+  }
+  text(t, px, py, { c = '#4a4f73', align = 'left', size = 12, bold = false } = {}) { const g = this.ctx; g.fillStyle = c; g.font = `${bold ? '700 ' : ''}${size}px system-ui, sans-serif`; g.textAlign = align; g.fillText(t, px, py); }
+}
+
+
+Plot.prototype.rect = function (x0, x1, y0, y1, { c = '#000', a = 0.2, stroke = null, sa = 1, w = 1 } = {}) {
+  this.clip(g => { const X0 = this.X(x0), X1 = this.X(x1), Y0 = this.Y(y0), Y1 = this.Y(y1), top = Math.min(Y0, Y1), hh = Math.abs(Y1 - Y0); g.globalAlpha = a; g.fillStyle = c; g.fillRect(X0, top, X1 - X0, hh); if (stroke) { g.globalAlpha = sa; g.strokeStyle = stroke; g.lineWidth = w; g.strokeRect(X0, top, X1 - X0, hh); } });
+};
+const $ = id => document.getElementById(id);
+const PAL = ['#7c5cff', '#2f7dff', '#1fa971', '#f08a24', '#e5484d', '#ec5fa5', '#e6b800', '#14b8c4'], INK = '#272a44';
+const fx = (v, d = 3) => { if (!isFinite(v)) return '∞'; const a = Math.abs(v); if (a === 0) return '0'; if (a < 1e-3 || a >= 1e6) return v.toExponential(2); return String(+v.toPrecision(d)); };
+const pcs = (v, d = 1) => (100 * v).toFixed(d) + '%';
+function setLegend(id, items) { $(id).innerHTML = items.map(it => `<span>${it.dash ? `<i class="sw" style="background:none;border-top:3px dashed ${it.c}"></i>` : it.line ? `<i class="sw" style="background:${it.c}"></i>` : `<i class="dot" style="background:${it.c}"></i>`}${it.t}</span>`).join(''); }
+const P1 = new Plot($('cv1')), P2 = new Plot($('cv2')); let HV1 = null, HV2 = null;
+const logGrid = (a, b, k) => { const o = []; for (let i = 0; i < k; i++) o.push(Math.round(Math.exp(Math.log(a) + (Math.log(b) - Math.log(a)) * i / (k - 1)))); return [...new Set(o)]; };
+
+// =============================== PART 1 ===============================
+const S1 = { pop: 'coin', eps: 0.1, view: 'paths', nd: 30, rho: 0, ce: 'A', seed: 1, M: 400, N: 2000, means: null, key: '' };
+function means1() { const k = S1.pop + S1.seed; if (S1.key !== k) { S1.means = simMeans(POP[S1.pop], S1.M, S1.N, S1.seed * 7919 + 13); S1.key = k; } return S1.means; }
+const mean1 = () => POP[S1.pop].mu;
+function stats1() { // probability of deviation, sup-version, and mean square for each n
+  const A = means1(), M = S1.M, N = S1.N, mu = mean1(), e = S1.eps, bad = new Float64Array(N), last = new Int32Array(M), sq = new Float64Array(N);
+  for (let m = 0; m < M; m++) { let l = 0; for (let n = 1; n <= N; n++) { const d = A[m * N + n - 1] - mu; if (Math.abs(d) > e) { bad[n - 1]++; l = n; } sq[n - 1] += d * d; } last[m] = l; }
+  const sup = new Float64Array(N); for (let m = 0; m < M; m++) for (let n = 1; n <= last[m]; n++) sup[n - 1]++;
+  for (let i = 0; i < N; i++) { bad[i] /= M; sup[i] /= M; sq[i] /= M; } return { bad, sup, sq };
+}
+function v1paths() {
+  const A = means1(), N = S1.N, mu = mean1(), e = S1.eps, pop = S1.pop, a = { coin: 0.55, exp: 1.3, unif: 0.45, cauchy: 3 }[pop], lo = mu - a, hi = mu + a;
+  P1.m = { l: 74, r: 18, t: 14, b: 52 }; P1.setup({ x: [1, N], y: [lo, hi], xlog: true, xlabel: 'n = number of observations (log scale)', ylabel: 'running average X̄ₙ' });
+  P1.rect(1, N, mu - e, mu + e, { c: '#1fa971', a: 0.14 });
+  for (let m = 0; m < 25; m++) { const pts = []; for (let n = 1; n <= N; n += n < 200 ? 1 : 5) pts.push([n, A[m * N + n - 1]]); P1.line(pts, { c: PAL[m % PAL.length], w: 1.4, a: 0.8 }); }
+  P1.line([[1, mu], [N, mu]], { c: INK, w: 2, dash: [7, 5] });
+  HV1 = (x, y) => `n = ${Math.round(x)}   X̄ = ${fx(y)}`;
+  setLegend('lg1', [{ c: '#1fa971', line: 1, t: `band μ ± ε  (μ = ${mu}, ε = ${e})` }, { c: INK, dash: 1, t: 'true mean μ' }, { c: PAL[0], line: 1, t: '25 independent experiments (one coloured line each)' }]);
+  let inside = 0; for (let m = 0; m < S1.M; m++) if (Math.abs(A[m * N + N - 1] - mu) <= e) inside++;
+  const cau = pop === 'cauchy';
+  return { title: 'Each coloured line is one experiment: the average after n observations', see: cau ? `The Cauchy distribution has <b>no mean</b>: huge outliers keep appearing, so the running average <b>never settles</b>. Averaging 1000 Cauchy values is no better than a single one. The LLN needs a finite mean.` : `Each line follows <b>one</b> experiment as n grows. At first lines are wild; later they are drawn into the green band around μ and stay there. <b>Almost sure</b> convergence is exactly this statement about <i>each single line</i>: with probability 1 it ends up inside the band for good (for every ε).`, num: cau ? 'No finite μ or σ: the theorem does not apply.' : `At n = ${N}, ${inside} of ${S1.M} simulated experiments (${pcs(inside / S1.M)}) are inside the band. Chebyshev guarantees at least ${pcs(Math.max(0, 1 - POP[pop].sd ** 2 / (N * e * e)))}.`, tip: '💡 Change ε: a narrower band makes the lines take longer to settle, but with enough n they always do (unless the population is Cauchy).' };
+}
+function v1prob() {
+  const { bad, sup, sq } = stats1(), N = S1.N, ns = logGrid(1, N, 70), pop = S1.pop, s2 = POP[pop].sd ** 2, e = S1.eps;
+  P1.m = { l: 74, r: 18, t: 14, b: 52 }; P1.setup({ x: [1, N], y: [0, 1.02], xlog: true, xlabel: 'n (log scale)', ylabel: 'probability' });
+  P1.line(ns.map(n => [n, sup[n - 1]]), { c: '#1fa971', w: 2.6 }); P1.line(ns.map(n => [n, bad[n - 1]]), { c: '#2f7dff', w: 2.6 });
+  if (pop !== 'cauchy') P1.line(ns.map(n => [n, Math.min(1, s2 / (n * e * e))]), { c: '#f08a24', w: 2, dash: [7, 5] });
+  HV1 = (x, y) => `n = ${Math.round(x)}   probability = ${fx(y)}`;
+  setLegend('lg1', [{ c: '#2f7dff', line: 1, t: 'P(|X̄ₙ − μ| > ε)  — in probability' }, { c: '#1fa971', line: 1, t: 'P(some m ≥ n has |X̄ₘ − μ| > ε)  — almost surely' }, ...(pop !== 'cauchy' ? [{ c: '#f08a24', dash: 1, t: 'Chebyshev bound σ²/(nε²)' }] : [])]);
+  const g = n => `${fx(bad[n - 1])} / ${fx(sup[n - 1])}`;
+  return { title: 'Convergence in probability versus almost sure', see: pop === 'cauchy' ? 'For the Cauchy distribution neither curve goes to 0: no mode of convergence holds.' : `<b style="color:#2f7dff">Blue</b>: at a <i>single</i> n, what fraction of experiments are outside the band? <b style="color:#1fa971">Green</b>: what fraction of experiments are outside the band <i>at some time from n onwards</i>? Both go to 0 here. Blue → 0 is convergence in probability (weak LLN); green → 0 is almost sure convergence (strong LLN). Green is always above blue, because "ever outside after n" is a larger event than "outside at n".`, num: pop === 'cauchy' ? '' : `Blue / green at n = 10: ${g(10)}; at n = 100: ${g(100)}; at n = 1000: ${g(1000)}. Chebyshev's bound is always above the blue curve, but only loosely.`, tip: '💡 For the LLN the two curves both go to 0. The counterexamples view shows sequences where blue → 0 but green does not.' };
+}
+function v1l2() {
+  const { sq } = stats1(), N = S1.N, ns = logGrid(1, N, 70), s2 = POP[S1.pop].sd ** 2, cau = S1.pop === 'cauchy', fl = v => Math.max(v, 1e-9);
+  P1.m = { l: 74, r: 18, t: 14, b: 52 };
+  const hiY = Math.max(...ns.map(n => sq[n - 1]), s2) * 1.5, loY = cau ? 1e-3 : s2 / N / 4; P1.setup({ x: [1, N], y: [loY, hiY], xlog: true, ylog: true, xlabel: 'n (log scale)', ylabel: 'mean squared error E[(X̄ₙ − μ)²] (log scale)' });
+  if (!cau) P1.line(ns.map(n => [n, s2 / n]), { c: '#f08a24', w: 2.4, dash: [7, 5] }); P1.line(ns.map(n => [n, fl(sq[n - 1])]), { c: '#7c5cff', w: 2.6 }); P1.dots(ns.map(n => [n, fl(sq[n - 1])]), { c: '#7c5cff', r: 3 });
+  HV1 = (x, y) => `n = ${Math.round(x)}   mean-square error = ${fx(y)}`;
+  setLegend('lg1', [{ c: '#7c5cff', line: 1, t: 'simulated mean of (X̄ₙ − μ)² over 400 experiments' }, ...(cau ? [] : [{ c: '#f08a24', dash: 1, t: 'exact value σ²/n' }])]);
+  return { title: 'Mean-square (L²) convergence', see: cau ? 'The Cauchy has infinite variance, so the mean-square error is infinite; the simulated values are dominated by a few giant outliers and do not decrease.' : `Here the measure is the <b>average squared distance</b> from μ. For independent observations it equals exactly <b>σ²/n</b>: on a log–log plot it is a straight line with slope −1 (the purple points follow the orange line). It goes to 0, so X̄ₙ → μ in L², and hence in probability.`, num: cau ? '' : `σ² = ${fx(s2)}. At n = 100 the exact error is ${fx(s2 / 100)}, simulated ${fx(sq[99])}. The root, √(σ²/n) = σ/√n, is the "standard error".`, tip: '💡 L² is the easiest mode to <i>prove</i> (a one-line variance computation) but the strongest requirement: it needs a finite variance, which a.s. and probability do not.' };
+}
+function v1dist() {
+  const pop = POP[S1.pop], n = S1.nd, B = 3000, r = mulberry(S1.seed * 101 + n), zs = new Float64Array(B), cau = S1.pop === 'cauchy';
+  for (let b = 0; b < B; b++) { let s = 0; for (let i = 0; i < n; i++) s += pop.draw(r); zs[b] = Math.sqrt(n) * (s / n - pop.mu) / pop.sd; }
+  const lo = -4, hi = 4, nb = 40, bw = (hi - lo) / nb, ct = new Array(nb).fill(0); for (const z of zs) { const k = Math.floor((z - lo) / bw); if (k >= 0 && k < nb) ct[k]++; }
+  const ds = ct.map(c => c / (B * bw)), xs = ct.map((_, i) => lo + i * bw), srt = Float64Array.from(zs).sort(); let ks = 0; for (let i = 0; i < B; i++) { const F = normcdf(srt[i]); ks = Math.max(ks, Math.abs((i + 1) / B - F), Math.abs(i / B - F)); }
+  P1.m = { l: 74, r: 18, t: 14, b: 52 }; P1.setup({ x: [lo, hi], y: [0, Math.max(0.5, ...ds) * 1.1], xlabel: 'Zₙ = √n (X̄ₙ − μ) / σ', ylabel: 'density' });
+  P1.hist(xs, ds, bw, { c: '#7c5cff', fill: 0.3, w: 1.4 }); const cv = []; for (let i = 0; i <= 200; i++) { const x = lo + (hi - lo) * i / 200; cv.push([x, normpdf(x)]); } P1.line(cv, { c: '#e5484d', w: 2.6 });
+  HV1 = (x, y) => `z = ${fx(x)}   density = ${fx(y)}`;
+  setLegend('lg1', [{ c: '#7c5cff', sw: 1, line: 1, t: `histogram of Zₙ for ${B} experiments, n = ${n}` }, { c: '#e5484d', line: 1, t: 'standard normal N(0, 1)' }]);
+  return { title: 'Convergence in distribution: the shape becomes a bell', see: cau ? 'For the Cauchy, the average of n values has <i>again</i> a Cauchy distribution, whatever n: heavy tails, no bell. The CLT needs a finite variance.' : `Each experiment averages n values, centres by μ, and scales by √n/σ. The histogram is the shape of Zₙ. As n grows it settles onto the <b style="color:#e5484d">bell curve</b>. Note that no <i>individual</i> Zₙ converges to anything: only its <b>distribution</b> does – exactly "convergence in distribution".`, num: `n = ${n}: the largest gap between the empirical and the normal cumulative curves is ${fx(ks)} (it shrinks like 1/√n, Berry–Esseen).${S1.pop === 'coin' && n < 30 ? ' With a coin the values are discrete, so the histogram has spikes.' : ''}`, tip: '💡 Compare the skewed exponential at n = 1, 5, 30, 100, 500: the skew disappears slowly. The CLT is about large n, not a promise for small n.' };
+}
+function v1sq() {
+  const rho = S1.rho, ns = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000], cau = S1.pop === 'cauchy', sdx = n => Math.sqrt(rho + (1 - rho) / n);
+  const emp = cau ? null : simSd(POP[S1.pop], rho, ns, 300, S1.seed * 31 + 5), N = 1000, all = logGrid(1, N, 40);
+  P1.m = { l: 74, r: 18, t: 14, b: 52 }; P1.setup({ x: [1, N], y: [0.02, 60], xlog: true, ylog: true, xlabel: 'n (log scale)', ylabel: 'standard deviation, in units of σ (log scale)' });
+  P1.line(all.map(n => [n, n * sdx(n)]), { c: '#f08a24', w: 2.6 }); P1.line(all.map(n => [n, sdx(n)]), { c: '#2f7dff', w: 2.6 }); P1.line(all.map(n => [n, Math.sqrt(n) * sdx(n)]), { c: '#1fa971', w: 2.6 });
+  if (emp) { P1.dots(ns.map((n, i) => [n, n * emp[i]]), { c: '#f08a24', r: 3.5 }); P1.dots(ns.map((n, i) => [n, emp[i]]), { c: '#2f7dff', r: 3.5 }); P1.dots(ns.map((n, i) => [n, Math.sqrt(n) * emp[i]]), { c: '#1fa971', r: 3.5 }); }
+  HV1 = (x, y) => `n = ${Math.round(x)}   sd = ${fx(y)} σ`;
+  setLegend('lg1', [{ c: '#f08a24', line: 1, t: 'sd of the sum Sₙ = X₁+…+Xₙ' }, { c: '#2f7dff', line: 1, t: 'sd of the average X̄ₙ' }, { c: '#1fa971', line: 1, t: 'sd of √n (X̄ₙ − μ)  (the CLT scaling)' }, { c: INK, line: 1, t: 'curves = formula, dots = simulation' }]);
+  const indep = rho === 0;
+  return { title: 'Spread versus n: where √n comes from', see: indep ? `With independent observations: the sum has spread <b style="color:#f08a24">σ√n</b> (slope +½ on this log–log plot), the average <b style="color:#2f7dff">σ/√n</b> (slope −½), and the <b style="color:#1fa971">√n-scaled</b> average has the <b>same</b> spread σ at every n: a flat line. That flat line is why √n is the right zoom for the CLT.` : rho < 1 ? `With correlation ρ = ${rho} the average's spread stops at σ√ρ = ${fx(Math.sqrt(rho))}σ and never reaches 0: <b>the LLN fails</b>. The √n-scaled version even grows. Independence (or at least weak dependence) is what makes the √n law work.` : `With identical copies (ρ = 1) every observation is the same number, so the average has the same spread as one observation, whatever n: averaging gives <b>no benefit</b>.`, num: cau ? 'The Cauchy has no variance, so no standard deviation can be computed (dots omitted).' : `Var(X̄ₙ) = σ²(ρ + (1−ρ)/n). At n = 100: sd = ${fx(sdx(100))}σ${indep ? ' = σ/10. To get 10 times more precision you need 100 times more data.' : ''}`, tip: '💡 Switch between independent and correlated observations above and watch the blue line stop falling.' };
+}
+// counterexamples: X_n(ω) as functions of a single U ~ Uniform(0,1) (A, B) or Z ~ N(0,1) (C)
+function ce1() {
+  const type = S1.ce, M = 1500, N = 256, e = S1.eps, r = mulberry(S1.seed * 17 + 3), cnt = new Float64Array(N), lastBad = new Int32Array(M);
+  for (let m = 0; m < M; m++) {
+    const u = r(), z = randn(r); let l = 0;
+    for (let n = 1; n <= N; n++) { let d; if (type === 'A') { const k = Math.floor(Math.log2(n)), j = n - 2 ** k; d = (u >= j / 2 ** k && u < (j + 1) / 2 ** k) ? 1 : 0; } else if (type === 'B') d = u < 1 / n ? n : 0; else d = -2 * z; if (Math.abs(d) > e) { cnt[n - 1]++; l = n; } }
+    lastBad[m] = l;
+  }
+  const sup = new Float64Array(N); for (let m = 0; m < M; m++) for (let n = 1; n <= lastBad[m]; n++) sup[n - 1]++;
+  const ns = logGrid(1, N, 60), fl = v => Math.max(v, 4e-4), e2 = n => type === 'A' ? 2 ** -Math.floor(Math.log2(n)) : type === 'B' ? n : 4;
+  P1.m = { l: 74, r: 18, t: 14, b: 52 }; P1.setup({ x: [1, N], y: [4e-4, 400], xlog: true, ylog: true, xlabel: 'n (log scale)', ylabel: 'probability / error (log scale)' });
+  P1.line(ns.map(n => [n, e2(n)]), { c: '#f08a24', w: 2.4 }); P1.line(ns.map(n => [n, fl(sup[n - 1] / M)]), { c: '#1fa971', w: 2.6 }); P1.line(ns.map(n => [n, fl(cnt[n - 1] / M)]), { c: '#2f7dff', w: 2.6 }); P1.dots(ns.map(n => [n, fl(cnt[n - 1] / M)]), { c: '#2f7dff', r: 3 });
+  HV1 = (x, y) => `n = ${Math.round(x)}   value = ${fx(y)}`;
+  setLegend('lg1', [{ c: '#2f7dff', line: 1, t: 'P(|Xₙ − X| > ε)  — in probability' }, { c: '#1fa971', line: 1, t: 'P(sup over m ≥ n of |Xₘ − X| > ε)  — almost sure' }, { c: '#f08a24', line: 1, t: 'E[(Xₙ − X)²]  — mean-square' }]);
+  const info = {
+    A: { t: 'A · the moving bump', see: 'Xₙ equals 1 on a short interval of outcomes that sweeps across [0, 1] again and again (shorter each round), and is 0 elsewhere. The <b>blue</b> curve goes to 0 (the bump is small) and the <b style="color:#f08a24">orange</b> too, but the <b style="color:#1fa971">green</b> one stays near 1: every single experiment is hit by the bump <i>infinitely often</i>, so no path converges to 0.', num: 'P(Xₙ ≠ 0) = 2⁻ᵏ → 0 and E[Xₙ²] = 2⁻ᵏ → 0. Converges to 0 <b>in probability and in L²</b>, but <b>not almost surely</b>.', tip: '💡 So "in probability" is genuinely weaker than a.s.: the chance of a bad event at time n vanishes, but bad events keep happening along each path.' },
+    B: { t: 'B · the rare tall spike', see: 'Xₙ = n when the outcome u &lt; 1/n and 0 otherwise. For each outcome u, only the finitely many n &lt; 1/u give a spike: the <b style="color:#1fa971">green</b> and <b style="color:#2f7dff">blue</b> curves go to 0. But the spike heights grow, so the <b style="color:#f08a24">orange</b> mean-square error <i>grows like n</i>.', num: 'P(Xₙ ≠ 0) = 1/n, Xₙ → 0 <b>almost surely and in probability</b>, but E[Xₙ²] = n → ∞, so <b>not in L²</b> (not even in L¹: E[Xₙ] = 1).', tip: '💡 So a.s. does <i>not</i> imply L². This is why the CLT and the LLN need conditions on the variance only for L².' },
+    C: { t: 'C · same shape, different values', see: 'Take Z standard normal and Xₙ = −Z. Every Xₙ has <i>exactly</i> the same distribution as Z, so Xₙ → Z in distribution trivially. But Xₙ is the mirror image of Z, so |Xₙ − Z| = 2|Z|: all three curves stay flat and never go to 0.', num: 'Converges to Z <b>in distribution only</b>: not in probability, not a.s., not in L² (E[(Xₙ − Z)²] = 4).', tip: '💡 This is the CLT in miniature: it says the <i>shape</i> of Zₙ becomes normal, not that the numbers Zₙ get close to a particular random number.' }
+  }[type];
+  return { title: 'Counterexamples: the modes are different', see: info.see, num: info.num, tip: info.tip };
+}
+const V1 = { paths: v1paths, prob: v1prob, l2: v1l2, dist: v1dist, sq: v1sq, ce: ce1 };
+function render1() {
+  P1.resize(); const v = V1[S1.view](); $('vt1').textContent = v.title; $('see1').innerHTML = v.see; $('num1').innerHTML = v.num || ''; $('tip1').innerHTML = v.tip;
+  $('ndw').style.display = S1.view === 'dist' ? '' : 'none'; $('rhow').style.display = S1.view === 'sq' ? '' : 'none'; $('cew').style.display = S1.view === 'ce' ? '' : 'none';
+}
+function init1() {
+  document.querySelectorAll('[data-v1]').forEach(b => b.onclick = () => { S1.view = b.dataset.v1; document.querySelectorAll('[data-v1]').forEach(x => x.classList.toggle('on', x === b)); render1(); });
+  $('pop1').onchange = () => { S1.pop = $('pop1').value; render1(); }; $('ep1').oninput = () => { S1.eps = +$('ep1').value; $('epv').textContent = S1.eps.toFixed(2); render1(); };
+  $('rs1').onclick = () => { S1.seed++; render1(); }; $('nd1').onchange = () => { S1.nd = +$('nd1').value; render1(); }; $('rho1').onchange = () => { S1.rho = +$('rho1').value; render1(); }; $('ce1').onchange = () => { S1.ce = $('ce1').value; render1(); };
+}
+
+// =============================== PART 2 ===============================
+const PR = { unif: [1, 1, 'Flat Beta(1,1)'], jeff: [0.5, 0.5, 'Jeffreys Beta(½,½)'], skep: [20, 20, 'Sceptical Beta(20,20)'], opt: [8, 2, 'Optimistic Beta(8,2)'], pes: [2, 8, 'Pessimistic Beta(2,8)'] };
+const PRK = Object.keys(PR);
+const SC = { med: { p: 1, se: 95, sp: 95, d: 'sick', pos: 'test positive' }, ids: { p: 0.1, se: 99, sp: 98, d: 'attack', pos: 'alarm' }, spam: { p: 20, se: 90, sp: 97, d: 'phishing mail', pos: 'flagged' } };
+const S2 = { view: 'nf', sc: 'med', prev: 0.01, sens: 0.95, spec: 0.95, prior: 'unif', n: 20, pt: 0.7, seed: 3, m0: 0, ta: 1, xb: 2, sg: 2, nn: 10, dat: null, dk: '' };
+const post = (pr, se, sp) => se * pr / (se * pr + (1 - sp) * (1 - pr));
+function dat2() { const k = S2.pt + '_' + S2.seed; if (S2.dk !== k) { const r = mulberry(S2.seed * 977 + 5), a = new Int32Array(401); for (let i = 1; i <= 400; i++) a[i] = a[i - 1] + (r() < S2.pt ? 1 : 0); S2.dat = a; S2.dk = k; } return S2.dat; }   // a[n] = successes in first n trials
+const curve = (f, lo, hi, k = 300) => { const o = []; for (let i = 0; i <= k; i++) { const x = lo + (hi - lo) * i / k; o.push([x, f(x)]); } return o; };
+const sub = (pts, a, b) => pts.filter(p => p[0] >= a && p[0] <= b);
+function v2nf() {
+  const N = 10000, d = N * S2.prev, TP = d * S2.sens, FN = d - TP, h = N - d, FP = h * (1 - S2.spec), TN = h - FP, cl = ['#1fa971', '#e5484d', '#f08a24', '#2f7dff'], vals = [TP, FP, FN, TN], lab = ['sick & +', 'healthy & +', 'sick & −', 'healthy & −'];
+  const sc = SC[S2.sc], L = [`${sc.d} & ${sc.pos}`, `not ${sc.d} & ${sc.pos}`, `${sc.d} & negative`, `not ${sc.d} & negative`];
+  P2.m = { l: 74, r: 18, t: 14, b: 52 }; P2.setup({ x: [0, 4], y: [1, 40000], ylog: true, noxt: true, xlabel: 'out of 10,000 cases', ylabel: 'number of cases (log scale)' });
+  vals.forEach((v, i) => { P2.rect(i + 0.15, i + 0.85, 1, Math.max(v, 1), { c: cl[i], a: 0.9 }); P2.text(fx(v, 4), P2.X(i + 0.5), P2.Y(Math.max(v, 1)) - 6, { align: 'center', bold: true, size: 13, c: INK }); P2.text(L[i], P2.X(i + 0.5), P2.y0 + 18, { align: 'center', size: 11.5, bold: true, c: INK }); });
+  const pst = TP / (TP + FP); HV2 = null;
+  P2.text(`P(${sc.d} | ${sc.pos}) = ${fx(TP, 4)} / (${fx(TP, 4)} + ${fx(FP, 4)}) = ${pcs(pst)}`, P2.x0 + 14, P2.y1 + 24, { bold: true, size: 15, c: '#1fa971' });
+  setLegend('lg2', [{ c: '#1fa971', t: 'true positives' }, { c: '#e5484d', t: 'false positives' }, { c: '#f08a24', t: 'false negatives' }, { c: '#2f7dff', t: 'true negatives' }]);
+  return { title: 'Bayes with natural frequencies', see: `Imagine 10,000 cases. Only <b>${fx(d, 4)}</b> are really "${sc.d}" (the prior, ${pcs(S2.prev)}). The test finds ${fx(TP, 4)} of them (green) but also wrongly flags ${fx(FP, 4)} of the ${fx(h, 4)} others (red). Among all <b>${sc.pos}</b> cases, the green ones are a fraction ${pcs(pst)}: that is the posterior. Counting people is the same as Bayes' theorem, but easier to feel.`, num: `P(${sc.pos}) = sens·prior + (1−spec)·(1−prior) = ${fx(TP + FP, 4)}/10000. Posterior = <b>${pcs(pst)}</b> while the sensitivity is ${pcs(S2.sens, 0)}. Also P(${sc.d} | negative) = ${pcs(FN / (FN + TN), 3)}.`, tip: pst < 0.5 ? '💡 The posterior is lower than the sensitivity because the red bar (false positives from a huge healthy group) is bigger than the green one. Increase the base rate, or the specificity, and watch it flip.' : '💡 Here the base rate is high enough, or the test good enough, for most positives to be real. Lower the base rate and the posterior collapses.' };
+}
+function v2pp() {
+  const se = S2.sens, sp = S2.spec, curves = [[0.9, '#e5484d'], [0.95, '#f08a24'], [0.99, '#2f7dff'], [0.999, '#1fa971']];
+  P2.m = { l: 74, r: 18, t: 14, b: 52 }; P2.setup({ x: [0.001, 0.5], y: [0, 1.02], xlog: true, xlabel: 'base rate P(D) (log scale)', ylabel: 'posterior P(D | positive)' });
+  const g = (f) => { const o = []; for (let i = 0; i <= 200; i++) { const x = Math.exp(Math.log(0.001) + (Math.log(0.5) - Math.log(0.001)) * i / 200); o.push([x, f(x)]); } return o; };
+  P2.line([[0.001, 0.001], [0.5, 0.5]], { c: '#9aa0c8', w: 1.6, dash: [4, 4] });
+  for (const [s, c] of curves) P2.line(g(x => post(x, se, s)), { c, w: 2.2, a: 0.85 });
+  P2.line(g(x => post(x, se, sp)), { c: INK, w: 3.2 }); const pv = post(S2.prev, se, sp); P2.dots([[S2.prev, pv]], { c: INK, r: 6 });
+  P2.text(`${pcs(pv)}`, P2.X(S2.prev) + 10, P2.Y(pv) - 8, { bold: true, size: 14, c: INK }); HV2 = (x, y) => `base rate = ${pcs(x, 2)}   posterior (current test) = ${pcs(post(x, se, sp))}`;
+  setLegend('lg2', [...curves.map(([s, c]) => ({ c, line: 1, t: `specificity ${pcs(s, 1)}` })), { c: INK, line: 1, t: `current test (${pcs(sp, 1)}), dot = current base rate` }, { c: '#9aa0c8', dash: 1, t: 'posterior = prior (test tells nothing)' }]);
+  return { title: 'The posterior depends strongly on the prior', see: `Each curve shows, for a test with the sensitivity you chose, what a positive result means as the <b>base rate</b> changes. For rare conditions (left) even very good tests give a small posterior: positives are mostly false alarms. For common ones (right) a positive is believable. The dashed grey line is a useless test (posterior = prior): every curve is above it, so the test always <i>adds</i> information, just not always enough.`, num: `Now: base rate ${pcs(S2.prev)} → posterior <b>${pcs(pv)}</b>. Raising specificity from 95% to 99.9% (blue to green) is worth far more than raising the sensitivity when the base rate is low.`, tip: '💡 Intrusion detection: if only 0.1% of events are attacks, a 98%-specific detector still fires ~20 false alarms per real attack. Rare-event problems need very high specificity.' };
+}
+function betaPts(a, b, k = 400) { return curve(x => betapdf(Math.min(Math.max(x, 1e-6), 1 - 1e-6), a, b), 0.0005, 0.9995, k); }
+function v2bu() {
+  const n = S2.n, k = dat2()[n], [a, b, nm] = PR[S2.prior], A = a + k, B = b + n - k, pri = betaPts(a, b), lik = betaPts(k + 1, n - k + 1), pos = betaPts(A, B), ym = Math.min(Math.max(...pri.map(p => p[1]), ...lik.map(p => p[1]), ...pos.map(p => p[1])) * 1.1, 30);
+  const lo = betaquant(0.025, A, B), hi = betaquant(0.975, A, B);
+  P2.m = { l: 74, r: 18, t: 14, b: 52 }; P2.setup({ x: [0, 1], y: [0, ym], xlabel: 'unknown proportion p', ylabel: 'density' });
+  const ci = sub(pos, lo, hi); if (ci.length > 1) P2.band(ci, ci.map(p => [p[0], 0]), '#1fa971', 0.22);
+  P2.line(pri, { c: '#2f7dff', w: 2.4 }); P2.line(lik, { c: '#f08a24', w: 2.4, dash: [7, 5] }); P2.line(pos, { c: '#1fa971', w: 3.2 }); P2.line([[S2.pt, 0], [S2.pt, ym]], { c: INK, w: 1.6, dash: [2, 4] });
+  HV2 = (x, y) => `p = ${fx(x)}   density = ${fx(y)}`;
+  setLegend('lg2', [{ c: '#2f7dff', line: 1, t: `prior ${nm}` }, { c: '#f08a24', dash: 1, t: 'likelihood (rescaled to area 1)' }, { c: '#1fa971', line: 1, t: 'posterior = prior × likelihood, renormalised' }, { c: '#1fa971', sw: 1, line: 1, t: '95% credible interval (shaded)' }, { c: INK, dash: 1, t: 'true p used in the simulation' }]);
+  const mle = n ? k / n : NaN, pm = A / (A + B), w = (a + b) / (a + b + n), wald = n ? [Math.max(0, mle - 1.96 * Math.sqrt(mle * (1 - mle) / n)), Math.min(1, mle + 1.96 * Math.sqrt(mle * (1 - mle) / n))] : null;
+  return { title: 'Prior × likelihood = posterior', see: `Start from the <b style="color:#2f7dff">prior</b> (what we believed about p). Multiply it, point by point, by the <b style="color:#f08a24">likelihood</b> (how well each p explains ${k} successes in ${n} trials), and renormalise: you get the <b style="color:#1fa971">posterior</b>. It lies <i>between</i> the other two, closer to the one that is more concentrated. With n = 0 the posterior is the prior; as n grows it narrows around the data.`, num: `Posterior = Beta(${fx(A)}, ${fx(B)}). Mean = ${fx(pm)} = ${fx(w)}·(prior mean ${fx(a / (a + b))}) + ${fx(1 - w)}·(data k/n = ${n ? fx(mle) : '–'}). 95% credible interval [${fx(lo)}, ${fx(hi)}]${wald ? `; frequentist Wald interval [${fx(wald[0])}, ${fx(wald[1])}]` : ''}.`, tip: '💡 Slide n up with a flat prior: the posterior and the likelihood almost coincide, and the credible interval is close to the classical interval. Pick the sceptical prior and see how it pulls the posterior back.' };
+}
+function v2sq() {
+  const [a, b, nm] = PR[S2.prior], D = dat2(), cps = [0, 1, 3, 10, 30, 100], cols = ['#9aa0c8', '#e5484d', '#f08a24', '#e6b800', '#1fa971', '#2f7dff'], cur = cps.map(n => betaPts(a + D[n], b + n - D[n])), ym = Math.min(Math.max(...cur.flat().filter((_, i) => true).map(p => Array.isArray(p) ? p[1] : p)) * 1.1, 30);
+  P2.m = { l: 74, r: 18, t: 14, b: 52 }; P2.setup({ x: [0, 1], y: [0, ym], xlabel: 'unknown proportion p', ylabel: 'density' });
+  cur.forEach((c, i) => P2.line(c, { c: cols[i], w: i === 0 ? 2.4 : 2.6, dash: i === 0 ? [7, 5] : [] })); P2.line([[S2.pt, 0], [S2.pt, ym]], { c: INK, w: 1.6, dash: [2, 4] }); HV2 = (x, y) => `p = ${fx(x)}   density = ${fx(y)}`;
+  setLegend('lg2', [...cps.map((n, i) => ({ c: cols[i], line: 1, t: n === 0 ? `before data (prior)` : `after ${n} trials (${D[n]} successes)` })), { c: INK, dash: 1, t: 'true p' }]);
+  return { title: 'Learning step by step', see: `Each curve is the posterior after more data, and each one is the <b>prior of the next step</b>. Starting from ${nm} (grey dashed), the belief moves toward the data and gets narrower: with more information we are more certain. Updating all at once, or one trial at a time, gives the same final curve.`, num: `After 100 trials: ${D[100]} successes (${pcs(D[100] / 100, 0)}), posterior mean ${fx((a + D[100]) / (a + b + 100))}, standard deviation ${fx(Math.sqrt(((a + D[100]) * (b + 100 - D[100])) / ((a + b + 100) ** 2 * (a + b + 101))))}.`, tip: '💡 "New data" simulates a different sequence of trials. The late curves always look alike; the early ones depend on luck and on the prior.' };
+}
+function v2pr() {
+  const n = S2.n, D = dat2(), k = D[n], cols = ['#2f7dff', '#7c5cff', '#1fa971', '#f08a24', '#e5484d'], cur = PRK.map(key => betaPts(PR[key][0] + k, PR[key][1] + n - k)), lik = betaPts(k + 1, n - k + 1), ym = Math.min(Math.max(...cur.map(c => Math.max(...c.map(p => p[1]))), ...lik.map(p => p[1])) * 1.1, 30);
+  P2.m = { l: 74, r: 18, t: 14, b: 52 }; P2.setup({ x: [0, 1], y: [0, ym], xlabel: 'unknown proportion p', ylabel: 'posterior density' });
+  P2.line(lik, { c: '#6a6f91', w: 2, dash: [7, 5] }); cur.forEach((c, i) => P2.line(c, { c: cols[i], w: 2.8 })); P2.line([[S2.pt, 0], [S2.pt, ym]], { c: INK, w: 1.6, dash: [2, 4] }); HV2 = (x, y) => `p = ${fx(x)}   density = ${fx(y)}`;
+  setLegend('lg2', [...PRK.map((key, i) => ({ c: cols[i], line: 1, t: PR[key][2] })), { c: '#6a6f91', dash: 1, t: 'likelihood alone' }, { c: INK, dash: 1, t: 'true p' }]);
+  const means = PRK.map(key => (PR[key][0] + k) / (PR[key][0] + PR[key][1] + n)), spread = Math.max(...means) - Math.min(...means);
+  return { title: 'Same data, different priors', see: `Five analysts see the <b>same data</b> (${k} successes in ${n} trials) but start with different priors. Their posteriors differ: the sceptical prior (green) is stubborn, the optimistic and pessimistic ones are pulled to opposite sides, while the flat and Jeffreys priors follow the data (dashed likelihood) closely. Their disagreement is the <b>influence of the prior</b> on the conclusion.`, num: `Posterior means: ${PRK.map((key, i) => `${PR[key][2].split(' ')[0]} ${fx(means[i])}`).join(', ')}. Largest disagreement: ${fx(spread)}.`, tip: '💡 Slide n towards 200: the five curves merge. Sensitivity to the prior is high with little data, and fades as the data speak.' };
+}
+function v2lc() {
+  const D = dat2(), N = 400, ns = []; for (let n = 1; n <= N; n++) ns.push(n), cols = ['#2f7dff', '#7c5cff', '#1fa971', '#f08a24', '#e5484d'];
+  P2.m = { l: 74, r: 18, t: 14, b: 52 }; P2.setup({ x: [1, N], y: [0, 1], xlog: true, xlabel: 'number of trials n (log scale)', ylabel: 'estimate of p' });
+  P2.line([[1, S2.pt], [N, S2.pt]], { c: INK, w: 1.6, dash: [2, 4] }); P2.line(ns.map(n => [n, D[n] / n]), { c: '#6a6f91', w: 1.8, dash: [7, 5] });
+  PRK.forEach((key, i) => P2.line(ns.map(n => [n, (PR[key][0] + D[n]) / (PR[key][0] + PR[key][1] + n)]), { c: cols[i], w: 2.6 })); HV2 = (x, y) => `n = ${Math.round(x)}   estimate = ${fx(y)}`;
+  setLegend('lg2', [...PRK.map((key, i) => ({ c: cols[i], line: 1, t: 'posterior mean, ' + PR[key][2] })), { c: '#6a6f91', dash: 1, t: 'frequency k/n (maximum likelihood)' }, { c: INK, dash: 1, t: 'true p' }]);
+  return { title: 'Priors fade as data accumulate', see: `Each coloured line is the posterior mean of an analyst with a different prior, as the same data keep coming. At the start they are far apart (they reflect the priors); later they all converge to the observed frequency (grey) and to the true p (dotted). A prior is equivalent to a + b imaginary trials, and real trials soon outnumber them – except for the strong sceptical prior (a + b = 40), which needs several dozen trials before giving way.`, num: `After 10 trials the posterior means range from ${fx(Math.min(...PRK.map(key => (PR[key][0] + D[10]) / (PR[key][0] + PR[key][1] + 10))))} to ${fx(Math.max(...PRK.map(key => (PR[key][0] + D[10]) / (PR[key][0] + PR[key][1] + 10))))}; after 400, from ${fx(Math.min(...PRK.map(key => (PR[key][0] + D[400]) / (PR[key][0] + PR[key][1] + 400))))} to ${fx(Math.max(...PRK.map(key => (PR[key][0] + D[400]) / (PR[key][0] + PR[key][1] + 400))))}.`, tip: '💡 This is why Bayesian and frequentist answers agree with lots of data, and why it matters to say which prior you used when data are scarce.' };
+}
+function v2nn() {
+  const m0 = S2.m0, ta = S2.ta, xb = S2.xb, sg = S2.sg, n = S2.nn, ls = sg / Math.sqrt(n), prec = 1 / ta ** 2 + 1 / ls ** 2, ps = 1 / Math.sqrt(prec), pm = (m0 / ta ** 2 + xb / ls ** 2) / prec, w = (1 / ta ** 2) / prec;
+  const lo = Math.min(m0 - 3.5 * ta, xb - 3.5 * ls, pm - 3.5 * ps), hi = Math.max(m0 + 3.5 * ta, xb + 3.5 * ls, pm + 3.5 * ps), ym = Math.max(normpdf(0, 0, ta), normpdf(0, 0, ls), normpdf(0, 0, ps)) * 1.12;
+  P2.m = { l: 74, r: 18, t: 14, b: 52 }; P2.setup({ x: [lo, hi], y: [0, ym], xlabel: 'unknown mean μ', ylabel: 'density' });
+  const pt = curve(x => normpdf(x, pm, ps), lo, hi), ci = sub(pt, pm - 1.96 * ps, pm + 1.96 * ps); P2.band(ci, ci.map(p => [p[0], 0]), '#1fa971', 0.22);
+  P2.line(curve(x => normpdf(x, m0, ta), lo, hi), { c: '#2f7dff', w: 2.4 }); P2.line(curve(x => normpdf(x, xb, ls), lo, hi), { c: '#f08a24', w: 2.4, dash: [7, 5] }); P2.line(pt, { c: '#1fa971', w: 3.2 }); HV2 = (x, y) => `μ = ${fx(x)}   density = ${fx(y)}`;
+  setLegend('lg2', [{ c: '#2f7dff', line: 1, t: `prior N(${m0}, ${ta}²)` }, { c: '#f08a24', dash: 1, t: `likelihood: x̄ = ${xb}, sd σ/√n = ${fx(ls)}` }, { c: '#1fa971', line: 1, t: 'posterior (shaded: 95% credible interval)' }]);
+  return { title: 'Normal prior, normal data: the posterior is a compromise', see: `Both prior (blue) and likelihood (orange dashed) are bell curves; their product is again a bell curve (green). Its centre sits between the prior mean and the sample mean, <b>closer to the narrower one</b>, and it is narrower than both: combining two sources of information gives more certainty than either alone. Increase n and the orange curve narrows and takes over.`, num: `Precision = 1/τ² + n/σ² = ${fx(prec)}. Posterior mean = <b>${fx(pm)}</b> = ${fx(w)}·μ₀ + ${fx(1 - w)}·x̄ (weights ∝ precisions). Posterior sd ${fx(ps)}; 95% credible interval [${fx(pm - 1.96 * ps)}, ${fx(pm + 1.96 * ps)}], classical interval [${fx(xb - 1.96 * ls)}, ${fx(xb + 1.96 * ls)}].`, tip: '💡 Make the prior very wide (τ large): the posterior equals the likelihood, and the credible interval equals the classical confidence interval. Make it narrow and wrong: the data have a hard time moving it.' };
+}
+const V2 = { nf: v2nf, pp: v2pp, bu: v2bu, sq: v2sq, pr: v2pr, lc: v2lc, nn: v2nn };
+function render2() {
+  P2.resize(); const v = V2[S2.view](); $('vt2').textContent = v.title; $('see2').innerHTML = v.see; $('num2').innerHTML = v.num; $('tip2').innerHTML = v.tip;
+  const g = S2.view; $('g_tst').style.display = (g === 'nf' || g === 'pp') ? '' : 'none'; $('g_bet').style.display = ['bu', 'sq', 'pr', 'lc'].includes(g) ? '' : 'none'; $('g_nrm').style.display = g === 'nn' ? '' : 'none';
+  $('priorw').style.display = (g === 'bu' || g === 'sq') ? '' : 'none'; $('nw').style.display = (g === 'bu' || g === 'pr') ? '' : 'none';
+}
+function init2() {
+  document.querySelectorAll('[data-v2]').forEach(b => b.onclick = () => { S2.view = b.dataset.v2; document.querySelectorAll('[data-v2]').forEach(x => x.classList.toggle('on', x === b)); render2(); });
+  const sl = (id, key, vid, fmt, scale = 1) => { $(id).oninput = () => { S2[key] = +$(id).value / scale; $(vid).textContent = fmt(S2[key]); render2(); }; };
+  sl('pr2', 'prev', 'pv', v => pcs(v), 100); sl('se2', 'sens', 'sev', v => pcs(v, 1), 100); sl('sp2', 'spec', 'spv', v => pcs(v, 1), 100);
+  sl('n2', 'n', 'nv2', v => v); sl('pt2', 'pt', 'ptv', v => v.toFixed(2)); sl('m02', 'm0', 'm0v', v => v.toFixed(1)); sl('ta2', 'ta', 'tav', v => v.toFixed(1)); sl('xb2', 'xb', 'xbv', v => v.toFixed(1)); sl('sg2', 'sg', 'sgv', v => v.toFixed(1)); sl('nn2', 'nn', 'nnv', v => v);
+  $('sc2').onchange = () => { const s = SC[$('sc2').value]; S2.sc = $('sc2').value; $('pr2').value = s.p; $('se2').value = s.se; $('sp2').value = s.sp; S2.prev = s.p / 100; S2.sens = s.se / 100; S2.spec = s.sp / 100; $('pv').textContent = pcs(S2.prev); $('sev').textContent = pcs(S2.sens, 1); $('spv').textContent = pcs(S2.spec, 1); render2(); };
+  $('pri2').onchange = () => { S2.prior = $('pri2').value; render2(); }; $('rs2').onclick = () => { S2.seed++; render2(); };
+}
+function attach(cv, P, roId, get) {
+  cv.addEventListener('mousemove', e => { const hv = get(), ro = $(roId); if (!P.o || !hv) { ro.style.display = 'none'; return; } const r = cv.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top; if (px < P.x0 || px > P.x1 || py < P.y1 || py > P.y0) { ro.style.display = 'none'; return; } ro.style.display = 'block'; ro.textContent = hv(P.invX(px), P.invY(py)); });
+  cv.addEventListener('mouseleave', () => { $(roId).style.display = 'none'; });
+}
+attach($('cv1'), P1, 'ro1', () => HV1); attach($('cv2'), P2, 'ro2', () => HV2);
+let TAB = 't1';
+function showTab(t) { TAB = t; document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.t === t)); $('t1').style.display = t === 't1' ? '' : 'none'; $('t2').style.display = t === 't2' ? '' : 'none'; try { sessionStorage.setItem('h8tab', t); } catch (e) { } if (t === 't1') render1(); else render2(); }
+document.querySelectorAll('#tabs button').forEach(b => b.onclick = () => showTab(b.dataset.t));
+window.addEventListener('resize', () => { clearTimeout(window._rz); window._rz = setTimeout(() => { TAB === 't1' ? render1() : render2(); }, 120); });
+init1(); init2(); let t0 = 't1'; try { t0 = sessionStorage.getItem('h8tab') || 't1'; } catch (e) { } showTab(t0);
+</script>
+</body></html>
