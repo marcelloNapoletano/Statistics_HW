@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HMWK 9</title>
+<style>
+:root{
+  --ink:#272a44; --mute:#6a6f91; --line:#e3e6f6; --soft:#f4f5ff; --card:rgba(255,255,255,.9);
+  --violet:#7c5cff; --blue:#2f7dff; --orange:#f08a24; --green:#1fa971; --red:#e5484d; --yellow:#e6b800; --pink:#ec5fa5;
+  --shadow:0 12px 34px rgba(88,80,170,.12);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;color:var(--ink);font:16px/1.65 "Nunito","Quicksand",ui-rounded,"SF Pro Rounded","Segoe UI",system-ui,sans-serif;min-height:100vh;
+  background:radial-gradient(900px 500px at 6% -6%,#e5dfff 0,transparent 60%),radial-gradient(800px 520px at 100% 0,#ffe1f0 0,transparent 55%),radial-gradient(900px 600px at 50% 112%,#d6f4ff 0,transparent 60%),#f7f7ff;background-attachment:fixed}
+header,main{max-width:1080px;margin:0 auto;padding:0 20px}
+header{padding-top:26px}
+.back{display:inline-flex;align-items:center;gap:6px;color:var(--mute);text-decoration:none;font-size:14px;border-radius:99px;padding:6px 14px;background:#fff;box-shadow:0 2px 8px rgba(88,80,170,.10);transition:.18s}
+.back:hover{color:var(--violet);transform:translateX(-2px)}
+h1{margin:14px 0 6px;font-size:clamp(26px,4.5vw,38px);line-height:1.15;letter-spacing:-.3px;background:linear-gradient(90deg,var(--violet),var(--blue) 60%,#14b8c4);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{margin:0 0 6px;color:var(--mute);font-size:17px;max-width:760px}
+h3{margin:0 0 6px;font-size:19px}
+.tabs{display:inline-flex;flex-wrap:wrap;gap:4px;background:#fff;border-radius:99px;padding:5px;box-shadow:0 4px 16px rgba(88,80,170,.10);margin:16px 0 4px}
+.tabs button{border:0;background:transparent;color:var(--mute);padding:9px 18px;border-radius:99px;cursor:pointer;font:inherit;font-weight:700;transition:.2s}
+.tabs button:hover{color:var(--violet)}
+.tabs button.on{background:linear-gradient(135deg,var(--violet),var(--blue));color:#fff;box-shadow:0 6px 16px rgba(124,92,255,.35)}
+main{padding-bottom:70px}
+section.tab{display:none}
+section.tab.on{display:block;animation:rise .45s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.card{background:var(--card);border:1px solid rgba(124,92,255,.10);border-radius:24px;padding:22px 26px;margin:18px 0;box-shadow:var(--shadow)}
+.card.hero{background:linear-gradient(135deg,rgba(124,92,255,.10),rgba(47,125,255,.08));}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.mini{background:var(--soft);border-radius:18px;padding:16px 18px;transition:.2s}
+.mini:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(88,80,170,.12);background:#fff}
+.mini h4{margin:0 0 4px;font-size:16.5px}
+.mini p{margin:4px 0}
+.row{display:flex;gap:18px;flex-wrap:wrap}
+.row>*{flex:1 1 320px;min-width:0}
+.say{color:#3d4160;margin:2px 0 12px}
+.tip{background:#fff8e6;border-radius:14px;padding:10px 14px;margin-top:12px;color:#6b4e0c;font-size:15px}
+.note{color:var(--mute);font-size:14.5px}
+.m{color:var(--mute);font-size:13px}
+label{color:var(--mute);font-size:13px;font-weight:700;display:block;margin-bottom:4px}
+input,select{background:#fff;color:var(--ink);border:1.5px solid var(--line);border-radius:12px;padding:9px 12px;font:inherit;transition:.15s}
+input:focus,select:focus{outline:none;border-color:var(--violet);box-shadow:0 0 0 3px rgba(124,92,255,.15)}
+input[type=range]{padding:0;width:100%;accent-color:var(--violet);border:0}
+input[type=text]{width:100%}
+.btn{background:#fff;color:var(--ink);border:1.5px solid var(--line);border-radius:99px;padding:9px 18px;font:inherit;font-weight:700;cursor:pointer;transition:.18s}
+.btn:hover{border-color:var(--violet);color:var(--violet);transform:translateY(-1px)}
+.btn.primary{background:linear-gradient(135deg,var(--violet),var(--blue));color:#fff;border-color:transparent;box-shadow:0 6px 16px rgba(124,92,255,.32)}
+.btn.primary:hover{color:#fff;box-shadow:0 9px 22px rgba(124,92,255,.42)}
+.ctrls{display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin:10px 0}
+code,.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+.pub{font-size:clamp(17px,3vw,23px);font-weight:800;background:linear-gradient(135deg,#dcfbe9,#e0f2ff);color:#0e6b45;border-radius:18px;padding:14px 20px;margin:12px 0}
+.chips{display:flex;flex-wrap:wrap;gap:6px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px}
+.chip{background:var(--soft);border-radius:99px;padding:3px 10px}
+.chip.last{background:#dcfbe9;color:#0e6b45;font-weight:700}
+.chip.rep{background:#ede9ff;color:#5b3fd6}
+canvas{width:100%;max-width:560px;height:auto;background:#fbfbff;border-radius:18px;display:block;border:1px solid var(--line)}
+.legend span{display:inline-block;margin:0 14px 4px 0;font-size:13.5px;color:var(--mute)}
+.dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+#log{max-height:520px;overflow:auto;background:#fbfbff;border:1px solid var(--line);border-radius:18px;padding:8px}
+#log .r{padding:8px 12px;border-radius:12px;cursor:pointer;color:var(--mute);font-size:14px;transition:.15s}
+#log .r:hover{background:var(--soft)}
+#log .r.cur{background:#ede9ff;color:var(--ink)}
+#log .r p{margin:3px 0}
+#log .r .m{display:none}
+#log.math .r.cur .m{display:block;font-family:ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap}
+.cap{background:var(--soft);border-radius:14px;padding:10px 14px;margin:10px 0;min-height:66px;font-size:15px}
+.hexout{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;word-break:break-all;background:var(--soft);border-radius:14px;padding:10px 14px;margin:6px 0}
+.ok{color:var(--green);font-weight:700}.bad{color:var(--red);font-weight:700}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:14.5px;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+th,td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+th{background:var(--soft);color:var(--mute);font-weight:800}
+.tag{display:inline-block;font-size:11.5px;font-weight:700;border-radius:99px;padding:2px 10px;margin:0 4px 4px 0}
+.t-der{background:#efe9ff;color:#6a3fd8}.t-pk{background:#e0edff;color:#1f63d6}.t-hash{background:#ffeedb;color:#b45f0a}.t-chk{background:#dcf7e9;color:#13774f}.t-enc{background:#fff4c9;color:#8a6a00}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.tile{background:var(--soft);border-radius:18px;padding:14px 16px}
+.tile b{display:block;font-size:28px;line-height:1.2;background:linear-gradient(90deg,var(--violet),var(--blue));-webkit-background-clip:text;background-clip:text;color:transparent}
+.tile small{color:var(--mute)}
+.meter{display:grid;grid-template-columns:150px 1fr 48px;gap:12px;align-items:center;margin:8px 0;font-size:14px}
+.track{position:relative;height:12px;background:var(--soft);border-radius:99px}
+.track i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--violet),var(--blue))}
+.track u{position:absolute;top:-5px;bottom:-5px;width:2px;background:var(--ink);opacity:.4}
+.mv{font-weight:800;text-align:right}
+svg.plot text,svg.bars text,#timeline text{fill:var(--mute);font-family:inherit}
+.pipe{display:flex;flex-wrap:wrap;align-items:stretch;gap:6px;margin:12px 0}
+.node{background:#fff;border-radius:18px;padding:12px 12px;min-width:118px;flex:1 1 118px;text-align:center;box-shadow:0 4px 14px rgba(88,80,170,.10);transition:.2s}
+.node:hover{transform:translateY(-4px)}
+.node .e{font-size:26px;display:block}
+.node b{display:block;font-size:14.5px}
+.node small{color:var(--mute);font-size:12.5px}
+.arrow{align-self:center;color:var(--violet);text-align:center;font-size:12px;font-weight:700;min-width:84px}
+.hl{display:flex;gap:10px;align-items:flex-start;margin:8px 0}
+.hl .e{font-size:22px;line-height:1.4}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+textarea{width:100%;background:#fff;color:var(--ink);border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;font:13.5px ui-monospace,Menlo,Consolas,monospace;resize:vertical}
+textarea:focus{outline:none;border-color:var(--violet);box-shadow:0 0 0 3px rgba(124,92,255,.15)}
+details summary{cursor:pointer;color:var(--violet)}
+.legend{margin:6px 0 4px}
+</style>
+<style>
+.seg{display:inline-flex;background:#fff;border:1.5px solid var(--line);border-radius:99px;padding:3px}
+.seg button{border:0;background:transparent;color:var(--mute);padding:7px 14px;border-radius:99px;cursor:pointer;font:inherit;font-weight:700}
+.seg button.on{background:linear-gradient(135deg,var(--violet),var(--blue));color:#fff}
+.vgroups{display:flex;flex-wrap:wrap;gap:14px 26px;margin:16px 0 8px}
+.vgroup{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.vlab{font-weight:800;color:var(--ink);margin-right:4px}
+.vbtn{border:1.5px solid var(--line);background:#fff;color:var(--mute);padding:8px 14px;border-radius:99px;cursor:pointer;font:inherit;font-weight:700;transition:.18s}
+.vbtn:hover{border-color:var(--violet);color:var(--violet)}
+.vbtn.on{background:linear-gradient(135deg,var(--violet),var(--blue));color:#fff;border-color:transparent;box-shadow:0 6px 16px rgba(124,92,255,.32)}
+.opts{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;margin:8px 0}
+.chk{display:inline-flex;align-items:center;gap:6px;margin:0;cursor:pointer}
+.chk input{width:auto;accent-color:var(--violet)}
+.chartwrap{position:relative;width:100%;margin-top:6px}
+.chartwrap canvas{display:block;border-radius:14px;max-width:none;width:100%;border:1px solid var(--line)}
+.busy{position:absolute;inset:0;background:rgba(255,255,255,.8);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--violet);border-radius:14px}
+.readout{position:absolute;top:10px;right:24px;background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:10px;padding:3px 10px;font-size:12.5px;color:var(--mute);display:none;pointer-events:none;white-space:pre}
+.sw{display:inline-block;width:22px;height:3px;margin-right:6px;vertical-align:3px}
+.dia{display:inline-block;width:9px;height:9px;transform:rotate(45deg);margin-right:7px}
+.mini-t{border-collapse:collapse;font-size:14px}.mini-t th,.mini-t td{padding:3px 10px;text-align:left;border-bottom:1px solid var(--line)}
+</style>
+<style>.eq{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:8px 12px;margin:6px 0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14px;overflow-x:auto}pre.code{background:#272a44;color:#e9ebff;border-radius:14px;padding:14px 16px;overflow-x:auto;font-size:14px;line-height:1.55;margin:6px 0 0}</style>
+<style>.cg{background:#e4f7ee}.cy{background:#fff6d9}.cr{background:#fde8e8}code{background:var(--soft);padding:1px 5px;border-radius:6px}</style>
+</head>
+<body>
+<header>
+  <a class="back" href="index.html">← Home</a>
+  <h1>HMWK 9 · Correlation and regression</h1>
+  <p class="sub">What correlation measures, how the two regression lines are found, why r is the geometric mean of their slopes, and why independence implies uncorrelation (but not the other way round).</p>
+</header>
+<main>
+<div class="card hero">
+  <h3>Do two variables move together?</h3>
+  <p class="say">For each unit we measure two numbers, <b>X</b> and <b>Y</b> (for example height and weight). <b>Correlation</b> says how well the points line up along a straight line; <b>regression</b> turns that line into a rule that predicts Y from X (or X from Y). The two ideas are two views of the same quantity.</p>
+  <div class="grid">
+    <div class="mini"><h4>📏 Covariance and correlation</h4><p>Cov(X,Y) = E[(X − μ<sub>X</sub>)(Y − μ<sub>Y</sub>)] is positive when large X goes with large Y. Dividing by both spreads gives the unit-free <b>correlation</b> r = Cov(X,Y) / (σ<sub>X</sub>σ<sub>Y</sub>), always between −1 and +1 (Cauchy–Schwarz). r = ±1: points exactly on a line. r = 0: no <i>linear</i> relation.</p></div>
+    <div class="mini"><h4>📈 Two regression lines</h4><p>"Y on X": the line y = a + bx minimising the squared <i>vertical</i> errors. "X on Y": the line x = a′ + b′y minimising the squared <i>horizontal</i> errors. They are different lines, crossing at the point of means (x̄, ȳ), unless all points lie exactly on a line.</p></div>
+    <div class="mini"><h4>🔗 The link: r² = b · b′</h4><p>The slopes are b = r·s<sub>Y</sub>/s<sub>X</sub> and b′ = r·s<sub>X</sub>/s<sub>Y</sub>. Multiply them: the spreads cancel and b·b′ = r². So <b>r is the geometric mean of the two regression coefficients</b>, r = ±√(b·b′), with the sign that b and b′ share.</p></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="vgroups" style="margin-top:0"><div class="vgroup"><span class="vlab">🗂️ Dataset (X, Y)</span><span id="dsb"></span></div></div>
+  <div class="ctrls" id="simc" style="align-items:end;display:none">
+    <div style="min-width:220px;flex:1"><label>True correlation ρ: <b id="rv">0.70</b></label><input type="range" id="rs" min="-1" max="1" step="0.05" value="0.7"></div>
+    <div><label>Sample size n</label><select id="sn"><option>10</option><option>30</option><option selected>100</option><option>500</option></select></div>
+    <div><button class="btn" id="rb">🎲 New sample</button></div>
+  </div>
+  <div id="cuc" style="display:none;margin-top:10px"><label>Your own data: one pair per line as <code>x,y</code></label><textarea id="cut" rows="6"></textarea><div class="opts"><button class="btn" id="cub">▶ Analyse</button><span class="note" id="cum"></span></div></div>
+  <p class="note" id="dsn" style="margin:8px 0 0"></p>
+  <div class="vgroups">
+    <div class="vgroup"><span class="vlab">📈 Regression</span>
+      <button class="vbtn on" data-v="lines">Both regression lines</button>
+      <button class="vbtn" data-v="res">Errors being minimised</button>
+      <button class="vbtn" data-v="sse">Finding the best slope</button></div>
+    <div class="vgroup"><span class="vlab">✔ Verification</span>
+      <button class="vbtn" data-v="gm">r = geometric mean</button></div>
+    <div class="vgroup"><span class="vlab">🔗 Independence</span>
+      <button class="vbtn" data-v="ind">Independent ⇒ r ≈ 0</button>
+      <button class="vbtn" data-v="non">…but r = 0 ⇏ independent</button></div>
+  </div>
+  <div class="opts" id="o_lines"><label class="chk"><input type="checkbox" id="std"> standardize (z-scores: both axes in units of standard deviation)</label></div>
+  <div class="opts" id="o_res"><label class="chk"><input type="checkbox" id="rv1" checked> vertical errors (Y on X)</label><label class="chk"><input type="checkbox" id="rv2" checked> horizontal errors (X on Y)</label></div>
+  <div class="ctrls" id="o_sse" style="display:none"><div style="min-width:240px;flex:1"><label>Try a slope b: <b id="bv">0</b></label><input type="range" id="bs" min="0" max="1" step="0.001" value="0"></div></div>
+  <div class="opts" id="o_ind" style="display:none"><label class="chk" style="font-weight:700">n per sample <select id="ni"><option>5</option><option>10</option><option selected>30</option><option>100</option></select></label><label class="chk" style="font-weight:700">X and Y are independent draws from <select id="pi"><option value="n">normal</option><option value="u">uniform</option><option value="e">exponential (skewed)</option></select></label><button class="btn" id="ib">🎲 Repeat</button></div>
+  <div class="opts" id="o_non" style="display:none"><label class="chk" style="font-weight:700">Dependence <select id="nt"><option value="par">Y = X²</option><option value="cir">(X, Y) on a circle</option><option value="abs">|Y| = |X| with a random sign</option></select></label><button class="btn" id="nb">🎲 New sample</button></div>
+  <div class="chartwrap"><canvas id="cv"></canvas><div id="ro" class="readout"></div></div>
+  <div id="lg" class="legend"></div>
+</div>
+
+<div class="card">
+  <h3 id="vt">What you are seeing</h3>
+  <div class="grid">
+    <div class="mini"><h4>👀 What the picture shows</h4><div id="see" class="say"></div></div>
+    <div class="mini"><h4>🔢 The numbers behind it</h4><div id="num" class="say"></div></div>
+  </div>
+  <div class="tip" id="tip"></div>
+</div>
+
+<div class="card">
+  <h3>🧮 Results for this dataset</h3>
+  <div id="res9"></div>
+</div>
+
+<div class="card">
+  <h3>✏️ Solving the regression problem: finding a and b</h3>
+  <p class="say">We look for the line y = a + bx that makes the total squared vertical error as small as possible:</p>
+  <div class="eq">S(a, b) = Σ (y<sub>i</sub> − a − b x<sub>i</sub>)²</div>
+  <p class="say">S is a bowl-shaped function of (a, b): its minimum is where both partial derivatives vanish.</p>
+  <div class="grid">
+    <div class="mini"><h4>∂S/∂a = 0</h4><p>−2 Σ (y<sub>i</sub> − a − b x<sub>i</sub>) = 0 ⇒ ȳ − a − b x̄ = 0, so <b>a = ȳ − b x̄</b>: the line passes through (x̄, ȳ).</p></div>
+    <div class="mini"><h4>∂S/∂b = 0</h4><p>−2 Σ x<sub>i</sub>(y<sub>i</sub> − a − b x<sub>i</sub>) = 0. Substituting a and using centred sums S<sub>xy</sub> = Σ(x−x̄)(y−ȳ), S<sub>xx</sub> = Σ(x−x̄)²: <b>b = S<sub>xy</sub>/S<sub>xx</sub> = r · s<sub>Y</sub>/s<sub>X</sub></b>.</p></div>
+    <div class="mini"><h4>It is a minimum</h4><p>S(b) = S<sub>yy</sub> − 2b S<sub>xy</sub> + b² S<sub>xx</sub> is a parabola opening upwards (S<sub>xx</sub> &gt; 0). At the best slope S = S<sub>yy</sub>(1 − r²): the fraction r² of the variation of Y is "explained" by X.</p></div>
+    <div class="mini"><h4>The other line</h4><p>Swap the roles: x = a′ + b′y with <b>b′ = S<sub>xy</sub>/S<sub>yy</sub> = r · s<sub>X</sub>/s<sub>Y</sub></b>, a′ = x̄ − b′ȳ. Then <b>b · b′ = S<sub>xy</sub>² / (S<sub>xx</sub>S<sub>yy</sub>) = r²</b>, which is the verification asked for (checked numerically above for every dataset).</p></div>
+  </div>
+</div>
+
+<div class="card">
+  <h3>🧩 Proof: independence implies uncorrelation</h3>
+  <p class="say"><b>Claim.</b> If X and Y are independent and have finite variances (positive, so that r exists), then Cov(X,Y) = 0 and hence r = 0.</p>
+  <div class="grid">
+    <div class="mini"><h4>Step 1 · Rewrite the covariance</h4><p>Cov(X,Y) = E[(X − μ<sub>X</sub>)(Y − μ<sub>Y</sub>)] = E[XY] − μ<sub>X</sub>μ<sub>Y</sub> (expand the product, use linearity of E). So we only need <b>E[XY] = E[X]E[Y]</b>.</p></div>
+    <div class="mini"><h4>Step 2 · Use independence (discrete case)</h4><p>Independence means P(X=x, Y=y) = P(X=x)P(Y=y). Then E[XY] = Σ<sub>x</sub>Σ<sub>y</sub> xy P(X=x)P(Y=y) = (Σ<sub>x</sub> x P(X=x)) (Σ<sub>y</sub> y P(Y=y)) = E[X]E[Y].</p></div>
+    <div class="mini"><h4>Step 2′ · Continuous case</h4><p>The joint density factorises, f(x,y) = f<sub>X</sub>(x)f<sub>Y</sub>(y), so E[XY] = ∬ xy f<sub>X</sub>(x)f<sub>Y</sub>(y) dx dy = (∫ x f<sub>X</sub> dx)(∫ y f<sub>Y</sub> dy) = E[X]E[Y] (Fubini's theorem; the integrals converge absolutely because E|X|, E|Y| &lt; ∞ and, by independence, E|XY| = E|X|E|Y| &lt; ∞).</p></div>
+    <div class="mini"><h4>Step 3 · Conclude</h4><p>Cov(X,Y) = E[X]E[Y] − μ<sub>X</sub>μ<sub>Y</sub> = 0, so r = Cov/(σ<sub>X</sub>σ<sub>Y</sub>) = 0. Equivalently, both regression slopes b = r s<sub>Y</sub>/s<sub>X</sub> and b′ are 0: knowing X does not move the best linear prediction of Y. ∎</p></div>
+  </div>
+  <div class="say" style="margin-top:10px"><b>The converse is false.</b> Let X be symmetric about 0 (for instance uniform on {−1, 0, 1}) and Y = X². Then Y is a function of X, so they are as dependent as can be, yet E[XY] = E[X³] = 0 = E[X]E[Y], so Cov(X,Y) = 0. Correlation only detects <i>linear</i> dependence. (Only for jointly normal variables does r = 0 imply independence.) Try the last two views to see it in simulations.</div>
+  <p class="note">Why the hypothesis on variances? For the Cauchy distribution E|X| = ∞, so neither E[XY] nor r is defined even though X and Y may be independent.</p>
+</div>
+
+<div class="card">
+  <h3>💻 How it is computed</h3>
+  <pre class="code">mx = mean(x); my = mean(y)
+Sxx = Σ (x − mx)²;  Syy = Σ (y − my)²;  Sxy = Σ (x − mx)(y − my)
+b  = Sxy / Sxx;   a  = my − b  · mx        // Y on X
+b2 = Sxy / Syy;   a2 = mx − b2 · my        // X on Y
+r  = Sxy / sqrt(Sxx · Syy)
+check:  b · b2 = r²   ⇒   r = sign(Sxy) · sqrt(b · b2)</pre>
+</div>
+</main>
+<script>
+function niceTicks(lo, hi, target = 6) {
+  const span = hi - lo, raw = span / target, mag = Math.pow(10, Math.floor(Math.log10(raw))), nr = raw / mag, step = (nr < 1.5 ? 1 : nr < 3 ? 2 : nr < 7 ? 5 : 10) * mag, t = [];
+  for (let v = Math.ceil(lo / step - 1e-9) * step; v <= hi + step * 1e-6; v += step) t.push(+v.toPrecision(12));
+  return t;
+}
+function logTicks(lo, hi) { const major = [], minor = []; for (let e = Math.floor(Math.log10(lo)) - 1; e <= Math.ceil(Math.log10(hi)); e++) for (const k of [1, 2, 5]) { const v = k * Math.pow(10, e); if (v < lo * 0.9999 || v > hi * 1.0001) continue; (k === 1 ? major : minor).push(v); } return { major, minor }; }
+function fmtTick(v, log) { if (!log && Math.abs(v) < 1e-12) return "0";
+  const a = Math.abs(v); if (a === 0) return '0';
+  if (log) return a >= 1 && a < 1e6 ? a.toLocaleString('en') : (a < 1 && a >= 0.001 ? String(+v.toPrecision(2)) : v.toExponential(0).replace('e+', 'e'));
+  if (a >= 10000) return v.toExponential(1).replace('e+', 'e').replace('.0e', 'e'); if (a >= 1000) return v.toLocaleString('en');
+  if (a >= 1) return String(+v.toPrecision(4)); if (a >= 0.001) return String(+v.toPrecision(3)); return v.toExponential(0);
+}
+class Plot {
+  constructor(cv) { this.cv = cv; this.ctx = cv.getContext('2d'); this.m = { l: 74, r: 18, t: 14, b: 52 }; }
+  resize() {
+    const dpr = window.devicePixelRatio || 1, w = Math.max(320, this.cv.parentElement.clientWidth), h = Math.round(Math.max(340, Math.min(620, w * 0.56)));
+    this.cv.style.width = w + 'px'; this.cv.style.height = h + 'px'; this.cv.width = Math.round(w * dpr); this.cv.height = Math.round(h * dpr);
+    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0); this.W = w; this.H = h;
+  }
+  setup(o) {
+    this.o = o; const c = this.ctx, m = this.m; this.x0 = m.l; this.x1 = this.W - m.r; this.y0 = this.H - m.b; this.y1 = m.t;
+    const f = (v, a, b, lg) => lg ? (Math.log(v) - Math.log(a)) / (Math.log(b) - Math.log(a)) : (v - a) / (b - a);
+    this.X = v => this.x0 + f(v, o.x[0], o.x[1], o.xlog) * (this.x1 - this.x0);
+    this.Y = v => this.y0 + f(v, o.y[0], o.y[1], o.ylog) * (this.y1 - this.y0);
+    this.invX = px => { const t = (px - this.x0) / (this.x1 - this.x0); return o.xlog ? Math.exp(Math.log(o.x[0]) + t * (Math.log(o.x[1]) - Math.log(o.x[0]))) : o.x[0] + t * (o.x[1] - o.x[0]); };
+    this.invY = py => { const t = (py - this.y0) / (this.y1 - this.y0); return o.ylog ? Math.exp(Math.log(o.y[0]) + t * (Math.log(o.y[1]) - Math.log(o.y[0]))) : o.y[0] + t * (o.y[1] - o.y[0]); };
+    c.clearRect(0, 0, this.W, this.H); c.fillStyle = '#fbfbff'; c.fillRect(this.x0, this.y1, this.x1 - this.x0, this.y0 - this.y1);
+    c.font = '12px system-ui, sans-serif'; c.lineWidth = 1;
+    const xt = o.xlog ? logTicks(o.x[0], o.x[1]) : { major: niceTicks(o.x[0], o.x[1], 8), minor: [] }, yt = o.ylog ? logTicks(o.y[0], o.y[1]) : { major: niceTicks(o.y[0], o.y[1], 7), minor: [] };
+    c.strokeStyle = '#eef0fb'; for (const v of xt.minor) { const x = this.X(v); c.beginPath(); c.moveTo(x, this.y0); c.lineTo(x, this.y1); c.stroke(); } for (const v of yt.minor) { const y = this.Y(v); c.beginPath(); c.moveTo(this.x0, y); c.lineTo(this.x1, y); c.stroke(); }
+    c.strokeStyle = '#e1e4f6'; c.fillStyle = '#6a6f91';
+    c.textAlign = 'center'; for (const v of xt.major) { const x = this.X(v); c.beginPath(); c.moveTo(x, this.y0); c.lineTo(x, this.y1); c.stroke(); if (!o.noxt) c.fillText(fmtTick(v, o.xlog), x, this.y0 + 17); }
+    c.textAlign = 'right'; for (const v of yt.major) { const y = this.Y(v); c.beginPath(); c.moveTo(this.x0, y); c.lineTo(this.x1, y); c.stroke(); if (!o.noyt) c.fillText(fmtTick(v, o.ylog), this.x0 - 8, y + 4); }
+    c.strokeStyle = '#c3c8e6'; c.strokeRect(this.x0, this.y1, this.x1 - this.x0, this.y0 - this.y1);
+    c.fillStyle = '#4a4f73'; c.font = '13px system-ui, sans-serif'; c.textAlign = 'center'; c.fillText(o.xlabel || '', (this.x0 + this.x1) / 2, this.H - 8);
+    c.save(); c.translate(16, (this.y0 + this.y1) / 2); c.rotate(-Math.PI / 2); c.fillText(o.ylabel || '', 0, 0); c.restore();
+  }
+  clip(fn) { const c = this.ctx; c.save(); c.beginPath(); c.rect(this.x0, this.y1, this.x1 - this.x0, this.y0 - this.y1); c.clip(); fn(c); c.restore(); }
+  line(pts, { c = '#000', w = 1.5, a = 1, dash = [] } = {}) {
+    this.clip(g => { g.globalAlpha = a; g.strokeStyle = c; g.lineWidth = w; g.setLineDash(dash); g.lineJoin = 'round'; g.beginPath(); let open = false;
+      for (const [x, y] of pts) { if (!isFinite(x) || !isFinite(y)) { open = false; continue; } const px = this.X(x), py = this.Y(y); if (open) g.lineTo(px, py); else { g.moveTo(px, py); open = true; } } g.stroke(); });
+  }
+  band(up, lo, color, a = 0.12) {
+    this.clip(g => { g.globalAlpha = a; g.fillStyle = color; g.beginPath(); up.forEach(([x, y], i) => i ? g.lineTo(this.X(x), this.Y(y)) : g.moveTo(this.X(x), this.Y(y))); for (let i = lo.length - 1; i >= 0; i--) g.lineTo(this.X(lo[i][0]), this.Y(lo[i][1])); g.closePath(); g.fill(); });
+  }
+  hist(xs, ds, bw, { c = '#000', fill = 0.25, w = 2, dash = [] } = {}) {
+    this.clip(g => { g.setLineDash(dash); g.lineWidth = w; g.strokeStyle = c; g.fillStyle = c; g.lineJoin = 'round'; g.beginPath(); const yb = this.Y(0);
+      g.moveTo(this.X(xs[0]), yb); xs.forEach((x, i) => { g.lineTo(this.X(x), this.Y(ds[i])); g.lineTo(this.X(x + bw), this.Y(ds[i])); }); g.lineTo(this.X(xs[xs.length - 1] + bw), yb);
+      if (fill) { g.globalAlpha = fill; g.fill(); g.globalAlpha = 1; } g.stroke(); });
+  }
+  dots(pts, { c = '#000', r = 3.4, shape = 'o' } = {}) {
+    this.clip(g => { g.fillStyle = c; for (const [x, y] of pts) { if (!isFinite(x) || !isFinite(y)) continue; const px = this.X(x), py = this.Y(y); g.beginPath(); if (shape === 'o') g.arc(px, py, r, 0, 7); else { g.moveTo(px, py - r * 1.3); g.lineTo(px + r * 1.3, py); g.lineTo(px, py + r * 1.3); g.lineTo(px - r * 1.3, py); g.closePath(); } g.fill(); } });
+  }
+  text(t, px, py, { c = '#4a4f73', align = 'left', size = 12, bold = false } = {}) { const g = this.ctx; g.fillStyle = c; g.font = `${bold ? '700 ' : ''}${size}px system-ui, sans-serif`; g.textAlign = align; g.fillText(t, px, py); }
+}
+
+
+Plot.prototype.rect = function (x0, x1, y0, y1, { c = '#000', a = 0.2, stroke = null, sa = 1, w = 1 } = {}) {
+  this.clip(g => { const X0 = this.X(x0), X1 = this.X(x1), Y0 = this.Y(y0), Y1 = this.Y(y1), top = Math.min(Y0, Y1), hh = Math.abs(Y1 - Y0); g.globalAlpha = a; g.fillStyle = c; g.fillRect(X0, top, X1 - X0, hh); if (stroke) { g.globalAlpha = sa; g.strokeStyle = stroke; g.lineWidth = w; g.strokeRect(X0, top, X1 - X0, hh); } });
+};
+const $ = id => document.getElementById(id);
+const C = ['#7c5cff', '#2f7dff', '#1fa971', '#f08a24', '#e5484d', '#ec5fa5', '#e6b800', '#14b8c4'], INK = '#272a44';
+const fx = (v, d = 4) => { if (!isFinite(v)) return '∞'; const a = Math.abs(v); if (a === 0) return '0'; if (a < 1e-3 || a >= 1e6) return v.toExponential(2); return String(+v.toPrecision(d)); };
+function mulberry(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function randn(r) { let u = 0; while (u === 0) u = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * r()); }
+function setLegend(items) { $('lg').innerHTML = items.map(it => `<span>${it.dash ? `<i class="sw" style="background:none;border-top:3px dashed ${it.c}"></i>` : it.line ? `<i class="sw" style="background:${it.c}"></i>` : `<i class="dot" style="background:${it.c}"></i>`}${it.t}</span>`).join(''); }
+// ---------------- statistics core
+function reg(x, y) {
+  const n = x.length; let mx = 0, my = 0; for (let i = 0; i < n; i++) { mx += x[i]; my += y[i]; } mx /= n; my /= n;
+  let sxx = 0, syy = 0, sxy = 0; for (let i = 0; i < n; i++) { const dx = x[i] - mx, dy = y[i] - my; sxx += dx * dx; syy += dy * dy; sxy += dx * dy; }
+  if (sxx === 0 || syy === 0) throw new Error('X and Y must both vary (not all equal).');
+  const b = sxy / sxx, a = my - b * mx, b2 = sxy / syy, a2 = mx - b2 * my, r = sxy / Math.sqrt(sxx * syy), gm = Math.sign(sxy) * Math.sqrt(b * b2);
+  let sseY = 0, sseX = 0; for (let i = 0; i < n; i++) { sseY += (y[i] - a - b * x[i]) ** 2; sseX += (x[i] - a2 - b2 * y[i]) ** 2; }
+  const R = Math.abs(r), ang = R === 0 ? 90 : (Math.atan(1 / R) - Math.atan(R)) * 180 / Math.PI;
+  return { n, mx, my, sxx, syy, sxy, b, a, b2, a2, r, gm, sseY, sseX, sx: Math.sqrt(sxx / (n - 1)), sy: Math.sqrt(syy / (n - 1)), ang };
+}
+// ---------------- datasets
+const AX = [10, 8, 13, 9, 11, 14, 6, 4, 12, 7, 5];
+const DS = {
+  women: { b: '⚖️ Height & weight', xn: 'height (in)', yn: 'weight (lb)', note: 'Real data (R dataset "women"): average height and weight of 15 American women aged 30–39.', x: [58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72], y: [115, 117, 120, 123, 126, 129, 132, 135, 139, 142, 146, 150, 154, 159, 164] },
+  a1: { b: 'Anscombe 1', xn: 'x', yn: 'y', note: "Anscombe's quartet (1973), set I: a noisy linear relation.", x: AX, y: [8.04, 6.95, 7.58, 8.81, 8.33, 9.96, 7.24, 4.26, 10.84, 4.82, 5.68] },
+  a2: { b: 'Anscombe 2', xn: 'x', yn: 'y', note: "Anscombe's quartet, set II: a perfect curve (parabola), not a line.", x: AX, y: [9.14, 8.14, 8.74, 8.77, 9.26, 8.10, 6.13, 3.10, 9.13, 7.26, 4.74] },
+  a3: { b: 'Anscombe 3', xn: 'x', yn: 'y', note: "Anscombe's quartet, set III: a perfect line plus one outlier.", x: AX, y: [7.46, 6.77, 12.74, 7.11, 7.81, 8.84, 6.08, 5.39, 8.15, 6.42, 5.73] },
+  a4: { b: 'Anscombe 4', xn: 'x', yn: 'y', note: "Anscombe's quartet, set IV: all x equal but one, so a single point creates the whole correlation.", x: [8, 8, 8, 8, 8, 8, 8, 19, 8, 8, 8], y: [6.58, 5.76, 7.71, 8.84, 8.47, 7.04, 5.25, 12.50, 5.56, 7.91, 6.89] },
+  sim: { b: '🎲 Simulated', xn: 'X', yn: 'Y', note: 'SIMULATED bivariate normal sample with the correlation ρ you choose (X mean 10, sd 2; Y mean 5, sd 3).' },
+  custom: { b: '✏️ My own data', xn: 'x', yn: 'y', note: 'Your own pairs. The numbers in the box at first are made up.' }
+};
+const S = { ds: 'women', view: 'lines', rho: 0.7, seed: 7, nseed: 1, iseed: 1, X: null, Y: null, A: null, cur: null };
+function build() {
+  const d = DS[S.ds]; let x, y;
+  if (S.ds === 'sim') { const r = mulberry(S.seed * 131 + 9), n = +$('sn').value; x = []; y = []; for (let i = 0; i < n; i++) { const z1 = randn(r), z2 = randn(r); x.push(10 + 2 * z1); y.push(5 + 3 * (S.rho * z1 + Math.sqrt(1 - S.rho * S.rho) * z2)); } }
+  else if (S.ds === 'custom') { x = []; y = []; try { for (const ln of $('cut').value.split('\n').map(s => s.trim()).filter(Boolean)) { const p = ln.split(/[,;\t ]+/).map(Number); if (p.length < 2 || p.some(v => !isFinite(v))) throw new Error('Bad line: "' + ln + '"'); x.push(p[0]); y.push(p[1]); } if (x.length < 3) throw new Error('At least 3 pairs are needed.'); } catch (e) { $('cum').textContent = '⚠ ' + e.message; return false; } }
+  else { x = d.x; y = d.y; }
+  try { S.A = reg(x, y); } catch (e) { $('cum').textContent = '⚠ ' + e.message; return false; } $('cum').textContent = S.ds === 'custom' ? '✔ ' + x.length + ' pairs read' : ''; S.X = x; S.Y = y; return true;
+}
+const P = new Plot($('cv')); let HV = null;
+const rng = (a, p = 0.08) => { const lo = Math.min(...a), hi = Math.max(...a), w = (hi - lo) || 1; return [lo - w * p, hi + w * p]; };
+const nm = () => ({ xn: DS[S.ds].xn, yn: DS[S.ds].yn });
+// ---------------- views
+function vLines(A) {
+  const std = $('std').checked, n = A.n; let xs = S.X, ys = S.Y, mx = A.mx, my = A.my, b = A.b, a = A.a, b2 = A.b2, a2 = A.a2, xl, yl, xlab = nm().xn, ylab = nm().yn;
+  if (std) { xs = S.X.map(v => (v - A.mx) / A.sx); ys = S.Y.map(v => (v - A.my) / A.sy); mx = 0; my = 0; b = A.r; a = 0; b2 = A.r; a2 = 0; xlab = 'z-score of ' + xlab; ylab = 'z-score of ' + ylab; }
+  const xr = rng(xs), yr = rng(ys); if (std) { const m = Math.max(Math.abs(xr[0]), Math.abs(xr[1]), Math.abs(yr[0]), Math.abs(yr[1])); xr[0] = yr[0] = -m; xr[1] = yr[1] = m; }
+  P.m = { l: 74, r: 18, t: 14, b: 52 }; P.setup({ x: xr, y: yr, xlabel: xlab, ylabel: ylab });
+  if (std) P.line([[xr[0], xr[0]], [xr[1], xr[1]]], { c: '#9aa0c8', w: 1.4, dash: [3, 4] });
+  P.dots(xs.map((v, i) => [v, ys[i]]), { c: C[2], r: n > 200 ? 2.6 : 4 });
+  P.line([[xr[0], a + b * xr[0]], [xr[1], a + b * xr[1]]], { c: C[1], w: 2.8 }); const yy = [yr[0], yr[1]]; P.line(yy.map(v => [a2 + b2 * v, v]), { c: C[3], w: 2.8 }); P.dots([[mx, my]], { c: C[4], r: 6.5 });
+  HV = null; setLegend([{ c: C[2], t: `${n} data points` }, { c: C[1], line: 1, t: std ? 'Y on X: slope r' : `Y on X: y = ${fx(A.a)} + ${fx(A.b)}·x` }, { c: C[3], line: 1, t: std ? 'X on Y: slope 1/r (as a line y vs x)' : `X on Y: x = ${fx(A.a2)} + ${fx(A.b2)}·y` }, { c: C[4], t: 'point of means' }, ...(std ? [{ c: '#9aa0c8', dash: 1, t: 'diagonal y = x' }] : [])]);
+  return { title: 'Two regression lines for the same points', see: `The <b style="color:#2f7dff">blue</b> line predicts Y from X (minimising vertical errors); the <b style="color:#f08a24">orange</b> line predicts X from Y (minimising horizontal errors). Both pass through the <b style="color:#e5484d">point of means</b>. They are different lines: the weaker the correlation, the more they open up like scissors, until at r = 0 they become horizontal and vertical. At |r| = 1 they coincide.${std ? ' In z-scores both axes have the same scale, so the blue line has slope exactly r and the orange one 1/r: they are mirror images in the diagonal.' : ''}`, num: `r = <b>${fx(A.r)}</b>. Slopes: b = ${fx(A.b)} (Y on X), b′ = ${fx(A.b2)} (X on Y, so as a line in this picture its slope is 1/b′ = ${fx(1 / A.b2)}). In z-units the angle between the lines is ${A.ang.toFixed(1)}°.`, tip: S.ds.startsWith('a') ? "💡 All four Anscombe sets give the same r = 0.816 and the same lines, yet they look completely different. Always plot the data: r is a summary, not the whole story." : '💡 Try the simulated dataset: slide ρ from 0 to 1 and watch the two lines close up like scissors.' };
+}
+function vRes(A) {
+  const n = A.n, xr = rng(S.X, 0.12), yr = rng(S.Y, 0.12); P.m = { l: 74, r: 18, t: 14, b: 52 }; P.setup({ x: xr, y: yr, xlabel: nm().xn, ylabel: nm().yn });
+  const v1 = $('rv1').checked, v2 = $('rv2').checked;
+  if (v1) S.X.forEach((x, i) => P.line([[x, S.Y[i]], [x, A.a + A.b * x]], { c: C[1], w: 1.6, a: 0.8 })); if (v2) S.Y.forEach((y, i) => P.line([[S.X[i], y], [A.a2 + A.b2 * y, y]], { c: C[3], w: 1.6, a: 0.8 }));
+  P.dots(S.X.map((v, i) => [v, S.Y[i]]), { c: C[2], r: n > 200 ? 2.6 : 4 }); if (v1) P.line([[xr[0], A.a + A.b * xr[0]], [xr[1], A.a + A.b * xr[1]]], { c: C[1], w: 2.8 }); if (v2) P.line([yr[0], yr[1]].map(v => [A.a2 + A.b2 * v, v]), { c: C[3], w: 2.8 }); HV = null;
+  setLegend([{ c: C[2], t: 'data' }, { c: C[1], line: 1, t: `Y on X: vertical errors, Σe² = ${fx(A.sseY)}` }, { c: C[3], line: 1, t: `X on Y: horizontal errors, Σe² = ${fx(A.sseX)}` }]);
+  return { title: 'What each line is minimising', see: 'Each short segment is a prediction error. The <b style="color:#2f7dff">blue</b> line is the one that makes the sum of the squared <b>vertical</b> segments as small as possible (we predict Y, and the error is measured in Y). The <b style="color:#f08a24">orange</b> line does the same for the <b>horizontal</b> segments (we predict X). Because they minimise different errors, they are different lines.', num: `Minimum vertical error: Σe² = S<sub>yy</sub>(1 − r²) = ${fx(A.syy)}·${fx(1 - A.r * A.r)} = ${fx(A.sseY)}. Minimum horizontal error: S<sub>xx</sub>(1 − r²) = ${fx(A.sxx * (1 - A.r * A.r))} (computed: ${fx(A.sseX)}).`, tip: '💡 Untick one of the boxes to look at one kind of error at a time. R² = r² is the fraction of the variation of Y removed by the line.' };
+}
+function vSse(A) {
+  const R0 = Math.max(Math.abs(A.b), 0.5) * 2 + 0.5, bs = $('bs'); if (S.key !== S.ds + S.seed + $('sn').value + $('cut').value.length) { bs.min = A.b - R0; bs.max = A.b + R0; bs.step = R0 / 200; bs.value = A.b - R0 * 0.7; S.key = S.ds + S.seed + $('sn').value + $('cut').value.length; }
+  const bt = +bs.value, f = b => A.syy - 2 * b * A.sxy + b * b * A.sxx, lo = A.b - R0, hi = A.b + R0; $('bv').textContent = bt.toFixed(3); const top = f(lo), bot = f(A.b);
+  P.m = { l: 74, r: 18, t: 14, b: 52 }; P.setup({ x: [lo, hi], y: [0, Math.max(top, f(hi)) * 1.05], xlabel: 'slope b (the intercept is a = ȳ − b·x̄)', ylabel: 'total squared error S(b)' });
+  const pts = []; for (let i = 0; i <= 200; i++) { const b = lo + (hi - lo) * i / 200; pts.push([b, f(b)]); } P.line(pts, { c: C[0], w: 3 });
+  P.line([[A.b, 0], [A.b, bot]], { c: C[2], w: 2, dash: [6, 5] }); P.dots([[A.b, bot]], { c: C[2], r: 7 }); P.dots([[bt, f(bt)]], { c: C[4], r: 7 }); P.line([[bt, 0], [bt, f(bt)]], { c: C[4], w: 1.5, dash: [3, 4] });
+  HV = (x, y) => `slope b = ${fx(x)}   S(b) = ${fx(f(x))}`; setLegend([{ c: C[0], line: 1, t: 'S(b) = Syy − 2b·Sxy + b²·Sxx (a parabola)' }, { c: C[2], t: `minimum at b = Sxy/Sxx = ${fx(A.b)}` }, { c: C[4], t: `your slope b = ${bt.toFixed(3)}` }]);
+  return { title: 'The best slope is the bottom of a parabola', see: 'For a given slope b, the best intercept is a = ȳ − b·x̄ (the line must pass through the point of means), so the total squared error is a function of b alone: a parabola. The <b style="color:#1fa971">green</b> dot is its minimum, the least-squares slope. Move the slider to try other slopes (red dot): any other choice has a larger error.', num: `S(b) = S<sub>yy</sub> − 2b S<sub>xy</sub> + b² S<sub>xx</sub>. Minimum at b̂ = S<sub>xy</sub>/S<sub>xx</sub> = ${fx(A.b)}, with S(b̂) = S<sub>yy</sub>(1 − r²) = ${fx(bot)}. At your slope: S = ${fx(f(bt))}, which exceeds the minimum by S<sub>xx</sub>(b − b̂)² = ${fx(A.sxx * (bt - A.b) ** 2)}.`, tip: '💡 Setting dS/db = −2 S<sub>xy</sub> + 2b S<sub>xx</sub> = 0 gives exactly this slope, as derived below.' };
+}
+function vGm(A) {
+  const r = mulberry(99), pts = []; let mx = 0; for (let k = 0; k < 300; k++) { const rho = 2 * r() - 1, n = 30, x = [], y = []; for (let i = 0; i < n; i++) { const z1 = randn(r), z2 = randn(r); x.push(z1); y.push(rho * z1 + Math.sqrt(1 - rho * rho) * z2); } const q = reg(x, y); pts.push([q.gm, q.r]); mx = Math.max(mx, Math.abs(q.r - q.gm)); }
+  P.m = { l: 74, r: 18, t: 14, b: 52 }; P.setup({ x: [-1.05, 1.05], y: [-1.05, 1.05], xlabel: 'sign(b) · √(b · b′)', ylabel: 'correlation r' }); P.line([[-1.05, -1.05], [1.05, 1.05]], { c: '#9aa0c8', w: 1.4, dash: [3, 4] }); P.dots(pts, { c: C[1], r: 3.4 }); P.dots([[A.gm, A.r]], { c: C[4], r: 8 });
+  HV = null; setLegend([{ c: C[1], t: '300 simulated datasets (n = 30, random true ρ)' }, { c: C[4], t: 'the current dataset' }, { c: '#9aa0c8', dash: 1, t: 'identity: r = √(b·b′)' }]);
+  return { title: 'r is the geometric mean of the two slopes', see: 'For every dataset we compute the slope b of Y on X, the slope b′ of X on Y, and the signed geometric mean sign(b)·√(b·b′), and plot it against the correlation r. All points fall exactly on the diagonal: the two numbers are the same. The red dot is your current dataset.', num: `Current dataset: b = ${fx(A.b)}, b′ = ${fx(A.b2)}, b·b′ = ${fx(A.b * A.b2)}, r² = ${fx(A.r * A.r)}, signed √(b·b′) = ${fx(A.gm)}, r = ${fx(A.r)}; difference ${(Math.abs(A.r - A.gm)).toExponential(1)} (rounding only). Largest difference over 300 datasets: ${mx.toExponential(1)}.`, tip: '💡 The sign matters: b and b′ always have the same sign as Cov(X,Y), so the geometric mean takes that sign.' };
+}
+function vInd() {
+  const n = +$('ni').value, pop = $('pi').value, B = 3000, r = mulberry(S.iseed * 7919 + n), dr = () => pop === 'n' ? randn(r) : pop === 'u' ? r() : -Math.log(1 - r()), rs = new Float64Array(B); let m1 = 0, m2 = 0;
+  for (let b = 0; b < B; b++) { const x = [], y = []; for (let i = 0; i < n; i++) { x.push(dr()); y.push(dr()); } let q; try { q = reg(x, y).r; } catch (e) { q = 0; } rs[b] = q; m1 += q; m2 += q * q; } m1 /= B; const sd = Math.sqrt(m2 / B - m1 * m1);
+  const lim = Math.min(1, 4 / Math.sqrt(n)), nb = 40, bw = 2 * lim / nb, ct = new Array(nb).fill(0); for (const q of rs) { const k = Math.floor((q + lim) / bw); if (k >= 0 && k < nb) ct[k]++; } const ds = ct.map(c => c / (B * bw)), xs = ct.map((_, i) => -lim + i * bw), sg = 1 / Math.sqrt(Math.max(n - 1, 1));
+  P.m = { l: 74, r: 18, t: 14, b: 52 }; P.setup({ x: [-lim, lim], y: [0, Math.max(...ds) * 1.15], xlabel: 'sample correlation r̂ of n independent pairs', ylabel: 'density' }); P.hist(xs, ds, bw, { c: C[0], fill: 0.35, w: 1.4 });
+  const cv = []; for (let i = 0; i <= 200; i++) { const x = -lim + 2 * lim * i / 200; cv.push([x, Math.exp(-x * x / (2 * sg * sg)) / (sg * Math.sqrt(2 * Math.PI))]); } P.line(cv, { c: C[4], w: 2.4 }); P.line([[0, 0], [0, Math.max(...ds) * 1.15]], { c: INK, w: 1.4, dash: [6, 5] });
+  HV = (x, y) => `r̂ = ${fx(x)}   density = ${fx(y)}`; setLegend([{ c: C[0], line: 1, t: `r̂ in ${B} samples of ${n} independent pairs` }, { c: C[4], line: 1, t: `normal curve, sd 1/√(n−1) = ${fx(sg)}` }, { c: INK, dash: 1, t: 'true correlation 0' }]);
+  return { title: 'Independent variables have correlation 0', see: `We draw ${B} samples of n independent pairs (X and Y generated separately) and compute the sample correlation r̂ of each. The histogram is centred on <b>0</b>, as the theorem says: independence gives Cov = 0, so the true correlation is 0. A single sample still gives r̂ ≠ 0 by chance, and the spread shrinks like 1/√n. This holds whatever the distribution (try the skewed one).`, num: `Mean of r̂ = ${fx(m1)} (theory 0); standard deviation = ${fx(sd)} (1/√(n−1) = ${fx(sg)}).`, tip: '💡 "Not exactly zero in a sample" does not mean dependence: you need a test (is |r̂| larger than about 2/√n?) to decide.' };
+}
+function vNon() {
+  const t = $('nt').value, r = mulberry(S.nseed * 331 + 5), n = 300, x = [], y = [];
+  for (let i = 0; i < n; i++) { if (t === 'par') { const u = 2 * r() - 1; x.push(u); y.push(u * u); } else if (t === 'cir') { const a = 2 * Math.PI * r(); x.push(Math.cos(a)); y.push(Math.sin(a)); } else { const u = 2 * r() - 1; x.push(u); y.push(Math.abs(u) * (r() < 0.5 ? -1 : 1)); } }
+  const A = reg(x, y), xr = rng(x, 0.1), yr = rng(y, 0.15); if (t === 'cir') { xr[0] = yr[0] = -1.4; xr[1] = yr[1] = 1.4; }
+  P.m = { l: 74, r: 18, t: 14, b: 52 }; P.setup({ x: xr, y: yr, xlabel: 'X', ylabel: 'Y' }); P.dots(x.map((v, i) => [v, y[i]]), { c: C[5], r: 3.5 }); P.line([[xr[0], A.a + A.b * xr[0]], [xr[1], A.a + A.b * xr[1]]], { c: C[1], w: 2.6 }); P.line([yr[0], yr[1]].map(v => [A.a2 + A.b2 * v, v]), { c: C[3], w: 2.6, dash: [7, 5] }); HV = null;
+  const lab = { par: 'Y = X² with X uniform on (−1, 1): Y is a function of X', cir: '(X, Y) = (cos θ, sin θ), θ uniform: X² + Y² = 1', abs: '|Y| = |X|, the sign of Y is random: knowing X tells |Y| exactly' }[t];
+  setLegend([{ c: C[5], t: lab }, { c: C[1], line: 1, t: `Y on X: slope ${fx(A.b, 2)}` }, { c: C[3], dash: 1, t: `X on Y: slope ${fx(A.b2, 2)}` }]);
+  return { title: 'Uncorrelated, but certainly not independent', see: 'Here Y is completely determined by X (a parabola), or lies on a circle, or has |Y| fixed by X. These variables are as dependent as can be, yet the correlation is about zero and both regression lines are flat. A straight line cannot capture a curved or symmetric relation: <b>correlation measures linear association only</b>.', num: `Sample correlation r̂ = ${fx(A.r)} (n = ${n}); slopes b = ${fx(A.b)}, b′ = ${fx(A.b2)}. For Y = X², the exact value is E[XY] = E[X³] = 0 = E[X]·E[Y], hence Cov = 0.`, tip: '💡 So: independence ⇒ r = 0 (proved below), but r = 0 ⇏ independence. Always plot the data.' };
+}
+const V = { lines: vLines, res: vRes, sse: vSse, gm: vGm, ind: () => vInd(), non: () => vNon() };
+function results(A) {
+  const row = (l, v, n) => `<div class="mini"><h4>${l}</h4><div class="say" style="font-size:20px;font-weight:800">${v}</div>${n ? `<p class="note">${n}</p>` : ''}</div>`;
+  return `<div class="grid">${row('Sample size n', A.n)}${row('Means', `${fx(A.mx)} ; ${fx(A.my)}`, 'x̄ ; ȳ')}${row('Correlation r', fx(A.r), 'S<sub>xy</sub> / √(S<sub>xx</sub> S<sub>yy</sub>)')}${row('Y on X', `y = ${fx(A.a)} + ${fx(A.b)}·x`, `b = S<sub>xy</sub>/S<sub>xx</sub> = r s<sub>Y</sub>/s<sub>X</sub>, a = ȳ − b x̄`)}${row('X on Y', `x = ${fx(A.a2)} + ${fx(A.b2)}·y`, `b′ = S<sub>xy</sub>/S<sub>yy</sub> = r s<sub>X</sub>/s<sub>Y</sub>, a′ = x̄ − b′ȳ`)}${row('b · b′', fx(A.b * A.b2), 'should equal r²')}${row('r²', fx(A.r * A.r), 'fraction of variance of Y explained by X')}${row('sign(b)·√(b·b′)', fx(A.gm), `differs from r by ${Math.abs(A.r - A.gm).toExponential(1)}`)}${row('Angle between the lines', A.ang.toFixed(1) + '°', 'in z-score units: 0° at |r| = 1, 90° at r = 0')}</div><div class="say ${Math.abs(A.r - A.gm) < 1e-9 ? 'cg' : 'cr'}" style="padding:10px 14px;border-radius:14px;margin-top:10px"><b>${Math.abs(A.r - A.gm) < 1e-9 ? '✔ Verified:' : '✘'}</b> r = ${fx(A.r)} equals the geometric mean of the two regression coefficients, ${fx(A.gm)} = sign(Sxy)·√(${fx(A.b)} · ${fx(A.b2)}).</div>`;
+}
+const GROUPS = { lines: 'o_lines', res: 'o_res', sse: 'o_sse', ind: 'o_ind', non: 'o_non' };
+function render() {
+  if (!S.A) return; P.resize(); const A = S.A, v = V[S.view](A); $('vt').textContent = v.title; $('see').innerHTML = v.see; $('num').innerHTML = v.num; $('tip').innerHTML = v.tip; $('res9').innerHTML = results(A); $('dsn').textContent = DS[S.ds].note;
+  Object.keys(GROUPS).forEach(k => $(GROUPS[k]).style.display = k === S.view ? '' : 'none');
+}
+function setDS(k) { S.ds = k; document.querySelectorAll('[data-ds]').forEach(b => b.classList.toggle('on', b.dataset.ds === k)); $('simc').style.display = k === 'sim' ? '' : 'none'; $('cuc').style.display = k === 'custom' ? '' : 'none'; if (build()) render(); }
+function init() {
+  $('dsb').innerHTML = Object.keys(DS).map(k => `<button class="vbtn${k === S.ds ? ' on' : ''}" data-ds="${k}">${DS[k].b}</button>`).join(''); $('cut').value = '1,2.1\n2,3.9\n3,6.2\n4,7.8\n5,10.1\n6,12.3\n7,13.8\n8,16.1';
+  document.querySelectorAll('[data-ds]').forEach(b => b.onclick = () => setDS(b.dataset.ds));
+  document.querySelectorAll('[data-v]').forEach(b => b.onclick = () => { S.view = b.dataset.v; document.querySelectorAll('[data-v]').forEach(x => x.classList.toggle('on', x === b)); render(); });
+  $('rs').oninput = () => { S.rho = +$('rs').value; $('rv').textContent = S.rho.toFixed(2); if (build()) render(); }; $('sn').onchange = () => { if (build()) render(); }; $('rb').onclick = () => { S.seed++; if (build()) render(); }; $('cub').onclick = () => { if (build()) render(); };
+  ['std', 'rv1', 'rv2', 'ni', 'pi', 'nt'].forEach(i => $(i).onchange = render); $('bs').oninput = render; $('ib').onclick = () => { S.iseed++; render(); }; $('nb').onclick = () => { S.nseed++; render(); };
+  $('cv').addEventListener('mousemove', e => { const ro = $('ro'); if (!P.o || !HV) { ro.style.display = 'none'; return; } const r = $('cv').getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top; if (px < P.x0 || px > P.x1 || py < P.y1 || py > P.y0) { ro.style.display = 'none'; return; } const t = HV(P.invX(px), P.invY(py)); if (!t) { ro.style.display = 'none'; return; } ro.style.display = 'block'; ro.textContent = t; });
+  $('cv').addEventListener('mouseleave', () => { $('ro').style.display = 'none'; }); window.addEventListener('resize', () => { clearTimeout(window._rz); window._rz = setTimeout(render, 120); }); setDS('women');
+}
+init();
+</script>
+</body></html>
